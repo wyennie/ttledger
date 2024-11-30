@@ -37,4 +37,26 @@ RSpec.describe "User sign up", type: :system do
     
     expect(page.has_content?("Email has already been taken")).to eq true
   end
+
+  it "Shows success message when all info is valid" do
+    visit signup_path
+    fill_in "Name", with: "John Johnson"
+    fill_in "Email", with: "user@example.com"
+    fill_in "Password", with: "foobar"
+    fill_in "Confirmation", with: "foobar"
+    click_on "Create account"
+
+    expect(page.has_content?("Welcome to Character Craft!"))
+  end
+
+  it "Redirects to users page when successful" do
+    visit signup_path
+    fill_in "Name", with: "John Johnson"
+    fill_in "Email", with: "user@example.com"
+    fill_in "Password", with: "foobar"
+    fill_in "Confirmation", with: "foobar"
+    click_on "Create account"
+
+    expect(page.has_content?("Player Page"))
+  end
 end
