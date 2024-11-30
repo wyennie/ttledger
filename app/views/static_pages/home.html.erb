@@ -1,12 +1,12 @@
-<nav>
-  <%= link_to "Login", "#" %>
-  <%= link_to "Sign Up", signup_path %>
+<nav class="absolute top-4 left-4 flex space-x-6 text-white bg-emerald-500 p-2 rounded shadow-lg">
+  <%= link_to "Login", "#", class: "hover:underline" %>
+  <%= link_to "Sign Up", signup_path, class: "hover:underline" %>
 </nav>
 
-<div>
-  <h1>Character Craft</h1>
-  <p>
-    Welcome! Create characters and keep track of stats and inventories.
+<div class="mt-20 text-center">
+  <h1 class="text-5xl font-extrabold text-gray-800">Character Craft</h1>
+  <p class="mt-4 text-xl text-gray-600">
+    Welcome! Create characters and keep track of stats and inventories.  
     Create and manage whole campaigns!
   </p>
 </div>

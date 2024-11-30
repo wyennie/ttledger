@@ -1,23 +1,31 @@
-<h1>Sign Up</h1>
+<h1 class="text-4xl font-bold text-center text-gray-800 mb-6">Sign Up</h1>
 
-<div class="row">
-  <div class="column">
-    <%= form_with(model: @user) do |f| %>
-      <%= render 'shared/error_messages' %>
+<div class="max-w-md mx-auto bg-white p-6 rounded-lg shadow-lg">
+  <%= form_with(model: @user) do |f| %>
+    <%= render 'shared/error_messages' %>
 
-      <%= f.label :name %>
-      <%= f.text_field :name, class: 'form-control' %>
+    <div class="mb-4">
+      <%= f.label :name, class: "block text-lg font-medium text-gray-700" %>
+      <%= f.text_field :name, class: "mt-1 block w-full p-2 border border-gray-300 rounded-lg focus:ring-emerald-500 focus:border-emerald-500" %>
+    </div>
 
-      <%= f.label :email %>
-      <%= f.email_field :email, class: 'form-control' %>
+    <div class="mb-4">
+      <%= f.label :email, class: "block text-lg font-medium text-gray-700" %>
+      <%= f.email_field :email, class: "mt-1 block w-full p-2 border border-gray-300 rounded-lg focus:ring-emerald-500 focus:border-emerald-500" %>
+    </div>
 
-      <%= f.label :password %>
-      <%= f.password_field :password, class: 'form-control' %>
+    <div class="mb-4">
+      <%= f.label :password, class: "block text-lg font-medium text-gray-700" %>
+      <%= f.password_field :password, class: "mt-1 block w-full p-2 border border-gray-300 rounded-lg focus:ring-emerald-500 focus:border-emerald-500" %>
+    </div>
 
-      <%= f.label :password_confirmation, "Confirmation" %>
-      <%= f.password_field :password_confirmation, class: 'form-control' %>
+    <div class="mb-4">
+      <%= f.label :password_confirmation, "Confirmation", class: "block text-lg font-medium text-gray-700" %>
+      <%= f.password_field :password_confirmation, class: "mt-1 block w-full p-2 border border-gray-300 rounded-lg focus:ring-emerald-500 focus:border-emerald-500" %>
+    </div>
 
-      <%= f.submit "Create account", class: "btn" %>
-    <% end %>
-  </div>
+    <div>
+      <%= f.submit "Create account", class: "w-full py-2 px-4 bg-emerald-500 text-white font-semibold rounded-lg shadow-md hover:bg-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:ring-opacity-75" %>
+    </div>
+  <% end %>
 </div>
