@@ -26,4 +26,3 @@ RSpec.describe "User log in", type: :system do
     expect(page).to have_current_path(users_path + "/#{user.id}")
   end
 end
-

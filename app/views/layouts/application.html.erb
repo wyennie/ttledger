@@ -23,7 +23,7 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body class="bg-slate-300 text-center py-4">
+  <body class="bg-slate-300 text-center">
     <%= render "layouts/header" %>
     <% flash.each do |message_type, message| %>
       <% if message_type == "danger" %>
