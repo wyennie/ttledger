@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2024_12_03_232003) do
+ActiveRecord::Schema[8.0].define(version: 2024_12_03_233913) do
   create_table "campaigns", force: :cascade do |t|
     t.string "name"
     t.text "description"
@@ -44,7 +44,7 @@ ActiveRecord::Schema[8.0].define(version: 2024_12_03_232003) do
   create_table "roles", force: :cascade do |t|
     t.integer "user_id", null: false
     t.integer "campaign_id", null: false
-    t.integer "role_type"
+    t.integer "role_type", default: 1, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["campaign_id"], name: "index_roles_on_campaign_id"
