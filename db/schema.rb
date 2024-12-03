@@ -10,7 +10,47 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2024_12_01_205840) do
+ActiveRecord::Schema[8.0].define(version: 2024_12_03_232003) do
+  create_table "campaigns", force: :cascade do |t|
+    t.string "name"
+    t.text "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "characters", force: :cascade do |t|
+    t.string "name"
+    t.text "description"
+    t.json "stats"
+    t.integer "user_id", null: false
+    t.integer "campaign_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["campaign_id"], name: "index_characters_on_campaign_id"
+    t.index ["user_id"], name: "index_characters_on_user_id"
+  end
+
+  create_table "items", force: :cascade do |t|
+    t.string "name"
+    t.string "weight"
+    t.string "value"
+    t.integer "count"
+    t.integer "character_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["character_id"], name: "index_items_on_character_id"
+  end
+
+  create_table "roles", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.integer "campaign_id", null: false
+    t.integer "role_type"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["campaign_id"], name: "index_roles_on_campaign_id"
+    t.index ["user_id"], name: "index_roles_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "name"
     t.string "email"
@@ -19,4 +59,10 @@ ActiveRecord::Schema[8.0].define(version: 2024_12_01_205840) do
     t.string "password_digest"
     t.string "remember_digest"
   end
+
+  add_foreign_key "characters", "campaigns"
+  add_foreign_key "characters", "users"
+  add_foreign_key "items", "characters"
+  add_foreign_key "roles", "campaigns"
+  add_foreign_key "roles", "users"
 end
