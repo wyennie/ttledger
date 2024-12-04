@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :role do
-    user { nil }
-    campaign { nil }
-    role_type { 1 }
+    association :user
+    association :campaign
+    role_type   { :gamemaster }
   end
 end

@@ -2,7 +2,7 @@ class User < ApplicationRecord
   attr_accessor :remember_token
 
   has_many :characters
-  has_many :rols
+  has_many :roles
   has_many :campaigns, through: :roles
 
   before_save { self.email = email.downcase }
