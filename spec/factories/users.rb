@@ -6,7 +6,7 @@ FactoryBot.define do
     password_confirmation { "password" }
 
     trait :with_unique_email do
-      email { "uniqueuser#{rand(1000)}@example.com"} 
+      email { "uniqueuser#{rand(1000)}@example.com" }
     end
   end
 end
