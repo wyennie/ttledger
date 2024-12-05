@@ -3,9 +3,10 @@ require 'rails_helper'
 RSpec.describe "User sign up", type: :system do
   it "Shows and error message when submitting password and password confirmation that do not match" do
     visit signup_path
-    fill_in "Name", with: "John Johnson"
-    fill_in "Email", with: "user1@example.com"
-    fill_in "Password", with: "foobar"
+    fill_in "Username",     with: "JohnnyBravo"
+    fill_in "Name",         with: "John Johnson"
+    fill_in "Email",        with: "user1@example.com"
+    fill_in "Password",     with: "foobar"
     fill_in "Confirmation", with: "blablabla"
     click_on "Create account"
 
@@ -14,9 +15,10 @@ RSpec.describe "User sign up", type: :system do
 
   it "Shows an error message when the name is left blank" do
     visit signup_path
-    fill_in "Name", with: "     "
-    fill_in "Email", with: "user1@example.com"
-    fill_in "Password", with: "foobar"
+    fill_in "Username",     with: "JohnnyBravo"
+    fill_in "Name",         with: "     "
+    fill_in "Email",        with: "user1@example.com"
+    fill_in "Password",     with: "foobar"
     fill_in "Confirmation", with: "foobar"
     click_on "Create account"
 
@@ -24,13 +26,12 @@ RSpec.describe "User sign up", type: :system do
   end
 
   it "Shows an error message if the email is already in use" do
-    @user = User.new(name: "Example User", email: "user@example.com",
-                            password: "foobar", password_confirmation: "foobar")
-    @user.save
+    FactoryBot.create(:user, email: "user@example.com")
     visit signup_path
-    fill_in "Name", with: "John Johnson"
-    fill_in "Email", with: "user@example.com"
-    fill_in "Password", with: "foobar"
+    fill_in "Username",     with: "JohnnyBravo"
+    fill_in "Name",         with: "John Johnson"
+    fill_in "Email",        with: "user@example.com"
+    fill_in "Password",     with: "foobar"
     fill_in "Confirmation", with: "foobar"
     click_on "Create account"
 
@@ -39,9 +40,10 @@ RSpec.describe "User sign up", type: :system do
 
   it "Shows success message when all info is valid" do
     visit signup_path
-    fill_in "Name", with: "John Johnson"
-    fill_in "Email", with: "user@example.com"
-    fill_in "Password", with: "foobar"
+    fill_in "Username",     with: "JohnnyBravo"
+    fill_in "Name",         with: "John Johnson"
+    fill_in "Email",        with: "user@example.com"
+    fill_in "Password",     with: "foobar"
     fill_in "Confirmation", with: "foobar"
     click_on "Create account"
 
@@ -50,9 +52,10 @@ RSpec.describe "User sign up", type: :system do
 
   it "Redirects to users page when successful" do
     visit signup_path
-    fill_in "Name", with: "John Johnson"
-    fill_in "Email", with: "user@example.com"
-    fill_in "Password", with: "foobar"
+    fill_in "Username",     with: "JohnnyBravo"
+    fill_in "Name",         with: "John Johnson"
+    fill_in "Email",        with: "user@example.com"
+    fill_in "Password",     with: "foobar"
     fill_in "Confirmation", with: "foobar"
     click_on "Create account"
 

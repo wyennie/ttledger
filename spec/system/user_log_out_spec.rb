@@ -1,16 +1,10 @@
 require "rails_helper"
 
 RSpec.describe "User log out", type: :system do
-  before do
-    @user = User.create!(
-      name: "Will Yennie",
-      email: "wryennie@example.com",
-      password: "foobar",
-      password_confirmation: "foobar"
-    )
-  end
-
   it "redirects to root" do
+    user = FactoryBot.create(:user, email: "wryennie@example.com",
+                                    password: "foobar",
+                                    password_confirmation: "foobar")
     visit login_path
     fill_in "Email", with: "wryennie@example.com"
     fill_in "Password", with: "foobar"

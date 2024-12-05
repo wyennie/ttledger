@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2024_12_03_233913) do
+ActiveRecord::Schema[8.0].define(version: 2024_12_05_172451) do
   create_table "campaigns", force: :cascade do |t|
     t.string "name"
     t.text "description"
@@ -58,6 +58,8 @@ ActiveRecord::Schema[8.0].define(version: 2024_12_03_233913) do
     t.datetime "updated_at", null: false
     t.string "password_digest"
     t.string "remember_digest"
+    t.string "username"
+    t.index ["username"], name: "index_users_on_username", unique: true
   end
 
   add_foreign_key "characters", "campaigns"

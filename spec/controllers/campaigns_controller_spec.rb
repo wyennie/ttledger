@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.describe CampaignsController, type: :controller do
-  let(:user)     { create(:user, :with_unique_email) }
+  let(:user)     { create(:user, :with_unique_email_and_username) }
   let(:campaign) { create(:campaign) }
   let(:params)   { { campaign: FactoryBot.attributes_for(:campaign) } }
 
