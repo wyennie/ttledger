@@ -2,11 +2,10 @@
   <%= render "shared/sidebar" %>
   <main class="flex-1 p-8">
     <h3 class="text-xl font-semibold text-gray-800 mb-2"><%= @campaign.name %></h3>
-    <%= link_to "Edit", edit_campaign_path(@campaign), class: "w-full py-2 px-4 bg-indigo-500 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:ring-opacity-75" %>
-    
+    <%= link_to "Edit", edit_campaign_path(@campaign), class: "w-full py-2 px-4 bg-indigo-500 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:ring-opacity-75" %> 
+    <p><strong>Game master:</strong> <%= @campaign.roles.find_by(role_type: "gamemaster").user.username %></p>
     <p class="space-y-2 mt-4"><strong>Description:</strong> <%= @campaign.description.presence || "No description provided" %></p>
-    
-    <p><strong>Game master:</strong> <%= @campaign.roles.find_by(role_type: "gamemaster").user.email %></p>  
-  </main>
 
+    <%= link_to "Create a character", new_campaign_character_path(@campaign.id), class: "w-full py-2 px-4 bg-indigo-500 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:ring-opacity-75" %> 
+  </main>
 </div>
