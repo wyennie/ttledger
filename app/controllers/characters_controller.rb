@@ -1,5 +1,5 @@
 class CharactersController < ApplicationController
-  before_action :set_campaign, only: [:new, :create, :edit, :update, :destroy]
+  before_action :set_campaign, only: [ :new, :create, :edit, :update, :destroy ]
 
   def show
   end
