@@ -1,7 +1,7 @@
 <header>
   <aside class="w-1/4 bg-zinc-400 p-6 shadow-lg">
     <ul class="absolute top-4 left-4 flex space-x-6 text-white-500 p-2">
-      <li><%= link_to "About", root_path, class: "hover:underline" %></li>
+      <li><%= link_to "About", about_path, class: "hover:underline" %></li>
       <% if logged_in? %>
         <li><%= link_to "Home", current_user, class: "hover:underline" %></li>
         <li><%= link_to "Log out", logout_path, class: "hover:underline", data: { "turbo-method": :delete } %></li>

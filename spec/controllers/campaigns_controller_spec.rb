@@ -1,8 +1,13 @@
 require "rails_helper"
 
 RSpec.describe CampaignsController, type: :controller do
+  let(:user)     { create(:user, :with_unique_email) }
   let(:campaign) { create(:campaign) }
   let(:params)   { { campaign: FactoryBot.attributes_for(:campaign) } }
+
+  before do
+    allow(controller).to receive(:current_user).and_return(user)
+  end
 
   describe '#create' do
     context 'when valid parameters are provided' do
@@ -30,7 +35,6 @@ RSpec.describe CampaignsController, type: :controller do
     end
   end
 
-=begin
   describe '#update' do
     context 'when campaign exists' do
       it 'updates the campaign with valid params' do
@@ -39,22 +43,13 @@ RSpec.describe CampaignsController, type: :controller do
         expect(campaign.name).to eq('Updated Name')
       end
 
-      it 'responds with a 200 status code' do
+      it 'responds with a 302 status code' do
         put :update, params: { id: campaign.id, campaign: { name: 'Updated Name' } }
-        expect(response).to have_http_status(:ok)
-      end
-    end
-
-    context 'when campaign does not exist' do
-      it 'responds with a 404 status code' do
-        put :update, params: { id: 9999, campaign: { name: 'Non-existent Campaign' } }
-        expect(response).to have_http_status(:not_found)
+        expect(response).to have_http_status(:found)
       end
     end
   end
-=end
 
-=begin
   describe '#destroy' do
     context 'when campaign exists' do
       it 'deletes the campaign' do
@@ -62,9 +57,9 @@ RSpec.describe CampaignsController, type: :controller do
         expect { delete :destroy, params: { id: campaign.id } }.to change(Campaign, :count).by(-1)
       end
 
-      it 'responds with a 204 status code' do
+      it 'responds with a 303 status code' do
         delete :destroy, params: { id: campaign.id }
-        expect(response).to have_http_status(:no_content)
+        expect(response).to have_http_status(:see_other)
       end
     end
 
@@ -75,5 +70,4 @@ RSpec.describe CampaignsController, type: :controller do
       end
     end
   end
-=end
 end
