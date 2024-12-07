@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :campaign do
-    name        { "Campaign Title" }
-    description { "This is the description of the campaign." }
+    name        { Faker::Book.title }
+    description { Faker::Lorem.paragraph }
 
     trait :without_description do
       description { nil }

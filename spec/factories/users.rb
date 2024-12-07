@@ -1,14 +1,9 @@
 FactoryBot.define do
   factory :user do
-    username              { "TestUser" }
-    name                  { "Test User" }
-    email                 { "testuser@example.com" }
+    username              { Faker::Internet.username(specifier: 5..10) }
+    name                  { Faker::Name.name }
+    email                 { Faker::Internet.email }
     password              { "password" }
     password_confirmation { "password" }
-
-    trait :with_unique_email_and_username do
-      username { "uniqueusername#{rand(1000)}" }
-      email    { "uniqueuser#{rand(1000)}@example.com" }
-    end
   end
 end
