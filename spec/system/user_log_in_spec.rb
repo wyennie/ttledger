@@ -15,8 +15,8 @@ RSpec.describe "User log in", type: :system do
 
   it "user is redirected home when they log in" do
     visit login_path
-    fill_in "Email",    with: "testuser@example.com"
-    fill_in "Password", with: "password"
+    fill_in "Email",    with: "#{user.email}"
+    fill_in "Password", with: "#{user.password}"
     click_on "Log in"
 
     expect(page).to have_current_path(users_path + "/#{user.id}")
