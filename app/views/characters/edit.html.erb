@@ -1,4 +1,18 @@
 <div>
-  <h1 class="font-bold text-4xl">Characters#edit</h1>
-  <p>Find me in app/views/characters/edit.html.erb</p>
+  <h1 class="font-bold text-4xl">Characters Sheet</h1>
+  <%= form_with(model:[@campaign, @character]) do |f| %>
+    <div class="mb-4">
+      <%= f.label :name, class: "block text-lg font-medium text-gray-700" %>
+      <%= f.text_field :name, 
+        class: "mt-1 block w-full p-2 border border-gray-300 rounded-lg focus:ring-emerald-500 focus:border-emerald-500", 
+         prompt: true,
+         onchange: 'this.form.submit()'
+         %>
+
+    </div>
+  <% end %>
+
+  <%= link_to "Delete character", campaign_character_path(@campaign, @character), 
+    data: { "turbo-method": :delete, turbo_confirm: "Are you sure you want to delete #{@character.name}?" },
+    class: "btn btn-danger" %>
 </div>

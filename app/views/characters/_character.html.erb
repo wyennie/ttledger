@@ -1,0 +1,7 @@
+<div id="character_<%= character.id %>" class="space-y-2 mt-4 rounded shadow-md">
+  <li class="bg-gray-300 p-2 rounded">
+    <% if character.persisted? %>
+      <%= link_to "#{character.name}", edit_campaign_character_path(@campaign, character), class: "btn btn-secondary" %>
+    <% end %>
+  </li>
+</div>

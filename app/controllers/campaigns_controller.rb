@@ -1,9 +1,9 @@
 class CampaignsController < ApplicationController
-  before_action :logged_in?, only: [ :edit, :destroy ]
+  before_action :logged_in?
   before_action :set_user_and_campaigns
+  before_action :set_campaign, only: [ :destroy, :update, :edit, :show ]
 
   def show
-    @campaign = Campaign.find(params[:id])
   end
 
   def new
@@ -23,12 +23,9 @@ class CampaignsController < ApplicationController
   end
 
   def edit
-    @campaign = Campaign.find(params[:id])
   end
 
   def update
-    @campaign = Campaign.find(params[:id])
-
     if @campaign.update(campaign_params)
       flash[:success] = "Campaign updated!"
       redirect_to @campaign
@@ -38,7 +35,6 @@ class CampaignsController < ApplicationController
   end
 
   def destroy
-    @campaign = Campaign.find(params[:id])
     @campaign.roles.destroy_all
     @campaign.characters.destroy_all
     @campaign.destroy
@@ -52,6 +48,10 @@ class CampaignsController < ApplicationController
 
     def campaign_params
       params.require(:campaign).permit(:name, :description)
+    end
+
+    def set_campaign
+      @campaign = Campaign.find(params[:id])
     end
 
     def set_user_and_campaigns
