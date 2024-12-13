@@ -1,0 +1,22 @@
+<!-- app/views/items/edit.html.erb -->
+<turbo-frame id="item-modal">
+  <div class="fixed inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-center">
+    <div class="bg-white p-6 rounded-lg shadow-lg w-96">
+      <h2 class="font-semibold text-xl mb-4">Edit Item</h2>
+      <%= form_with model: [@campaign, @character, @item], url: campaign_character_item_path(@campaign, @character, @item), method: :patch, data: { turbo: true } do |f| %>
+        <div class="mb-4">
+          <%= f.label :name, "Item Name", class: "block text-sm font-medium text-gray-700" %>
+          <%= f.text_field :name, class: "form-control w-full"%>
+        </div>
+        <div class="mb-4">
+          <%= f.label :description, "Description", class: "block text-sm font-medium text-gray-700" %>
+          <%= f.text_area :description, class: "form-control w-full" %>
+        </div>
+        <div class="mb-4">
+          <%= f.submit "Save Changes", class: "btn btn-primary" %>
+        </div>
+      <% end %>
+      <%= link_to "Close", "#", data: { turbo_frame: "item-modal" }, class: "text-sm text-blue-500" %>
+    </div>
+  </div>
+</turbo-frame>

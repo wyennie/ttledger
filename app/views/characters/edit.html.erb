@@ -1,5 +1,6 @@
 <div>
   <h1 class="font-bold text-4xl">Characters Sheet</h1>
+  <%= render "shared/error_messages", object: @character %>  
   <%= form_with(model:[@campaign, @character]) do |f| %>
     <div class="mb-4">
       <%= f.label :name, class: "block text-lg font-medium text-gray-700" %>
@@ -12,6 +13,34 @@
     </div>
   <% end %>
 
+  <!-- Inventory Section -->
+  <div class="mt-6">
+    <h2 class="font-semibold text-2xl text-gray-800 mb-4">Inventory</h2>
+    <div class="border rounded-lg shadow-md bg-gray-100 p-4">
+      <%= turbo_frame_tag "item-modal" do %>
+        
+        <%= button_to 'Add item', campaign_character_items_path(@campaign, @character),
+             method: :post, data: { turbo: true }, class: "w-full py-2 px-4 bg-indigo-500 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:ring-opacity-75" %>
+
+
+        <div class="mb-4">
+          <ul class="space-y-2">
+            <% @character.items.each do |item| %>
+              <%= button_to edit_campaign_character_item_path(@campaign, @character, item), method: :get, data: { turbo_frame: "item-modal" }, class: "w-full flex justify-between bg-white p-2 rounded shadow hover:bg-gray-100 cursor-pointer" do %>
+                <span><%= item.name %></span>
+                <%= link_to "Delete", campaign_character_item_path(@campaign, @character, item), 
+                  data: {
+                    "turbo-method": :delete, 
+                  }, class: "text-red-500 hover:text-red-700" %>
+              <% end %>
+            <% end %>
+          </ul>
+        </div> 
+
+      <% end %>
+    </div>
+
+  <br>
   <%= link_to "Delete character", campaign_character_path(@campaign, @character), 
     data: { "turbo-method": :delete, turbo_confirm: "Are you sure you want to delete #{@character.name}?" },
     class: "w-full py-2 px-4 bg-red-500 text-white font-semibold rounded-lg shadow-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-opacity-75" %>

@@ -5,9 +5,14 @@ Rails.application.routes.draw do
   get     "/login",   to: "sessions#new"
   post    "/login",   to: "sessions#create"
   delete  "/logout",  to: "sessions#destroy"
+
   resources :users
+
   resources :campaigns do
-    resources :characters, only: [ :create, :edit, :update, :destroy ]
+    resources :characters, only: [ :create, :edit, :update, :destroy ] do
+      resources :items, only: [ :create, :edit, :update, :destroy ]
+    end
   end
+
   get "up" => "rails/health#show", as: :rails_health_check
 end
