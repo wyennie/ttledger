@@ -1,7 +1,7 @@
 class CharactersController < ApplicationController
-  before_action :logged_in?, only: [:create, :edit, :update, :destroy]
+  before_action :logged_in?, only: [ :create, :edit, :update, :destroy ]
   before_action :set_campaign
-  before_action :set_character, only: [:edit, :update, :destroy]
+  before_action :set_character, only: [ :edit, :update, :destroy ]
 
   def create
     @character = @campaign.characters.new(character_params)
@@ -12,7 +12,7 @@ class CharactersController < ApplicationController
 
       redirect_to campaign_path(@campaign)
     else
-      render @campaign, status: :unprocessable_entity 
+      render @campaign, status: :unprocessable_entity
     end
   end
 
@@ -34,8 +34,8 @@ class CharactersController < ApplicationController
   def destroy
     @character.user = current_user
     @character.destroy
-    flash[:success] = "Character was successfully deleted." 
-    redirect_to campaign_path(@campaign) 
+    flash[:success] = "Character was successfully deleted."
+    redirect_to campaign_path(@campaign)
   end
 
   private

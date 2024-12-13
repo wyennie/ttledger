@@ -6,8 +6,8 @@ class ItemsController < ApplicationController
     if @item.save
       redirect_to edit_campaign_character_path(@campaign, @character)
     else
-      flash[:danger] = 'Failed to create item.'
-       render @character, status: :unprocessable_entity 
+      flash[:danger] = "Failed to create item."
+      render :edit
     end
   end
 
@@ -23,7 +23,7 @@ class ItemsController < ApplicationController
         format.html { redirect_to campaign_character_path(@campaign, @character), notice: "Item updated successfully." }
       end
     else
-      flash.now[:alert] = 'Failed to update item.'
+      flash.now[:alert] = "Failed to update item."
       render :edit
     end
   end
