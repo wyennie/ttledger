@@ -10,6 +10,7 @@ class Item < ApplicationRecord
   validates :description, length: { maximum: 500 }, allow_blank: true
   validates :weight, numericality: { greater_than_or_equal_to: 0 }, allow_nil: true
   validates :value, numericality: { greater_than_or_equal_to: 0 }, allow_nil: true
+  validates :count, numericality: { greater_than_or_equal_to: 1 }
   validates :item_type, presence: true
   validate :cannot_contain_itself
 

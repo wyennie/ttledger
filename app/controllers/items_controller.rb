@@ -20,7 +20,7 @@ class ItemsController < ApplicationController
     @item = @character.items.find(params[:id])
     if @item.update(item_params)
       respond_to do |format|
-        format.turbo_stream
+        format.turbo_stream { render turbo_stream: turbo_stream.replace("item-list", partial: "items/item_list", locals: { character: @character }) }
         format.html { redirect_to campaign_character_path(@campaign, @character), notice: "Item updated successfully." }
       end
     else
@@ -45,6 +45,6 @@ class ItemsController < ApplicationController
   end
 
   def item_params
-    params.fetch(:item, {}).permit(:name, :description, :weight, :value, :container_id, :item_type_id)
+    params.fetch(:item, {}).permit(:name, :description, :weight, :value, :count, :container_id, :item_type_id)
   end
 end
