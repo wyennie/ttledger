@@ -1,6 +1,10 @@
 <div>
   <h1 class="font-bold text-4xl">Characters Sheet</h1>
   <%= render "shared/error_messages", object: @character %>  
+  <div class="flex justigy-start  mb-4">
+    <%= link_to "#{@campaign.name}", campaign_path(@campaign.id),
+      class: "inline-block py-2 px-4 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 mb-4" %>
+  </div>
   <%= form_with(model:[@campaign, @character]) do |f| %>
     <div class="mb-4">
       <%= f.label :name, class: "block text-lg font-medium text-gray-700" %>
