@@ -22,16 +22,17 @@
         <%= button_to 'Add item', campaign_character_items_path(@campaign, @character),
              method: :post, data: { turbo: true }, class: "w-full py-2 px-4 bg-indigo-500 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:ring-opacity-75" %>
 
-
         <div class="mb-4">
           <ul class="space-y-2">
             <% @character.items.each do |item| %>
-              <%= button_to edit_campaign_character_item_path(@campaign, @character, item), method: :get, data: { turbo_frame: "item-modal" }, class: "w-full flex justify-between bg-white p-2 rounded shadow hover:bg-gray-100 cursor-pointer" do %>
-                <span><%= item.name %></span>
-                <%= link_to "Delete", campaign_character_item_path(@campaign, @character, item), 
-                  data: {
-                    "turbo-method": :delete, 
-                  }, class: "text-red-500 hover:text-red-700" %>
+              <% if item.persisted? %>
+                <%= button_to edit_campaign_character_item_path(@campaign, @character, item), method: :get, data: { turbo_frame: "item-modal" }, class: "w-full flex justify-between bg-white p-2 rounded shadow hover:bg-gray-100 cursor-pointer" do %>
+                  <span><%= item.name %></span>
+                  <%= link_to "Delete", campaign_character_item_path(@campaign, @character, item), 
+                    data: {
+                      "turbo-method": :delete, 
+                    }, class: "text-red-500 hover:text-red-700" %>
+                <% end %>
               <% end %>
             <% end %>
           </ul>

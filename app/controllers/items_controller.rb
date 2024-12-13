@@ -7,7 +7,8 @@ class ItemsController < ApplicationController
       redirect_to edit_campaign_character_path(@campaign, @character)
     else
       flash[:danger] = "Failed to create item."
-      render :edit
+      puts @item.errors.full_messages
+      render "characters/edit"
     end
   end
 
@@ -24,7 +25,7 @@ class ItemsController < ApplicationController
       end
     else
       flash.now[:alert] = "Failed to update item."
-      render :edit
+      render "characters/edit"
     end
   end
 
