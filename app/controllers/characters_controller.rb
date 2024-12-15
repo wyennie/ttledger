@@ -20,14 +20,17 @@ class CharactersController < ApplicationController
     @character = @campaign.characters.find(params[:id])
     @user = current_user
     @campaigns = current_user.campaigns
+    @character.build_character_derived_stat unless @character.character_derived_stat
+    @character.build_character_stat unless @character.character_stat
   end
 
   def update
     @character = @campaign.characters.find(params[:id])
     @character.user = current_user
     if @character.update(character_params)
+      render json: { message: "Saved successfully" }, status: :ok
     else
-      render :edit, status: :unprocessable_entity
+      render json: { errors: @character.errors.full_messages }, status: :unprocessable_entity
     end
   end
 
@@ -49,6 +52,22 @@ class CharactersController < ApplicationController
   end
 
   def character_params
-    params.require(:character).permit(:name)
+    params.require(:character).permit(
+      :name, :description, :occupation, :title, :character_class,
+      :alignment, :speed, :level, :xp, :ac,
+      character_stat_attributes: [
+        :strength_current,     :strength_max,     :strength_modifier,
+        :agility_current,      :agility_max,      :agility_modifier,
+        :stamina_current,      :stamina_max,      :stamina_modifier,
+        :personality_current,  :personality_max,  :personality_modifier,
+        :intelligence_current, :intelligence_max, :intelligence_modifier,
+        :luck_current,         :luck_max,         :luck_modifier
+      ],
+      character_derived_stat_attributes: [
+        :initiative, :action_dice, :attack_dice, :crit_die, :crit_table,
+        :fumble_die, :fumble_table, :reflex, :fortitude, :willpower,
+        :hp, :max_hp
+      ]
+    )
   end
 end
