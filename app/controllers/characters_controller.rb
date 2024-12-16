@@ -28,7 +28,6 @@ class CharactersController < ApplicationController
     @character = @campaign.characters.find(params[:id])
     @character.user = current_user
     if @character.update(character_params)
-      Rails.logger.debug("Submitted Params: #{params.inspect}")
       render json: { message: "Saved successfully" }, status: :ok
     else
       render json: { errors: @character.errors.full_messages }, status: :unprocessable_entity
