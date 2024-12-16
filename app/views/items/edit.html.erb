@@ -1,10 +1,11 @@
-
 <!-- app/views/items/edit.html.erb -->
 <turbo-frame id="item-modal">
-  <div class="fixed inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-center">
-    <div class="bg-white p-6 rounded-lg shadow-lg w-96">
-      <h2 class="font-semibold text-xl mb-4">Edit Item</h2>
-      
+  <div class="fixed inset-0 bg-opacity-50 p-6 flex justify-center items-center">
+    <div class="p-6 bg-slate-900 rounded-lg shadow-lg w-96">
+      <h1 class="text-4xl font-bold text-center text-slate-300 mb-6">Item Details</h1>
+
+      <% input_classes = "mt-1 block w-full p-2 border bg-slate-500 text-slate-300
+        border-slate-600 rounded-lg focus:ring-slate-400 focus:border-slate-300" %>
       <!-- Displaying validation error messages -->
       <%= render "shared/error_messages", object: @item %>
       
@@ -12,49 +13,54 @@
         
         <!-- Item Name -->
         <div class="mb-4">
-          <%= f.label :name, "Item Name", class: "block text-sm font-medium text-gray-700" %>
-          <%= f.text_field :name, class: "mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-emerald-500 focus:border-emerald-500" %>
+          <%= f.label :name, "Item Name", class: "block text-sm font-medium text-slate-200" %>
+          <%= f.text_field :name, class: input_classes %>
         </div>
         
         <!-- Description -->
         <div class="mb-4">
-          <%= f.label :description, "Description", class: "block text-sm font-medium text-gray-700" %>
-          <%= f.text_area :description, class: "mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-emerald-500 focus:border-emerald-500", rows: 4 %>
+          <%= f.label :description, "Description", class: "block text-sm font-medium text-slate-200" %>
+          <%= f.text_area :description, class: input_classes, rows: 4 %>
         </div>
 
         <!-- Weight -->
         <div class="mb-4">
-          <%= f.label :weight, "Weight (optional)", class: "block text-sm font-medium text-gray-700" %>
-          <%= f.number_field :weight, class: "mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-emerald-500 focus:border-emerald-500" %>
+          <%= f.label :weight, "Weight (optional)", class: "block text-sm font-medium text-slate-200" %>
+          <%= f.number_field :weight, class: input_classes %>
         </div>
 
         <!-- Value -->
         <div class="mb-4">
-          <%= f.label :value, "Value (optional)", class: "block text-sm font-medium text-gray-700" %>
-          <%= f.number_field :value, class: "mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-emerald-500 focus:border-emerald-500" %>
+          <%= f.label :value, "Value (optional)", class: "block text-sm font-medium text-slate-200" %>
+          <%= f.number_field :value, class: input_classes %>
         </div>
 
         <!-- Count -->
         <div class="mb-4">
-          <%= f.label :count, "Quantity", class: "block text-sm font-medium text-gray-700" %>
-          <%= f.number_field :count, class: "mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-emerald-500 focus:border-emerald-500" %>
+          <%= f.label :count, "Quantity", class: "block text-sm font-medium text-slate-200" %>
+          <%= f.number_field :count, class: input_classes %>
         </div>
 
         <!-- Item Type (Dropdown) -->
         <div class="mb-4">
-          <%= f.label :item_type, "Item Type", class: "block text-sm font-medium text-gray-700" %>
-          <%= f.collection_select :item_type_id, ItemType.all, :id, :name, { prompt: "Select Item Type" }, class: "mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-emerald-500 focus:border-emerald-500" %>
+          <%= f.label :item_type, "Item Type", class: "block text-sm font-medium text-slate-200" %>
+          <%= f.collection_select :item_type_id, ItemType.all, :id, :name, { prompt: "Select Item Type" }, 
+            class: input_classes %>
         </div>
 
         <!-- Submit Button -->
         <div class="mb-4">
-          <%= f.submit "Save Changes", class: "w-full py-2 px-4 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75" %>
+          <%= f.submit "Save Changes", data: { turbo_frame: "item-modal" },
+          class: "w-full py-2 px-4 bg-slate-400 text-slate-900 font-semibold 
+          rounded-lg shadow-md hover:bg-slate-200 focus:outline-none focus:ring-2 focus:ring-slate-400 
+          focus:ring-opacity-75" %>
         </div>
         
       <% end %>
 
       <!-- Close Button -->
-      <%= link_to "Close", "#", data: { turbo_frame: "item-modal" }, class: "text-sm text-blue-500 hover:text-blue-700 mt-2 block text-center" %>
+      <%= link_to "Close", "#", data: { turbo_frame: "item-modal" }, 
+        class: "text-sm text-slate-500 hover:text-slate-200 mt-2 block text-center" %>
     </div>
   </div>
 </turbo-frame>

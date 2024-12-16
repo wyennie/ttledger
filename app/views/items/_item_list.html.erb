@@ -2,25 +2,31 @@
 <!-- app/views/items/_item_list.html.erb -->
 <%= turbo_frame_tag "item-list" do %>
   <%= button_to 'Add item', campaign_character_items_path(@campaign, @character),
-       method: :post, data: { turbo: true }, class: "w-full py-2 px-4 bg-indigo-500 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:ring-opacity-75" %>
+    method: :post, data: { turbo: true },
+    class: "w-full py-2 px-4 bg-slate-700 text-slate-100 font-semibold 
+          rounded-lg shadow-md hover:bg-slate-900 focus:outline-none focus:ring-2 
+          focus:ring-slate-400 focus:ring-opacity-75" %>
 
   <div class="mb-4">
     <ul class="space-y-2">
       <% @character.items.each do |item| %>
         <% if item.persisted? %>
-          <%= button_to edit_campaign_character_item_path(@campaign, @character, item), method: :get, data: { turbo_frame: "item-modal" }, class: "w-full flex justify-between bg-white p-2 rounded shadow hover:bg-gray-100 cursor-pointer" do %>
+          <%= button_to edit_campaign_character_item_path(@campaign, @character, item), 
+            method: :get, data: { turbo_frame: "item-modal" }, 
+            class: "w-full flex justify-between bg-slate-500 p-2 rounded shadow hover:bg-slate-900 cursor-pointer" do %>
             <span class="font-medium"><%= item.name %></span>
 
-            <span class="text-sm text-gray-500 flex flex-row space-x-4 items-center ml-auto mr-4">
+            <span class="text-sm text-slate-300 flex flex-row space-x-4 items-center ml-auto mr-4">
               <span><%= (item.value || 0).to_s + "gp" %></span>
               <span><%= item.weight.to_s + " lbs" %></span>
               <span><%= item.count %> qty</span>
             </span>
 
             <%= link_to "Delete", campaign_character_item_path(@campaign, @character, item), 
-              data: {
-                "turbo-method": :delete, 
-              }, class: "text-red-500 hover:text-red-700" %>
+                      data: {
+                        "turbo-method": :delete, 
+                      }, class: "p-1 bg-red-500 text-slate-200 rounded-lg shadow-md hover:bg-red-600
+                                focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-opacity-75" %>
           <% end %>
         <% end %>
       <% end %>

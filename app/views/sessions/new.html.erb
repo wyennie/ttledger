@@ -1,22 +1,26 @@
-<h1 class="text-4xl font-bold text-center text-gray-800 mb-6">Log in</h1>
+<h1 class="text-4xl font-bold text-center text-slate-300 mb-6">Log in</h1>
 
-<div class="max-w-md mx-auto bg-white p-6 rounded-lg shadow-lg">
+<div class="max-w-md mx-auto bg-slate-800 p-6 rounded-lg shadow-lg">
   <%= form_with(url: login_path, scope: :session) do |f| %>
-
-    <div class="mb-4">
-      <%= f.label :email, class: "block text-lg font-medium text-gray-700" %>
-      <%= f.email_field :email, class: "mt-1 block w-full p-2 border border-gray-300 rounded-lg focus:ring-emerald-500 focus:border-emerald-500" %>
+   <div class="mb-4">
+      <%= f.label :email, class: "block text-lg font-medium text-slate-300" %>
+      <%= f.email_field :email, class: "mt-1 block w-full p-2 border bg-slate-500 text-slate-300
+      border-slate-600 rounded-lg focus:ring-slate-300 focus:border-slate-300" %>
     </div>
 
     <div class="mb-4">
-      <%= f.label :password, class: "block text-lg font-medium text-gray-700" %>
-      <%= f.password_field :password, class: "mt-1 block w-full p-2 border border-gray-300 rounded-lg focus:ring-emerald-500 focus:border-emerald-500" %>
+      <%= f.label :password, class: "block text-lg font-medium text-slate-300" %>
+      <%= f.password_field :password, class: "mt-1 block w-full p-2 border bg-slate-500 text-slate-300
+      border-slate-600 rounded-lg focus:ring-slate-300 focus:border-slate-300" %>
     </div>
 
     <div>
-      <%= f.submit "Log in", class: "w-full py-2 px-4 bg-indigo-500 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:ring-opacity-75" %>
+      <%= f.submit "Log in", 
+        class: "w-full py-2 px-4 bg-slate-500 text-slate-300 font-semibold rounded-lg shadow-md hover:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-opacity-75" %>
     </div>
   <% end %>
 
-  <p class="space-x-6 text-black p-2 rounded">New User? <span class="text-blue-500"><%= link_to "Sign up now!", signup_path %></span></p>
+  <p class="space-x-6 text-slate-300 p-2 rounded">New User? 
+    <span class="text-slate-100"><%= link_to "Sign up now!", signup_path %></span>
+  </p>
 </div>

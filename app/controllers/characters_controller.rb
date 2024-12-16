@@ -28,6 +28,7 @@ class CharactersController < ApplicationController
     @character = @campaign.characters.find(params[:id])
     @character.user = current_user
     if @character.update(character_params)
+      Rails.logger.debug("Submitted Params: #{params.inspect}")
       render json: { message: "Saved successfully" }, status: :ok
     else
       render json: { errors: @character.errors.full_messages }, status: :unprocessable_entity
@@ -56,6 +57,7 @@ class CharactersController < ApplicationController
       :name, :description, :occupation, :title, :character_class,
       :alignment, :speed, :level, :xp, :ac,
       character_stat_attributes: [
+        :id,
         :strength_current,     :strength_max,     :strength_modifier,
         :agility_current,      :agility_max,      :agility_modifier,
         :stamina_current,      :stamina_max,      :stamina_modifier,
@@ -64,6 +66,7 @@ class CharactersController < ApplicationController
         :luck_current,         :luck_max,         :luck_modifier
       ],
       character_derived_stat_attributes: [
+        :id,
         :initiative, :action_dice, :attack_dice, :crit_die, :crit_table,
         :fumble_die, :fumble_table, :reflex, :fortitude, :willpower,
         :hp, :max_hp

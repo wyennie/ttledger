@@ -1,16 +1,7 @@
 import { Controller } from "@hotwired/stimulus";
 
 export default class extends Controller {
-  connect() {
-      // Attach event listener for change event
-      const selectElement = this.element.querySelector('select');
-      if (selectElement) {
-        selectElement.addEventListener('change', this.submitField.bind(this));
-      }
-    }
-
   submitField(event) {
-    console.log('Change detected', event.target);
     const form = event.target.closest("form");
     const formData = new FormData(form);
 
