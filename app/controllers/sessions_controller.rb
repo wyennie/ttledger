@@ -1,16 +1,16 @@
 class SessionsController < ApplicationController
   def new
   end
-
+ 
   def create
     user = User.find_by(email: params[:session][:email].downcase)
-    if user && user.authenticate(params[:session][:password])
+    if user && user.authenticate(params[:session][:password]) && user.confirmed_at
       reset_session
       remember user
       log_in user
       redirect_to user
     else
-      flash.now[:danger] = "Invalid email/password combination"
+      flash.now[:danger] = "Invalid email/password combination or unconfirmed email."
       render "new", status: :unprocessable_entity
     end
   end

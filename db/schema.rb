@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2024_12_14_045934) do
+ActiveRecord::Schema[8.0].define(version: 2024_12_16_212054) do
   create_table "armors", force: :cascade do |t|
     t.integer "ac_bonus"
     t.integer "check_penalty"
@@ -137,6 +137,9 @@ ActiveRecord::Schema[8.0].define(version: 2024_12_14_045934) do
     t.string "password_digest"
     t.string "remember_digest"
     t.string "username"
+    t.datetime "confirmed_at"
+    t.string "confirmation_token"
+    t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["username"], name: "index_users_on_username", unique: true
   end
 

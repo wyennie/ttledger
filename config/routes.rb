@@ -5,7 +5,7 @@ Rails.application.routes.draw do
   get     "/login",   to: "sessions#new"
   post    "/login",   to: "sessions#create"
   delete  "/logout",  to: "sessions#destroy"
-
+  get "confirm_email", to: 'users#confirm_email', as: 'confirm_email'
   resources :users
 
   resources :campaigns do

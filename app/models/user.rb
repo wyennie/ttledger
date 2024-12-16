@@ -6,6 +6,8 @@ class User < ApplicationRecord
   has_many :campaigns, through: :roles
 
   before_save { self.email = email.downcase }
+  before_create :create_confirmation_token
+
   validates :username, presence: true, length: { maximum: 50 },
                        uniqueness: true
   validates :name,     presence: true, length: { maximum: 50 }
@@ -14,7 +16,7 @@ class User < ApplicationRecord
                        format: { with: VALID_EMAIL_REGEX },
                        uniqueness: true
   has_secure_password
-  validates :password, presence: true, length: { minimum: 6 }, allow_nil: true
+  validates :password, presence: true, length: { minimum: 6 }
 
   def self.digest(string)
     cost = ActiveModel::SecurePassword.min_cost ? BCrypt::Engine::MIN_COST :
@@ -29,6 +31,23 @@ class User < ApplicationRecord
   def remember
     self.remember_token = User.new_token
     update_attribute(:remember_digest, User.digest(remember_token))
+  end
+
+  def create_confirmation_token
+    self.confirmation_token = SecureRandom.urlsafe_base64
+  end
+
+  def send_confirmation_email
+    UserMailer.confirmation_email(self).deliver_now
+  end
+
+  def confirm_email
+    if update_attribute(:confirmed_at, Time.current) && update_attribute(:confirmation_token, nil)
+      Rails.logger.info("User #{self.id} confirmed successfully.")
+    else
+      Rails.logger.error("User #{self.id} confirmation failed: #{errors.full_messages.join(', ')}")
+      raise ActiveRecord::Rollback
+    end
   end
 
   def authenticated?(remember_token)
