@@ -1,9 +1,13 @@
 class CampaignsController < ApplicationController
-  before_action :logged_in?
+  before_action :authenticate_user!
   before_action :set_user_and_campaigns
   before_action :set_campaign, only: [ :destroy, :update, :edit, :show ]
 
   def show
+  end
+
+  def authenticate_user!
+    redirect_to login_path unless logged_in?
   end
 
   def new
@@ -52,10 +56,18 @@ class CampaignsController < ApplicationController
 
     def set_campaign
       @campaign = Campaign.find(params[:id])
+      if @campaign.nil?
+        redirect_to campaigns_path, alert: "Campaign not found."
+      end
     end
 
     def set_user_and_campaigns
-      @campaigns = current_user.campaigns
       @user = current_user
+
+      if @user
+        @campaigns = @user.campaigns
+      else
+        redirect_to login_path, alert: "Please log in" # Or any other logic to handle unauthenticated users
+      end
    end
 end
