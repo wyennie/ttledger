@@ -1,5 +1,5 @@
 class UserMailer < ApplicationMailer
-  default from: "noreply@example.com"
+  default from: "will@ttledger.com"
 
   def confirmation_email(user)
     @user = user
