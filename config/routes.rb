@@ -7,7 +7,7 @@ Rails.application.routes.draw do
   delete  "/logout",  to: "sessions#destroy"
   get "confirm_email", to: "users#confirm_email", as: "confirm_email"
   resources :users
-
+  resources :friendships, only: [:create, :update]
   resources :campaigns do
     resources :characters, only: [ :create, :edit, :update, :destroy ] do
       resources :items, only: [ :create, :edit, :update, :destroy ]

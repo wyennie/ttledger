@@ -1,6 +1,12 @@
 class User < ApplicationRecord
   attr_accessor :remember_token
 
+  has_many :sent_friend_requests, class_name: "Friendship", foreign_key: :sender_id
+  has_many :received_friend_requests, class_name: "Friendship", foreign_key: :receiver_id
+
+  has_many :friends, -> { where(status: "accepted") }, through: :sent_friend_requests, source: :receiver
+  has_many :inverse_friends, -> { where(status: "accepted") }, through: :received_friend_requests, source: :sender
+
   has_many :characters
   has_many :roles
   has_many :campaigns, through: :roles

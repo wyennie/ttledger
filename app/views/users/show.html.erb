@@ -1,7 +1,66 @@
-<!-- Main Content -->
-<h2 class="text-5xl font-semibold text-slate-400 mb-4">Characters</h2>
-<ul class="space-y-4 p-4 rounded shadow-md text-3xl">
-  <%= render @characters %>
-</ul>
+<div>
+  <!-- Main Content -->
+  <h2 class="text-5xl font-semibold text-slate-400 mb-4">Characters</h2>
+  <ul class="space-y-4 p-4 rounded shadow-md text-3xl">
+    <%= render @characters %>
+  </ul>
 
-<%#Potentially only display character where User has role of Player in that campaign %>
+  <h2 class="text-5xl font-semibold text-slate-400 mb-4">Users</h2>
+
+  <!-- Container for friends lists -->
+  <div class="flex space-x-8">
+
+  <!-- Friends -->
+    <div class="flex-1">
+      <h2 class="text-3xl font-semibold text-slate-400 mb-4">Friends</h2>
+      <div class="mb-4">
+        <ul class="space-y-2">
+        <% @accepted_friendships.each do |friendship| %>
+          <li>
+            <% if current_user.username == friendship.receiver.username %>
+              <%= friendship.sender.username %> is your friend
+            <% else %>
+              <%= friendship.receiver.username %> is your friend
+            <% end %>
+          </li>
+        <% end %>
+        </ul>
+      </div>
+    </div>
+    <!-- Pending Friend Requests -->
+    <div class="flex-1">
+      <h2 class="text-3xl font-semibold text-slate-400 mb-4">Pending</h2>
+      <div class="mb-4">
+        <ul class="space-y-2">
+        <% @pending_friendships.each do |friendship| %>
+            <li class="flex items-center">
+              <span class="text-2xl font-semibold">
+                <%= friendship.sender.username %>
+              </span>
+
+              <div class="flex flex-col space-y-2">
+                <!--  friendship PATCH  /friendships/:id(.:format)    friendships#update -->
+                <%= form_with(model: friendship, method: :patch) do |f| %>
+                  <input type="hidden" name="_method" value="put">
+                  <input type="hidden" name="friendship[status]" value="accepted">
+                  <%= f.submit "Accept",  class: "w-full py-1 px-3 bg-green-500 text-white font-semibold rounded-lg 
+                                shadow-md hover:bg-green-600 focus:outline-none focus:ring-2 
+                                focus:ring-green-400 focus:ring-opacity-75 text-sm" %>
+                <% end %>
+                <%= form_with(model: friendship, method: :patch) do |f| %>
+                  <input type="hidden" name="_method" value="put">
+                  <input type="hidden" name="friendship[status]" value="denied">
+                  <%= f.submit "Deny",  class: "w-full py-1 px-3 bg-red-500 text-white font-semibold rounded-lg 
+                                shadow-md hover:bg-red-600 focus:outline-none focus:ring-2 
+                                focus:ring-red-400 focus:ring-opacity-75 text-sm" %>
+                <% end %>
+              </div>
+            </li>
+        <% end %>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+
+</div>

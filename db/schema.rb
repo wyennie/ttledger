@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2024_12_16_212054) do
+ActiveRecord::Schema[8.0].define(version: 2024_12_19_221117) do
   create_table "armors", force: :cascade do |t|
     t.integer "ac_bonus"
     t.integer "check_penalty"
@@ -92,6 +92,14 @@ ActiveRecord::Schema[8.0].define(version: 2024_12_16_212054) do
 
   create_table "containers", force: :cascade do |t|
     t.integer "capacity"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "friendships", force: :cascade do |t|
+    t.integer "sender_id"
+    t.integer "receiver_id"
+    t.string "status"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
