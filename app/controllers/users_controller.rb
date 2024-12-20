@@ -1,18 +1,17 @@
 class UsersController < ApplicationController
+  before_action :authenticate_user!, except: [ :new, :create, :confirm_email ]
+  before_action :set_user, only: [ :show, :edit, :update ]
+  before_action :authorize_user!, only: [ :show, :edit, :update ]
+
   def show
-    @user = User.find(params[:id])
-
     # Fetch all Friendships related to the current_user (both sent and received)
-    @friendships = Friendship.where("sender_id = ? OR receiver_id = ?", @user.id, @user.id)
-
-
+    @friendships = Friendship.where("sender_id = ? OR receiver_id = ?", current_user.id, current_user.id)
 
     @user = User.find(params[:id])
     @sent_requests = @user.sent_friend_requests.where(status: 'pending')
     @received_requests = @user.received_friend_requests.where(status: 'pending')
     @campaigns = @user.campaigns
     @characters = @user.characters.includes(:campaign)
-
 
     @pending_friendships = @friendships.where(status: 'pending')
     @accepted_friendships = @friendships.where(status: 'accepted')
@@ -35,13 +34,11 @@ class UsersController < ApplicationController
   end
 
   def edit
-    @user = User.find(params[:id])
     @campaigns = @user.campaigns
   end
 
   def update
-    @user = User.find(params[:id])
-      Rails.logger.info("User found: #{@user.inspect}")
+    @campaigns = @user.campaigns
     if @user.update(user_params)
       flash[:success] = "Profile updated"
       redirect_to @user
@@ -64,9 +61,20 @@ class UsersController < ApplicationController
 
   private
 
+    def set_user
+      @user = User.find(params[:id])
+    end
+
     def user_params
       params.require(:user).permit(:username, :name, :email,
                                    :password, :password_confirmation,
                                    :confirmed_at)
+    end
+
+    def authorize_user!
+      unless current_user == @user
+        flash[:danger] = "You are not authorized to access this page."
+        redirect_to root_url
+      end
     end
 end

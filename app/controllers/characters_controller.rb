@@ -2,6 +2,7 @@ class CharactersController < ApplicationController
   before_action :logged_in?, only: [ :create, :edit, :update, :destroy ]
   before_action :set_campaign
   before_action :set_character, only: [ :edit, :update, :destroy ]
+  before_action :authorize_user!, only: [ :edit, :update, :destroy ]
 
   def create
     @character = @campaign.characters.new(character_params)
@@ -43,33 +44,40 @@ class CharactersController < ApplicationController
 
   private
 
-  def set_campaign
-    @campaign = Campaign.find(params[:campaign_id])
-  end
+    def set_campaign
+      @campaign = Campaign.find(params[:campaign_id])
+    end
 
-  def set_character
-    @character = @campaign.characters.find(params[:id])
-  end
+    def set_character
+      @character = @campaign.characters.find(params[:id])
+    end
 
-  def character_params
-    params.require(:character).permit(
-      :name, :description, :occupation, :title, :character_class,
-      :alignment, :speed, :level, :xp, :ac,
-      character_stat_attributes: [
-        :id,
-        :strength_current,     :strength_max,     :strength_modifier,
-        :agility_current,      :agility_max,      :agility_modifier,
-        :stamina_current,      :stamina_max,      :stamina_modifier,
-        :personality_current,  :personality_max,  :personality_modifier,
-        :intelligence_current, :intelligence_max, :intelligence_modifier,
-        :luck_current,         :luck_max,         :luck_modifier
-      ],
-      character_derived_stat_attributes: [
-        :id,
-        :initiative, :action_dice, :attack_dice, :crit_die, :crit_table,
-        :fumble_die, :fumble_table, :reflex, :fortitude, :willpower,
-        :hp, :max_hp
-      ]
-    )
-  end
+    def character_params
+      params.require(:character).permit(
+        :name, :description, :occupation, :title, :character_class,
+        :alignment, :speed, :level, :xp, :ac,
+        character_stat_attributes: [
+          :id,
+          :strength_current,     :strength_max,     :strength_modifier,
+          :agility_current,      :agility_max,      :agility_modifier,
+          :stamina_current,      :stamina_max,      :stamina_modifier,
+          :personality_current,  :personality_max,  :personality_modifier,
+          :intelligence_current, :intelligence_max, :intelligence_modifier,
+          :luck_current,         :luck_max,         :luck_modifier
+        ],
+        character_derived_stat_attributes: [
+          :id,
+          :initiative, :action_dice, :attack_dice, :crit_die, :crit_table,
+          :fumble_die, :fumble_table, :reflex, :fortitude, :willpower,
+          :hp, :max_hp
+        ]
+      )
+    end
+
+    def authorize_user!
+      unless current_user == @character.user
+        flash[:danger] = "You are not authorized to access this page."
+        redirect_to @campaign
+      end
+    end
 end
