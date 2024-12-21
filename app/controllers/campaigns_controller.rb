@@ -2,7 +2,7 @@ class CampaignsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_user_and_campaigns
   before_action :set_campaign, only: [ :destroy, :update, :edit, :show ]
-  before_action :authorize_user, only: [:show]
+  before_action :authorize_user, only: [ :show ]
 
   def show
   end
@@ -75,7 +75,7 @@ class CampaignsController < ApplicationController
   def authorize_user
     role = @campaign.roles.find_by(user: current_user)
 
-    if role.nil? || !role.role_type.in?(["gamemaster", "player"])
+    if role.nil? || !role.role_type.in?([ "gamemaster", "player" ])
       redirect_to root_path, alert: "You do not have access to this campaign."
     end
   end

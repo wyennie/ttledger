@@ -67,7 +67,7 @@ class User < ApplicationRecord
   end
 
   private
-    
+
     def password_required?
       new_record? || password.present?
     end

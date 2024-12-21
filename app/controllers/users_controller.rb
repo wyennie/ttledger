@@ -7,14 +7,14 @@ class UsersController < ApplicationController
     # Fetch all Friendships related to the current_user (both sent and received)
     @friendships = Friendship.where("sender_id = ? OR receiver_id = ?", current_user.id, current_user.id)
 
-    @sent_requests = @user.sent_friend_requests.where(status: 'pending')
-    @received_requests = @user.received_friend_requests.where(status: 'pending')
+    @sent_requests = @user.sent_friend_requests.where(status: "pending")
+    @received_requests = @user.received_friend_requests.where(status: "pending")
     @campaigns = @user.campaigns
     @characters = @user.characters.includes(:campaign)
 
-    @pending_friendships = @friendships.where(status: 'pending')
-    @accepted_friendships = @friendships.where(status: 'accepted')
-    @denied_friendships = @friendships.where(status: 'denied')
+    @pending_friendships = @friendships.where(status: "pending")
+    @accepted_friendships = @friendships.where(status: "accepted")
+    @denied_friendships = @friendships.where(status: "denied")
   end
 
   def new
