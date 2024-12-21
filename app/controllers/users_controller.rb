@@ -7,7 +7,6 @@ class UsersController < ApplicationController
     # Fetch all Friendships related to the current_user (both sent and received)
     @friendships = Friendship.where("sender_id = ? OR receiver_id = ?", current_user.id, current_user.id)
 
-    @user = User.find(params[:id])
     @sent_requests = @user.sent_friend_requests.where(status: 'pending')
     @received_requests = @user.received_friend_requests.where(status: 'pending')
     @campaigns = @user.campaigns

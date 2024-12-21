@@ -16,11 +16,11 @@
       <div class="mb-4">
         <ul class="space-y-2">
         <% @accepted_friendships.each do |friendship| %>
-          <li>
+          <li class="text-2xl font-semibold">
             <% if current_user.username == friendship.receiver.username %>
-              <%= friendship.sender.username %> is your friend
+              <%= friendship.sender.username %>
             <% else %>
-              <%= friendship.receiver.username %> is your friend
+              <%= friendship.receiver.username %>
             <% end %>
           </li>
         <% end %>
@@ -34,27 +34,33 @@
         <ul class="space-y-2">
         <% @pending_friendships.each do |friendship| %>
             <li class="flex items-center">
-              <span class="text-2xl font-semibold">
-                <%= friendship.sender.username %>
-              </span>
+              <% if current_user == friendship.sender %>
+                <p>
+                  Awaiting for response from <span class="text-2xl font-semibold"><%= friendship.receiver.username %></span>
+                </p>
+              <% else %>
+                <span class="text-2xl font-semibold">
+                  <%= friendship.sender.username %>
+                </span>
 
-              <div class="flex flex-col space-y-2">
-                <!--  friendship PATCH  /friendships/:id(.:format)    friendships#update -->
-                <%= form_with(model: friendship, method: :patch) do |f| %>
-                  <input type="hidden" name="_method" value="put">
-                  <input type="hidden" name="friendship[status]" value="accepted">
-                  <%= f.submit "Accept",  class: "w-full py-1 px-3 bg-green-500 text-white font-semibold rounded-lg 
-                                shadow-md hover:bg-green-600 focus:outline-none focus:ring-2 
-                                focus:ring-green-400 focus:ring-opacity-75 text-sm" %>
-                <% end %>
-                <%= form_with(model: friendship, method: :patch) do |f| %>
-                  <input type="hidden" name="_method" value="put">
-                  <input type="hidden" name="friendship[status]" value="denied">
-                  <%= f.submit "Deny",  class: "w-full py-1 px-3 bg-red-500 text-white font-semibold rounded-lg 
-                                shadow-md hover:bg-red-600 focus:outline-none focus:ring-2 
-                                focus:ring-red-400 focus:ring-opacity-75 text-sm" %>
-                <% end %>
-              </div>
+                <div class="flex flex-col space-y-2">
+                  <!--  friendship PATCH  /friendships/:id(.:format)    friendships#update -->
+                  <%= form_with(model: friendship, method: :patch) do |f| %>
+                    <input type="hidden" name="_method" value="put">
+                    <input type="hidden" name="friendship[status]" value="accepted">
+                    <%= f.submit "Accept",  class: "w-full py-1 px-3 bg-green-500 text-white font-semibold rounded-lg 
+                                  shadow-md hover:bg-green-600 focus:outline-none focus:ring-2 
+                                  focus:ring-green-400 focus:ring-opacity-75 text-sm" %>
+                  <% end %>
+                  <%= form_with(model: friendship, method: :patch) do |f| %>
+                    <input type="hidden" name="_method" value="put">
+                    <input type="hidden" name="friendship[status]" value="denied">
+                    <%= f.submit "Deny",  class: "w-full py-1 px-3 bg-red-500 text-white font-semibold rounded-lg 
+                                  shadow-md hover:bg-red-600 focus:outline-none focus:ring-2 
+                                  focus:ring-red-400 focus:ring-opacity-75 text-sm" %>
+                  <% end %>
+                </div>
+              <% end %>
             </li>
         <% end %>
         </ul>
@@ -63,4 +69,14 @@
 
   </div>
 
-</div>
+  <%= form_with url: friendships_path, method: :post, local: true do |form| %>
+    <div class="mb-4">
+      <%= form.label :username, "Enter a username to send a friend request", class: "block text-lg font-medium text-slate-300" %>
+      <%= form.text_field :username,  class: "mt-1 block w-full p-2 border bg-slate-500 
+      text-slate-300 border-slate-600 rounded-lg focus:ring-slate-300 focus:border-slate-300" %>
+    </div>
+    <%= form.submit "Send Friend Request", class: "w-full py-2 px-4 bg-slate-700 text-slate-100 font-semibold
+      rounded-lg shadow-md hover:bg-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-opacity-75" %>
+  <% end %>
+
+
