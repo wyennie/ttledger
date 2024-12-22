@@ -12,6 +12,10 @@ Rails.application.routes.draw do
     resources :characters, only: [ :create, :edit, :update, :destroy ] do
       resources :items, only: [ :create, :edit, :update, :destroy ]
     end
+    member do
+      post :invite_user
+      post :accept_invitation
+    end
   end
 
   get "up" => "rails/health#show", as: :rails_health_check

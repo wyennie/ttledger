@@ -4,11 +4,47 @@
               class: "py-2 px-4 bg-slate-700 text-slate-100 font-semibold
                       rounded-lg shadow-md hover:bg-slate-800 focus:outline-none 
                       focus:ring-2 focus:ring-slate-400 focus:ring-opacity-75" %>
-  <p class="space-y-4 text-xl mt-1 ml-auto">
-    <strong>Game master:</strong> 
-    <%= @campaign.roles.find_by(role_type: "gamemaster").user.username %>
-  </p>
+  <div class="space-y-4 mt-1 ml-auto">
+    <div>
+      <p class="space-y-4 text-xl mt-1 ml-auto">
+        <strong>Game master:</strong> 
+        <%= @campaign.roles.find_by(role_type: "gamemaster").user.username %>
+      </p>
+    </div>
+    <div>
+      <!-- Players -->
+      <h3 class="text-xl"><strong>Players:</strong></h3>
+      <ul>
+        <% @players.each do |player| %>
+          <li><%= player.username %></li>
+        <% end %>
+      </ul>
+    </div>
+  </div>
 </div>
+
+
+<!-- Invite User to Campaign -->
+<% if @campaign.roles.exists?(user: current_user, role_type: :gamemaster) %>
+  <h3 class="text-xl font-semibold">Invite a User</h3>
+  <%= form_with url: invite_user_campaign_path(@campaign), method: :post do |f| %>
+    <div class="flex flex-col space-y-4">
+      <div class="flex items-center space-x-4">
+        <div class="flex-1">
+          <%= text_field_tag :username, nil, placeholder: "Enter user's username", 
+            class: "w-full p-2 border bg-slate-500 text-slate-300 border-slate-600 rounded-lg 
+                    focus:ring-slate-300 focus:border-slate-300" %>
+        </div>
+        <%= submit_tag "Send Invitation", class: "p-2 bg-slate-700 text-slate-100 font-semibold 
+                                                  rounded-lg shadow-md hover:bg-slate-400 focus:outline-none 
+                                                  focus:ring-2 focus:ring-slate-400 focus:ring-opacity-75" %>
+      </div>
+    </div>
+  <% end %>
+<% end %>
+
+
+<!-- Characters -->
 <div class="space-y-4 p-6">
   <h2 class="text-2xl">Description</h2>
   <p class="space-y-2 mt-4">

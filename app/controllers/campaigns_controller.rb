@@ -1,10 +1,39 @@
 class CampaignsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_user_and_campaigns
-  before_action :set_campaign, only: [ :destroy, :update, :edit, :show ]
+  before_action :set_campaign, only: [ :invite_user, :accept_invitation, :destroy, :update, :edit, :show ]
   before_action :authorize_user, only: [ :show ]
+  before_action :authorize_gamemaster, only: [ :invite_user ]
+
+  def invite_user
+    user = User.find_by(username: params[:username])
+    if user
+      invitation = @campaign.campaign_invitations.create(sender: current_user, receiver: user)
+      if invitation.persisted?
+        flash[:success] = "Invitation sent to #{user.username}."
+      else
+        flash[:danger] = invitation.errors.full_messages.to_sentence
+      end
+    else
+      flash[:danger] = "User not found"
+    end
+    redirect_to @campaign
+  end
+
+  def accept_invitation
+    invitation = CampaignInvitation.find_by(id: params[:invitation_id], receiver: current_user, status: "pending")
+    if invitation
+      Role.create(user: current_user, campaign: @campaign, role_type: :player)
+      invitation.update(status: :accepted)
+      flash[:success] = "You have joined the campaign as a player!"
+    else
+      flash[:danger] = "Invalid or expired invitaion."
+    end
+    redirect_to @campaign
+  end
 
   def show
+    @players = @campaign.users.joins(:roles).where(roles: { role_type: "player" }).distinct
   end
 
   def authenticate_user!
@@ -50,6 +79,13 @@ class CampaignsController < ApplicationController
   end
 
   private
+
+    def authorize_gamemaster
+      unless @campaign.roles.exists?(user: current_user, role_type: :gamemaster)
+        flash[:danger] = "Only the gamemaster can invite users."
+        redirect_to root_path
+      end
+    end
 
     def campaign_params
       params.require(:campaign).permit(:name, :description)

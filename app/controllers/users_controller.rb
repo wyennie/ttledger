@@ -4,9 +4,8 @@ class UsersController < ApplicationController
   before_action :authorize_user!, only: [ :show, :edit, :update ]
 
   def show
-    # Fetch all Friendships related to the current_user (both sent and received)
     @friendships = Friendship.where("sender_id = ? OR receiver_id = ?", current_user.id, current_user.id)
-
+    @invitations = current_user.received_campaign_invitations.pending.includes(:campaign)
     @sent_requests = @user.sent_friend_requests.where(status: "pending")
     @received_requests = @user.received_friend_requests.where(status: "pending")
     @campaigns = @user.campaigns

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2024_12_19_221117) do
+ActiveRecord::Schema[8.0].define(version: 2024_12_22_034036) do
   create_table "armors", force: :cascade do |t|
     t.integer "ac_bonus"
     t.integer "check_penalty"
@@ -18,6 +18,18 @@ ActiveRecord::Schema[8.0].define(version: 2024_12_19_221117) do
     t.string "fumble_die"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "campaign_invitations", force: :cascade do |t|
+    t.integer "campaign_id", null: false
+    t.integer "sender_id", null: false
+    t.integer "receiver_id", null: false
+    t.integer "status", default: 0
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["campaign_id"], name: "index_campaign_invitations_on_campaign_id"
+    t.index ["receiver_id"], name: "index_campaign_invitations_on_receiver_id"
+    t.index ["sender_id"], name: "index_campaign_invitations_on_sender_id"
   end
 
   create_table "campaigns", force: :cascade do |t|
@@ -158,6 +170,9 @@ ActiveRecord::Schema[8.0].define(version: 2024_12_19_221117) do
     t.datetime "updated_at", null: false
   end
 
+  add_foreign_key "campaign_invitations", "campaigns"
+  add_foreign_key "campaign_invitations", "users", column: "receiver_id"
+  add_foreign_key "campaign_invitations", "users", column: "sender_id"
   add_foreign_key "character_derived_stats", "characters"
   add_foreign_key "character_stats", "characters"
   add_foreign_key "characters", "campaigns"
