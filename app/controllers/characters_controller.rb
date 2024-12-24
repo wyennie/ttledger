@@ -21,8 +21,6 @@ class CharactersController < ApplicationController
     @character = @campaign.characters.find(params[:id])
     @user = current_user
     @campaigns = current_user.campaigns
-    @character.build_character_derived_stat unless @character.character_derived_stat
-    @character.build_character_stat unless @character.character_stat
   end
 
   def update
@@ -54,23 +52,14 @@ class CharactersController < ApplicationController
 
     def character_params
       params.require(:character).permit(
-        :name, :description, :occupation, :title, :character_class,
-        :alignment, :speed, :level, :xp, :ac,
-        character_stat_attributes: [
-          :id,
-          :strength_current,     :strength_max,     :strength_modifier,
-          :agility_current,      :agility_max,      :agility_modifier,
-          :stamina_current,      :stamina_max,      :stamina_modifier,
-          :personality_current,  :personality_max,  :personality_modifier,
-          :intelligence_current, :intelligence_max, :intelligence_modifier,
-          :luck_current,         :luck_max,         :luck_modifier
-        ],
-        character_derived_stat_attributes: [
-          :id,
-          :initiative, :action_dice, :attack_dice, :crit_die, :crit_table,
-          :fumble_die, :fumble_table, :reflex, :fortitude, :willpower,
-          :hp, :max_hp
-        ]
+        :name, :description, :occupation, :title, :character_class, :alignment,
+        :speed, :level, :xp, :ac, :background, :notes, :short_term_goals,
+        :medium_term_goals, :long_term_goals, :languages, :lucky_sign, :initiative,
+        :action_dice, :attack_bonus, :crit_die, :crit_table, :fumble_die, :reflex,
+        :fortitude, :willpower, :current_hp, :max_hp, :current_strength, :max_strength,
+        :current_agility, :max_agility, :current_stamina, :max_stamina,
+        :current_personality, :max_personality, :current_intelligence,
+        :max_intelligence, :current_luck, :max_luck
       )
     end
 

@@ -1,15 +1,16 @@
 <h1 class="text-4xl font-bold text-center text-slate-300 mb-2">Character Sheet: <br><%= @character.name %></h1>
+<% input_classes = "mt-1 block w-full p-2 border bg-slate-500 text-slate-300
+  border-slate-600 rounded-lg focus:ring-slate-300 focus:border-slate-300" %>
+<% regular_button = "bg-slate-700 text-slate-100 font-semibold
+    rounded-lg shadow-md hover:bg-slate-400 focus:outline-none focus:ring-2 
+    focus:ring-slate-400 focus:ring-opacity-75" %>
 <div>
   <%= render "shared/error_messages", object: @character %>  
   <div class="flex justigy-start  mb-4">
     <%= link_to "#{@campaign.name}", campaign_path(@campaign.id), 
-    class: "w-full py-2 px-4 bg-slate-700 text-slate-100 font-semibold 
-    rounded-lg shadow-md hover:bg-slate-400 focus:outline-none focus:ring-2 
-    focus:ring-slate-400 focus:ring-opacity-75" %>
+    class: "w-full py-2 px-4 " + regular_button %> 
   </div>
   <div class="sheet-wrapper max-w-4xl mx-auto p-6 bg-slate-800 rounded-lg shadow-lg space-y-6">
-    <% input_classes = "mt-1 block w-full p-2 border bg-slate-500 text-slate-300
-      border-slate-600 rounded-lg focus:ring-slate-300 focus:border-slate-300" %>
 
     <%= form_with model: [@campaign, @character], 
       local: false, remote: true,
@@ -74,21 +75,19 @@
       <br>
       <!-- Fourth Row: hp/max_hp, ac -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-
+ 
         <!-- HP / Max HP -->
         <div class="space-y-2">
-          <%= f.fields_for :character_derived_stat do |cds| %>
-            <%= cds.label :hp, "Hit Points", class: "text-2xl py-3" %>
-            <div class="flex items-center justify-center">
-              <%= cds.number_field :hp, value: @character.character_derived_stat.hp || 1,
-                  class: "input-number w-1/2 text-center text-2xl py-3 " + input_classes, 
-                  data: { action: "input->form#submitField" } %>
-              <span class="mx-4 text-2xl">/</span>
-              <%= cds.number_field :max_hp, value: @character.character_derived_stat.max_hp || 1,
-                  class: "input-number w-1/2 text-center text-2xl py-3 " + input_classes, 
-                  data: { action: "input->form#submitField" } %>
-            </div>
-          <% end %>
+          <%= f.label :current_hp, "Hit Points", class: "text-2xl py-3" %>
+          <div class="flex items-center justify-center">
+            <%= f.number_field :current_hp, value: @character.current_hp || 0,
+                class: "input-number w-1/2 text-center text-2xl py-3 " + input_classes, 
+                data: { action: "input->form#submitField" } %>
+            <span class="mx-4 text-2xl">/</span>
+            <%= f.number_field :max_hp, value: @character.max_hp || 1,
+                class: "input-number w-1/2 text-center text-2xl py-3 " + input_classes, 
+                data: { action: "input->form#submitField" } %>
+          </div>
         </div>
 
         <!-- AC -->
@@ -109,27 +108,25 @@
         <div class="space-y-4 bg-slate-700 p-3 rounded-lg shadow-lg">
           <h2 class="block text-center text-3xl font-bold mb-4 p-2">ABILITY SCORES</h2>
           <% [:strength, :agility, :stamina, :personality, :intelligence, :luck].each do |stat| %>
-            <%= f.fields_for :character_stat do |cs| %>
-              <div class="flex items-center p-1">
-                <!-- Label -->
-                <%= cs.label "#{stat}_current", stat.to_s.capitalize, 
-                  class: "mr-2 w-3/5 font-bold text-left text-xl" %>
+            <div class="flex items-center p-1">
+              <!-- Label -->
+              <%= f.label "current_#{stat}", stat.to_s.capitalize, 
+                class: "mr-2 w-3/5 font-bold text-left text-xl" %>
 
-                <!-- Input Fields -->
-                <div class="flex items-center w-full">
-                  <%= cs.number_field "#{stat}_current", value: @character.character_stat.send("#{stat}_current") || 0,
-                    class: "input-number w-2/5 text-center " + input_classes,
-                    data: { action: "input->form#submitField" } %>
-                  <span class="mx-3 text-xl">/</span>
-                  <%= cs.number_field "#{stat}_max", value: @character.character_stat.send("#{stat}_max") || 0,
-                    class: "input-number w-2/5 text-center " + input_classes,
-                    data: { action: "input->form#submitField" } %>
-                  <div class="mx-3 text-3xl ml-auto"> 
-                    <%= Character.mod(@character.character_stat.send("#{stat}_current")) %>
-                  </div>
+              <!-- Input Fields -->
+              <div class="flex items-center w-full">
+                <%= f.number_field "current_#{stat}", value: @character.send("current_#{stat}") || 0,
+                  class: "input-number w-2/5 text-center " + input_classes,
+                  data: { action: "input->form#submitField" } %>
+                <span class="mx-3 text-xl">/</span>
+                <%= f.number_field "max_#{stat}", value: @character.send("max_#{stat}") || 0,
+                  class: "input-number w-2/5 text-center " + input_classes,
+                  data: { action: "input->form#submitField" } %>
+                <div class="mx-3 text-3xl ml-auto"> 
+                  <%= Character.mod(@character.send("current_#{stat}")) %>
                 </div>
               </div>
-            <% end %>
+            </div>
           <% end %>
         </div>
 
@@ -140,47 +137,37 @@
           <div class="grid grid-cols-3 gap-4">
             <div>
               <label class="block text-center text-2xl font-bold">Action</label>
-              <%= f.fields_for :character_derived_stat do |cds| %>
-                <%= cds.text_field :action_dice, value: @character.character_derived_stat.action_dice || "d20",
-                  class: "input-text w-full text-center " + input_classes,
-                  data: { action: "input->form#submitField" } %>
-              <% end %>
-            </div>
-            <div>
-              <label class="block text-center text-2xl font-bold">Crit</label>
-              <%= f.fields_for :character_derived_stat do |cds| %>
-                <%= cds.text_field :crit_die, value: @character.character_derived_stat.crit_die || "d10",
-                  class: "input-text w-full text-center " + input_classes,
-                  data: { action: "input->form#submitField" } %>
-              <% end %>
+              <%= f.text_field :action_dice, value: @character.action_dice || "d20",
+                class: "input-text w-full text-center " + input_classes,
+                data: { action: "input->form#submitField" } %>
             </div>
             <div>
               <label class="block text-center text-2xl font-bold">Fumble</label>
-              <%= f.fields_for :character_derived_stat do |cds| %>
-                <%= cds.text_field :fumble_die, value: @character.character_derived_stat.fumble_die || "d10",
-                  class: "input-text w-full text-center " + input_classes,
-                  data: { action: "input->form#submitField" } %>
-              <% end %>
+              <%= f.text_field :fumble_die, value: @character.fumble_die || "d4",
+                class: "input-text w-full text-center " + input_classes,
+                data: { action: "input->form#submitField" } %>
+            </div>
+            <div>
+              <label class="block text-center text-2xl font-bold">Crit</label>
+              <%= f.text_field :crit_die, value: @character.crit_die || "d4",
+                class: "input-text w-full text-center " + input_classes,
+                data: { action: "input->form#submitField" } %>
             </div>
           </div>
           
           <div class="grid grid-cols-3 gap-4">
             <div>
-              <label class="block text-center text-xl font-bold">Tables:</label>
+              <label class="block text-center text-xl font-bold">Atk Bns:</label>
             </div>
             <div>
-              <%= f.fields_for :character_derived_stat do |cds| %>
-                <%= cds.text_field :crit_table, value: @character.character_derived_stat.crit_table || "d10",
-                  class: "input-text w-full text-center " + input_classes,
-                  data: { action: "input->form#submitField" } %>
-              <% end %>
+              <%= f.text_field :attack_bonus, value: @character.attack_bonus || 0,
+                class: "input-text w-full text-center " + input_classes,
+                data: { action: "input->form#submitField" } %>
             </div>
             <div>
-              <%= f.fields_for :character_derived_stat do |cds| %>
-                <%= cds.text_field :fumble_table, value: @character.character_derived_stat.fumble_table || "d10",
-                  class: "input-text w-full text-center " + input_classes,
-                  data: { action: "input->form#submitField" } %>
-              <% end %>
+              <%= f.text_field :crit_table, value: @character.crit_table || "Table I",
+                class: "input-text w-full text-center " + input_classes,
+                data: { action: "input->form#submitField" } %>
             </div>
           </div>
         </div>
@@ -193,29 +180,23 @@
             <!-- Reflex -->
             <div class="flex justify-start items-center h-20 bg-slate-300 rounded-lg p-3">
               <span class="text-3xl font-bold w-1/2">Reflex</span>
-              <%= f.fields_for :character_derived_stat do |cds| %>
-                <% cds.number_field :reflex, value: @character.character_derived_stat.reflex || 0,
-                  class: "input-number w-1/3 ml-auto text-center " + input_classes,
-                data: { action: "input->form#submitField" } %>
-              <% end %>
+              <%= f.number_field :reflex, value: @character.reflex || 0,
+                class: "input-number w-1/3 ml-auto text-center " + input_classes,
+              data: { action: "input->form#submitField" } %>
             </div>
             <!-- Fortitude -->
             <div class="flex justify-start items-center h-20 bg-slate-300 rounded-lg p-3">
               <span class="text-3xl font-bold w-1/2">Fortitude</span>
-              <%= f.fields_for :character_derived_stat do |cds| %>
-                <% cds.number_field :fortitude, value: @character.character_derived_stat.fortitude || 0,
-                class: "input-number w-1/3 ml-auto text-center " + input_classes,
-                data: { action: "input->form#submitField" } %>
-              <% end %>
+              <%= f.number_field :fortitude, value: @character.fortitude || 0,
+              class: "input-number w-1/3 ml-auto text-center " + input_classes,
+              data: { action: "input->form#submitField" } %>
             </div>
             <!-- Willpower -->
             <div class="flex justify-start items-center h-20 bg-slate-300 rounded-lg p-3">
               <span class="text-3xl font-bold w-1/2">Willpower</span>
-              <%= f.fields_for :character_derived_stat do |cds| %>
-                <% cds.number_field :willpower, value: @character.character_derived_stat.willpower || 0,
-                class: "input-number w-1/3 ml-auto text-center " + input_classes,
-                data: { action: "input->form#submitField" } %>
-              <% end %>
+              <%= f.number_field :willpower, value: @character.willpower || 0,
+              class: "input-number w-1/3 ml-auto text-center " + input_classes,
+              data: { action: "input->form#submitField" } %>
             </div>
           </div>
         </div> 
