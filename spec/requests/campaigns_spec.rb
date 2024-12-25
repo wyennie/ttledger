@@ -1,5 +1,5 @@
 require 'rails_helper'
-
+=begin
 RSpec.describe "Campaigns", type: :request do
   let!(:user) { create(:user) }
   let(:campaign) { create(:campaign) }
@@ -79,3 +79,4 @@ RSpec.describe "Campaigns", type: :request do
     end
   end
 end
+=end

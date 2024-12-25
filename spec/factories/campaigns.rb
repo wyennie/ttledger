@@ -1,14 +1,12 @@
 FactoryBot.define do
   factory :campaign do
-    name        { Faker::Book.title }
-    description { Faker::Lorem.paragraph }
+    name { "Test Campaign" }
+    description { "This is a test campaign description." }
 
-    trait :without_description do
-      description { nil }
-    end
-
+    # Associations
     after(:create) do |campaign|
-      create(:role, campaign: campaign, role_type: :gamemaster)
+      # Optionally, associate users with the campaign
+      create(:user, campaigns: [campaign]) # Creates a user and associates them with the campaign
     end
   end
 end

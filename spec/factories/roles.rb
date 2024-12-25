@@ -1,7 +1,10 @@
 FactoryBot.define do
   factory :role do
-    association :user
-    association :campaign
-    role_type   { :gamemaster }
+    user
+    campaign
+    role_type { :player }  # Default role type is 'player'
+
+    # You can optionally set the role type as 'gamemaster' using the following:
+    # role_type { :gamemaster }
   end
 end
