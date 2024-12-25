@@ -11,12 +11,12 @@ FactoryBot.define do
     confirmed_at { nil }
     confirmation_token { SecureRandom.urlsafe_base64 }
     remember_digest { nil }
-    
+
     trait :with_remember_token do
       remember_token { "some_fake_token" }
       remember_digest { "some_fake_digest_value" }
     end
-    
+
     # Associations
     # Optional associations (you can specify `campaigns`, `characters`, etc. if needed)
     after(:create) do |user|

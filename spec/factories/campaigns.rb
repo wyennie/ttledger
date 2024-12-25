@@ -6,7 +6,7 @@ FactoryBot.define do
     # Associations
     after(:create) do |campaign|
       # Optionally, associate users with the campaign
-      create(:user, campaigns: [campaign]) # Creates a user and associates them with the campaign
+      create(:user, campaigns: [ campaign ]) # Creates a user and associates them with the campaign
     end
   end
 end

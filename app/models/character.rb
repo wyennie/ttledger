@@ -34,6 +34,6 @@ class Character < ApplicationRecord
       6.times do
         result = roller.roll_multiple_dice(3, 6)
         rolls << result[:total]
-      end 
+      end
     end
 end

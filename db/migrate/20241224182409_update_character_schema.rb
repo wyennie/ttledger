@@ -19,18 +19,18 @@ class UpdateCharacterSchema < ActiveRecord::Migration[8.0]
       t.integer :willpower, default: 0
       t.integer :current_hp, default: 0, null: false
       t.integer :max_hp, default: 0, null: false
-      t.integer :current_strength , default: 10, null: false
-      t.integer :max_strength , default: 10, null: false
-      t.integer :current_agility , default: 10, null: false
-      t.integer :max_agility , default: 10, null: false
-      t.integer :current_stamina , default: 10, null: false
-      t.integer :max_stamina , default: 10, null: false
-      t.integer :current_personality , default: 10, null: false
-      t.integer :max_personality , default: 10, null: false
-      t.integer :current_intelligence , default: 10, null: false
-      t.integer :max_intelligence , default: 10, null: false
-      t.integer :current_luck , default: 10, null: false
-      t.integer :max_luck , default: 10, null: false
+      t.integer :current_strength, default: 10, null: false
+      t.integer :max_strength, default: 10, null: false
+      t.integer :current_agility, default: 10, null: false
+      t.integer :max_agility, default: 10, null: false
+      t.integer :current_stamina, default: 10, null: false
+      t.integer :max_stamina, default: 10, null: false
+      t.integer :current_personality, default: 10, null: false
+      t.integer :max_personality, default: 10, null: false
+      t.integer :current_intelligence, default: 10, null: false
+      t.integer :max_intelligence, default: 10, null: false
+      t.integer :current_luck, default: 10, null: false
+      t.integer :max_luck, default: 10, null: false
     end
 
     drop_table :character_derived_stats do |t|

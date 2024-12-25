@@ -24,7 +24,7 @@ RSpec.describe User, type: :model do
     end
   end
 
-  # Authenticated? 
+  # Authenticated?
   describe '#authenticated?' do
     let!(:user) { create(:user, :with_remember_token) }
 
@@ -39,7 +39,6 @@ RSpec.describe User, type: :model do
     end
 
     context 'when remember_digest is present' do
-
       it 'returns true if the token is valid' do
         allow(BCrypt::Password).to receive(:new).with(user.remember_digest).and_return(double(is_password?: true))
         expect(user.authenticated?(user.remember_token)).to be true
