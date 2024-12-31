@@ -5,7 +5,6 @@
     <!-- Render chat messages here -->
     <div id="chat-messages">
       <!-- Example chat message -->
-      <div class="text-slate-300 mb-2">GM: How are the players progressing?</div>
     </div>
   </div>
 
@@ -13,9 +12,9 @@
 <%= form_with url: create_chat_message_campaign_path(@campaign), method: :post, local: false, 
       data: { turbo_frame: "chat", controller: "chat", action: "submit->chat#clearInput" } do |f| %>
   <div class="flex space-x-2 mt-4">
-    <%= text_area_tag :chat_message, nil, id: "chat-message-input", placeholder: "Type your message...", 
+    <%= text_area_tag :chat_message, nil, id: "chat-message-input", placeholder: "Type your message...", "data-chat-target": "chatMessage",
         class: "w-full p-2 bg-slate-700 text-slate-100 border-slate-600 rounded-lg focus:ring-slate-300 focus:border-slate-300", 
-        rows: 3, "data-chat-target": "chatMessage" %>
+        rows: 3 %>
     <%= submit_tag "Send", class: "p-2 bg-slate-500 text-slate-100 font-semibold rounded-lg" %>
   </div>
 <% end %>

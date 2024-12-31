@@ -195,6 +195,7 @@ GEM
     parser (3.3.6.0)
       ast (~> 2.4.1)
       racc
+    pg (1.5.9)
     postmark (1.25.1)
       json
     postmark-rails (0.22.1)
@@ -392,6 +393,7 @@ DEPENDENCIES
   importmap-rails
   jbuilder
   kamal
+  pg
   postmark-rails
   propshaft
   puma (>= 5.0)
