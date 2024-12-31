@@ -1,9 +1,31 @@
 class CampaignsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_user_and_campaigns
-  before_action :set_campaign, only: [ :invite_user, :accept_invitation, :destroy, :update, :edit, :show ]
+  before_action :set_campaign, only: [ :invite_user, :accept_invitation, :destroy, :update, :edit, :show, :manage]
   before_action :authorize_user, only: [ :show ]
-  before_action :authorize_gamemaster, only: [ :invite_user ]
+  before_action :authorize_gamemaster, only: [ :invite_user, :edit, :update ]
+
+  def manage
+    @chat_message = []
+  end
+
+  def create_chat_message
+    message = params[:chat_message]
+
+    # Call the ChatService to send the message
+    chat_service = ChatService.new(message: message)
+    response = chat_service.call
+
+    # Logic to save the message to a campaign, if necessary
+    # Example: @campaign.messages.create(content: message, user: current_user)
+
+    # Turbo Stream to append the new message
+    respond_to do |format|
+      format.turbo_stream do
+        render turbo_stream: turbo_stream.append("chat-messages", partial: "campaigns/chat_message", locals: { message: response })
+      end
+    end
+  end
 
   def invite_user
     user = User.find_by(username: params[:username])

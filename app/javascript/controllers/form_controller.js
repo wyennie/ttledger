@@ -3,6 +3,7 @@ import { Controller } from "@hotwired/stimulus";
 export default class extends Controller {
   submitField(event) {
     const form = event.target.closest("form");
+    console.log('hello from form-controller')
     const formData = new FormData(form);
 
     fetch(form.action, {

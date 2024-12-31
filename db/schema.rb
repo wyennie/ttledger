@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2024_12_24_182409) do
+ActiveRecord::Schema[8.0].define(version: 2024_12_30_011400) do
   create_table "armors", force: :cascade do |t|
     t.integer "ac_bonus"
     t.integer "check_penalty"

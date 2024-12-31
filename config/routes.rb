@@ -15,6 +15,8 @@ Rails.application.routes.draw do
     member do
       post :invite_user
       post :accept_invitation
+      post :create_chat_message
+      get  :manage
     end
   end
 

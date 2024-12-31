@@ -29,6 +29,6 @@ local:
 #   container: your_container_name-<%= Rails.env %>
 
 # mirror:
-#   service: Mirror
+  #   service: Mirror
 #   primary: local
 #   mirrors: [ amazon, google, microsoft ]

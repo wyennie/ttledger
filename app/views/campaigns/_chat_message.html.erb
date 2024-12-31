@@ -1,0 +1,14 @@
+<div class="text-slate-300 space-y-4">
+  <!-- User Bubble -->
+  <div class="flex justify-start">
+    <div class="bg-slate-700 text-white p-4 rounded-2xl max-w-lg">
+      <strong><%= current_user.username %>:</strong> <%= message[:user_message] %>
+    </div>
+  </div>
+  <!-- Bot Bubble -->
+  <div class="flex justify-end">
+    <div class="bg-slate-600 text-white p-4 rounded-2xl max-w-lg">
+      <strong>Bot:</strong> <%= message[:bot_message] %>
+    </div>
+  </div>
+</div>
