@@ -16,10 +16,10 @@ class ChatService
       parameters: {
         model: "gpt-3.5-turbo",
         messages: messages,
-        temperature: 0.7,
+        temperature: 0.7
       }
     )
-   # Extract the response content from the API response
+    # Extract the response content from the API response
     bot_message = response.dig("choices", 0, "message", "content")
 
     # Return the user message and bot message together
@@ -32,7 +32,7 @@ class ChatService
     def training_prompts
       [
         "Do you know what tabletop roleplaying games are?",
-        "Can assist the game master in thinking of ideas on the fly?",
+        "Can assist the game master in thinking of ideas on the fly?"
       ]
     end
 

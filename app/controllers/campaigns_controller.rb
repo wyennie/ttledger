@@ -1,7 +1,7 @@
 class CampaignsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_user_and_campaigns
-  before_action :set_campaign, only: [ :invite_user, :accept_invitation, :destroy, :update, :edit, :show, :manage]
+  before_action :set_campaign, only: [ :invite_user, :accept_invitation, :destroy, :update, :edit, :show, :manage ]
   before_action :authorize_user, only: [ :show ]
   before_action :authorize_gamemaster, only: [ :invite_user, :edit, :update ]
 
