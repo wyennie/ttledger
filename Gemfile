@@ -3,7 +3,7 @@ source "https://rubygems.org"
 gem "rails", "~> 8.0.0"
 gem "tailwindcss-rails"
 gem "propshaft"
-gem 'pg', '~> 1.5', '>= 1.5.9'
+gem 'pg', ">= 1.5.9"
 gem "sqlite3", ">= 2.1"
 gem "puma", ">= 5.0"
 gem "importmap-rails"
