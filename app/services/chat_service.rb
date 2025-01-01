@@ -14,7 +14,7 @@ class ChatService
 
     response = client.chat(
       parameters: {
-        model: "gpt-3.5-turbo",
+        model: "gpt-4o-mini-2024-07-18",
         messages: messages,
         temperature: 0.7
       }
