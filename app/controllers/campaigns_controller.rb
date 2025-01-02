@@ -128,13 +128,13 @@ class CampaignsController < ApplicationController
       else
         redirect_to login_path, alert: "Please log in" # Or any other logic to handle unauthenticated users
       end
-   end
-
-  def authorize_user
-    role = @campaign.roles.find_by(user: current_user)
-
-    if role.nil? || !role.role_type.in?([ "gamemaster", "player" ])
-      redirect_to root_path, alert: "You do not have access to this campaign."
     end
-  end
+
+    def authorize_user
+      role = @campaign.roles.find_by(user: current_user)
+
+      if role.nil? || !role.role_type.in?([ "gamemaster", "player" ])
+        redirect_to root_path, alert: "You do not have access to this campaign."
+      end
+    end
 end

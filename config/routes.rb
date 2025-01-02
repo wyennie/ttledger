@@ -9,6 +9,7 @@ Rails.application.routes.draw do
   resources :users
   resources :friendships, only: [ :create, :update ]
   resources :campaigns do
+    resources :pages
     resources :characters, only: [ :create, :edit, :update, :destroy ] do
       resources :items, only: [ :create, :edit, :update, :destroy ]
     end

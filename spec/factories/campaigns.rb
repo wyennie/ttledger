@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :campaign do
-    name { "Test Campaign" }
+    name { Faker::Company.name }
     description { "This is a test campaign description." }
 
     # Associations

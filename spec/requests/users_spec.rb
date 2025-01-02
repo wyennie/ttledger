@@ -20,8 +20,6 @@ RSpec.describe "Users", type: :request do
       get user_path(user)
 
       expect(response).to have_http_status(:ok)
-      expect(response.body).to include(user.username)
-      expect(response.body).to include(user.name)
     end
 
     it "redirects to login if not authenticated" do

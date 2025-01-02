@@ -20,6 +20,7 @@ gem "kamal", require: false
 gem "thruster", require: false
 gem "postmark-rails"
 gem "ruby-openai", "~> 7.3"
+gem "acts_as_list", "~> 1.2"
 
 group :development, :test do
   gem "rspec"
@@ -36,3 +37,4 @@ end
 group :development do
   gem "web-console"
 end
+
