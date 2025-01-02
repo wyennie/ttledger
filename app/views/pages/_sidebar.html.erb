@@ -1,0 +1,56 @@
+<div id="nav-sidebar" class="hidden md:block w-full bg-rose-100 text-sm font-semibold text-slate-700">
+  <div class="sticky inset-y-0 left-0">
+    <div class="flex h-screen flex-col items-start">
+      <div class="flex w-full flex-col items-start">
+        <button class="top group !justify-between !py-2">
+          <div class="flex items-center justify-start space-x-2">
+            <div class="shrink-0"><img class="inline-block h-6 w-6 rounded-md" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="Picture of me" /></div>
+            <div class="shrink-1 flex flex-col items-start">
+              <span class="truncate text-sm text-slate-900">Dr Nic's Notes</span>
+              <span class="truncate text-xs text-rose-500">drnic@mocra.com</span>
+            </div>
+          </div>
+          <div>
+            <svg class="h-3 w-3 text-rose-500" fill="currentColor" viewBox="-1 -1 9 11" xmlns="http://www.w3.org/2000/svg">
+              <path d="m3.5 0 .488-.57L3.5-.987l-.488.419L3.5 0Zm0 9-.488.57.488.418.488-.419L3.5 9ZM.488 3.57l3.5-3-.976-1.14-3.5 3 .976 1.14Zm2.524-3 3.5 3 .976-1.14-3.5-3L3.012.57Zm-3.5 6 3.5 3 .976-1.14-3.5-3-.976 1.14Zm4.476 3 3.5-3-.976-1.14-3.5 3 .976 1.14Z" />
+            </svg>
+          </div>
+        </button>
+        <button class="top">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
+          </svg>
+          <span>Quick Find</span>
+        </button>
+        <button class="top">
+          <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <span>All Updates</span>
+        </button>
+        <button class="top">
+          <svg class="h-4 w-4" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
+            <path fill="none" d="M0 0h16v16H0z"/>
+            <path d="M16 9V7l-2.259-.753a6.01 6.01 0 0 0-.441-1.066l1.066-2.131-1.416-1.416L10.819 2.7a6.324 6.324 0 0 0-1.066-.441L9 0H7l-.753 2.259a6.085 6.085 0 0 0-1.066.441L3.05 1.638 1.638 3.05l1.066 2.131a6.024 6.024 0 0 0-.445 1.066L0 7v2l2.259.753c.112.372.263.728.441 1.066L1.634 12.95l1.416 1.416L5.181 13.3c.338.178.694.328 1.066.441L7 16h2l.753-2.259a6.01 6.01 0 0 0 1.066-.441l2.131 1.066 1.416-1.416-1.066-2.131c.178-.337.328-.694.441-1.066L16 9zm-8 2a3.001 3.001 0 0 1 0-6 3.001 3.001 0 0 1 0 6z"/>
+          </svg>
+          <span>Settings & Members</span>
+        </button>
+      </div>
+      <div class="w-full grow overflow-y-scroll pt-3">
+        <div class="flex flex-col items-start">
+          <% @top_pages.each do |page| %>
+            <%= render "sidebar_top_level_page", page: page %>
+          <% end %>
+        </div>
+      </div>
+      <div class="flex w-full flex-col items-start border-t border-rose-300">
+        <button class="top !py-4">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+          </svg>
+          <span>New Page</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

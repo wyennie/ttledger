@@ -1,0 +1,20 @@
+<nav class="p-1 shadow-md bg-gray-300">
+  <div class="container mx-auto flex justify-between items-center">
+    <div class="flex space-x-2">
+      <% if logged_in? %>
+        <%= link_to "Home", current_user, class: "hover:underline" %>
+        <%= link_to "Settings", edit_user_path(current_user), class: "hover:underline" %>
+        <%= link_to "Log out", logout_path, class: "hover:underline", data: { "turbo-method": :delete } %>
+      <% else %>
+        <%= link_to "About", root_path, class: "over:underline" %>
+        <% unless request.fullpath == login_path || flash[:danger] %>
+          <%= link_to "Log in", login_path, class: "over:underline" %>
+        <% end %>
+        <% unless request.fullpath == signup_path || @user&.errors&.any? %>
+          <%= link_to "Sign Up", signup_path, class: "hover:underline" %>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+</nav>
+

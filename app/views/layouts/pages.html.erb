@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<!DOCTYPE html>
 <html>
   <head>
     <title><%= content_for(:title) || "Tabletop Ledger" %></title>
@@ -24,12 +23,13 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body class="bg-slate-900 text-center text-slate-300">
-      <%= render "layouts/navbar" %>
-      <main class="flex-1 p-8 text-center">
-        <%= render "layouts/flash" %>
+  <body class="h-full font-sans antialiased font-normal leading-normal bg-gray-50">
+    <div class="main flex flex-col">
+      <%# render "layouts/original_navbar" %>
+      <div class="px-3 lg:px-0 h-full">
         <%= yield %>
         <%= debug(params) if Rails.env.development? %>
-      </main>
+      </div>
+    </div>
   </body>
 </html>
