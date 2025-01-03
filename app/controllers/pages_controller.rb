@@ -15,13 +15,27 @@ class PagesController < ApplicationController
     else
       @page = @campaign.pages.create!
     end
-    redirect_to campaign_page_path(@campaign.id, @page.id)
+    redirect_to campaign_page_path(@campaign, @page)
+  end
+
+  def create
+    @page = @campaign.pages.new(create_page_params)
+    @page.parent_id = params[:parent_id] if params[:parent_id]
+
+    # Uncomment to authorize with Pundit
+    # authorize @page
+
+    if @page.save
+      redirect_to campaign_page_path(@campaign, @page)
+    else
+      render :new, status: :unprocessable_entity
+      format.html { render :new, status: :unprocessable_entity }
+    end
   end
 
   # PATCH/PUT /pages/1 or /pages/1.json
   def update
     if @page.update(page_params)
-      flash[:success] = "Page was successfully updated"
       redirect_to campaign_page_path(@campaign, @page)
     else
       redirect_to campaign_page_path(@campaign, @page), status: :unprocessable_entity
@@ -39,12 +53,19 @@ class PagesController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_page
-      @page = Page.find(params.expect(:id))
+      @page = Page.find_by(slug: params[:slug], campaign_id: params[:campaign_id])
+      if @page.nil?
+        redirect_to campaign_pages_path
+      end
     end
 
     # Only allow a list of trusted parameters through.
     def page_params
-      params.expect(page: [ :title, :body, :parent_id, :position ])
+      params.require(:page).permit(:title, :body, :parent_id, :position)
+    end
+
+    def create_page_params
+      params.permit(:page).permit(:title, :parent_id, :position)
     end
 
     def set_user_and_campaigns

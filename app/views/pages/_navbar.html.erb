@@ -1,0 +1,20 @@
+<nav class="p-1 shadow-md bg-gray-100">
+  <div class="container mx-auto flex justify-between items-center">
+    <div class="flex space-x-2 group-hover:cols-span-1">
+      <% if logged_in? %>
+        <%= link_to "Home", current_user, class: "hover:rounded-sm hover:bg-indigo-200" %>
+        <%= link_to "Settings", edit_user_path(current_user), class: "hover:rounded-sm hover:bg-indigo-200" %>
+        <%= link_to "Log out", logout_path, class: "hover:rounded-sm hover:bg-indigo-200", data: { "turbo-method": :delete } %>
+      <% else %>
+        <%= link_to "About", root_path, class: "hover:rounded-sm hover:bg-indigo-200" %>
+        <% unless request.fullpath == login_path || flash[:danger] %>
+          <%= link_to "Log in", login_path, class: "hover:rounded-sm hover:bg-indigo-200" %>
+        <% end %>
+        <% unless request.fullpath == signup_path || @user&.errors&.any? %>
+          <%= link_to "Sign Up", signup_path, class: "hover:rounded-sm hover:bg-indigo-200" %>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+</nav>
+

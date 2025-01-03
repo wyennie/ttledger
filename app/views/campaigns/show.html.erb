@@ -1,14 +1,15 @@
-<h1 class="text-4xl font-bold text-center text-slate-300 mb-6"><%= @campaign.name %></h1>
+<h1 class="text-4xl font-bold text-center  mb-6"><%= @campaign.name %></h1>
 <div class="flex">
+  <% button_colors = "bg-gray-300 border hover:bg-gray-400 focus:ring-gray-200" %>
+  <% input_field_colors = "bg-gray-300 border-gray-400 focus:ring-gray-200 focus:border-gray-200" %>
   <%= link_to "Edit campaign details", edit_campaign_path(@campaign), 
-              class: "py-2 px-4 bg-slate-700 text-slate-100 font-semibold
-                      rounded-lg shadow-md hover:bg-slate-800 focus:outline-none 
-                      focus:ring-2 focus:ring-slate-400 focus:ring-opacity-75" %>
+    class: button_colors + "py-2 px-4 b  font-semibold rounded-lg shadow-md
+           focus:outline-none focus:ring-2  focus:ring-opacity-75" %>
   <%= link_to "Manage", manage_campaign_path(@campaign), 
-              class: "py-2 px-4 bg-slate-700 text-slate-100 font-semibold
-                      rounded-lg shadow-md hover:bg-slate-800 focus:outline-none 
-                      focus:ring-2 focus:ring-slate-400 focus:ring-opacity-75" %>
-  <div class="space-y-4 mt-1 ml-auto">
+              class: button_colors +  "py-2 px-4  font-semibold
+                      rounded-lg shadow-md  focus:outline-none 
+                      focus:ring-2  focus:ring-opacity-75" %>
+ <div class="space-y-4 mt-1 ml-auto">
     <div>
       <p class="space-y-4 text-xl mt-1 ml-auto">
         <strong>Game master:</strong> 
@@ -36,12 +37,11 @@
       <div class="flex items-center space-x-4">
         <div class="flex-1">
           <%= text_field_tag :username, nil, placeholder: "Enter user's username", 
-            class: "w-full p-2 border bg-slate-500 text-slate-300 border-slate-600 rounded-lg 
-                    focus:ring-slate-300 focus:border-slate-300" %>
+            class: input_field_colors + "w-full p-2 border rounded-lg" %>
         </div>
-        <%= submit_tag "Send Invitation", class: "p-2 bg-slate-700 text-slate-100 font-semibold 
-                                                  rounded-lg shadow-md hover:bg-slate-400 focus:outline-none 
-                                                  focus:ring-2 focus:ring-slate-400 focus:ring-opacity-75" %>
+        <%= submit_tag "Send Invitation", class: button_colors + "w-full py-2 px-4 font-semibold rounded-lg 
+                        shadow-md focus:outline-none focus:ring-2 focus:ring-opacity-75 ml-auto" %>
+
       </div>
     </div>
   <% end %>
@@ -57,12 +57,12 @@
 </div>
 <div>
   <div class="flex items-center justify-between">
-    <h1 class="text-4xl font-bold text-center underline text-slate-300 mb-6">Characters</h1>
+    <h1 class="text-4xl font-bold text-center underline  mb-6">Characters</h1>
     <%= button_to 'Add character', campaign_characters_path(@campaign),
                 method: :post, data: { turbo: true }, params: { character: { name: "Default Name" } },
-                class: "w-full py-2 px-4 bg-slate-500 text-white font-semibold rounded-lg 
-                        shadow-md hover:bg-slate-600 focus:outline-none focus:ring-2 
-                        focus:ring-slate-400 focus:ring-opacity-75 ml-auto" %>
+                class: button_colors + "w-full py-2 px-4 font-semibold rounded-lg 
+                        shadow-md focus:outline-none focus:ring-2 
+                        focus:ring-opacity-75 ml-auto" %>
   </div>
 
   <div id="characters">

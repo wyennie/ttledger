@@ -8,6 +8,7 @@
     <meta name="mobile-web-app-capable" content="yes">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
+    <%= javascript_importmap_tags %>
 
     <%= yield :head %>
 
@@ -21,10 +22,9 @@
     <%# Includes all stylesheet files in app/assets/stylesheets %>
     <%= stylesheet_link_tag "application.tailwind", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
-    <%= javascript_importmap_tags %>
   </head>
 
-  <body class="bg-slate-900 text-center text-slate-300">
+  <body class="bg-gray-50 text-center">
       <%= render "layouts/navbar" %>
       <main class="flex-1 p-8 text-center">
         <%= render "layouts/flash" %>

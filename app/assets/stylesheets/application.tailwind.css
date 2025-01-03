@@ -9,6 +9,6 @@
   }
 
   #nav-sidebar button.top {
-    @apply px-4 py-1 flex w-full items-center justify-start space-x-2 hover:bg-rose-200;
+    @apply px-4 py-1 flex w-full items-center justify-start space-x-2 hover:bg-indigo-200;
   }
 }
