@@ -22,8 +22,6 @@ class PagesController < ApplicationController
     @page = @campaign.pages.new(create_page_params)
     @page.parent_id = params[:parent_id] if params[:parent_id]
 
-    # Uncomment to authorize with Pundit
-    # authorize @page
 
     if @page.save
       redirect_to campaign_page_path(@campaign, @page)

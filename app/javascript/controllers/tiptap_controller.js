@@ -24,7 +24,6 @@ const debounce = function(func, wait, immediate) {
   };
 };
 
-  let c = console.log.bind( console );
 export default class extends Controller {
   connect() {
     const masterElement = this.element;
