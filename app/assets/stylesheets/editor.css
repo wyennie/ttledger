@@ -1,18 +1,3 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-@layer components {
-  .grid-body {
-    @apply grid;
-    grid-template-columns: 14rem 1fr;
-  }
-
-  #nav-sidebar button.top {
-    @apply px-4 py-1 flex w-full items-center justify-start space-x-2 hover:bg-indigo-200;
-  }
-}
-
 .editable:empty:before {
   content: attr(data-placeholder);
   color: #999;
@@ -25,6 +10,11 @@
 
 #nav-sidebar button.top {
   @apply flex w-full items-center justify-start space-x-2 px-4 py-1 hover:bg-indigo-200;
+}
+
+.tiptap {
+  flex-direction: column;
+  flex: 1;
 }
 
 .ProseMirror {
@@ -57,4 +47,8 @@
 
 .ProseMirror blockquote {
   @apply border-l-4 border-slate-800 py-1 pl-4;
+}
+
+.ProseMirror:focus {
+  outline: none;
 }

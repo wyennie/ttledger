@@ -21,7 +21,15 @@ export default class extends Controller {
   static targets = ["content", "input"]
 
   changed = debounce (() => {
-    this.inputTarget.value = this.contentTarget.innerHTML;
+    const content = this.contentTarget.innerHTML.trim();
+
+    if (content === "<br>" || content === "") {
+      this.contentTarget.innerHTML = "";
+      this.inputTarget.value = "";
+    } else {
+      this.inputTarget.value = content;
+    }
+
     this.inputTarget.form.requestSubmit();
   }, 1000)
 }

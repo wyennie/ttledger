@@ -2,7 +2,7 @@
 <div class="grid-body relative">
   <%= render "sidebar" %>
   <main class="col-span-2 w-full md:col-start-2">
-    <div class="sticky top-0 w-full">
+    <div class="sticky top-0 bg-gray-100 z-50 w-full">
       <%= render partial: "navbar" %>
       <%= render partial: "layouts/flash" %>
     </div>
@@ -13,9 +13,14 @@
     <div class="flex w-full justify-center">
       <div class="w-[900px]">
         <%= render "header" %>
-        <%= render "comments" %>
+        <%# render "comments" %>
       </div>
     </div>
-    <%= render "body" %>
+    <%= form_with model: [@campaign, @page], data: { controller: "tiptap"} do |f| %>
+      <%= render partial: "body",
+                  locals: { initial_content: @page.body,
+                            form: f,
+                            field_name: :body } %>
+    <% end %>
   </main>
 </div>

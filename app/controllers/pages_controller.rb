@@ -35,19 +35,25 @@ class PagesController < ApplicationController
 
   # PATCH/PUT /pages/1 or /pages/1.json
   def update
-    if @page.update(page_params)
-      redirect_to campaign_page_path(@campaign, @page)
-    else
-      redirect_to campaign_page_path(@campaign, @page), status: :unprocessable_entity
+    respond_to do |format|
+      if @page.update(page_params)
+        if @page.body_previously_changed?
+          format.turbo_stream
+        end
+        format.html { redirect_to campaign_page_path(@campaign, @page) }
+      else
+        format.html { render :edit, status: :unprocessable_entity }
+      end
     end
   end
 
   # DELETE /pages/1 or /pages/1.json
   def destroy
-    @page.destroy!
+    @page.destroy
 
-    flash[:notice] = "Page was successfully destroyed"
-    redirect_to campaign_pages_path, status: :see_other
+    respond_to do |format|
+      format.html { redirect_to campaign_pages_path }
+    end
   end
 
   private

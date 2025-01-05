@@ -14,12 +14,6 @@
       Add cover
     </button>
   </div>
-  <style>
-    .editable:empty:before {
-      content: attr(data-placeholder);
-      color: #999;
-    }
-  </style>
   <div class="pr-[2rem] md:pr-[96px]">
     <%= form_with model: [@campaign, @page], data: {controller: "editable"} do |f| %>
       <h1 contenteditable 
