@@ -1,8 +1,9 @@
 class ChatService
   attr_reader :message
 
-  def initialize(message:)
+  def initialize(message:, context:)
     @message = message
+    @context = context
   end
 
   def call
@@ -31,8 +32,8 @@ class ChatService
 
     def training_prompts
       [
-        "Do you know what tabletop roleplaying games are?",
-        "Can assist the game master in thinking of ideas on the fly?"
+        "Do you know what tabletop roleplaying games are? Your job is to assist the game master",
+        @context
       ]
     end
 

@@ -22,6 +22,7 @@ gem "postmark-rails"
 gem "ruby-openai", "~> 7.3"
 gem "acts_as_list", "~> 1.2"
 gem "acts_as_tree", "~> 2.9"
+gem "redcarpet", "~> 3.6"
 
 group :development, :test do
   gem "rspec"

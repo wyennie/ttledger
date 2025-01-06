@@ -11,10 +11,12 @@ class PagesController < ApplicationController
   end
 
   def create_chat_message
-    message = params[:chat_message]
+    @page = Page.find_by(slug: params[:slug], campaign_id: params[:campaign_id])
 
+    message = params[:chat_message]
+    context = addPageContext
     # Call the ChatService to send the message
-    chat_service = ChatService.new(message: message)
+    chat_service = ChatService.new(message: message, context: context)
     response = chat_service.call
 
     # Logic to save the message to a campaign, if necessary
@@ -26,6 +28,17 @@ class PagesController < ApplicationController
         render turbo_stream: turbo_stream.append("chat-messages", partial: "pages/chat_message", locals: { message: response })
       end
     end
+  end
+
+  def addPageContext
+    body = @page.body
+            .gsub(/<\/ul>/, "")
+            .gsub(/<ul>/, "\n")
+            .gsub(/<\/li>/, "")
+            .gsub(/<li>/, "\n- ")
+            .gsub(/<\/?p>|<br\s*\/?>/, "\n")
+            .gsub(/\n+/, "\n")
+    "Given the following information:\n" + body + "\n" + "Answer the following: \n"
   end
 
   # GET /pages or /pages.json

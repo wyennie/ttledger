@@ -1,6 +1,6 @@
-<nav class="p-1 shadow-md">
-  <div class="container mx-auto flex justify-between items-center">
-    <div class="flex space-x-2 group-hover:cols-span-1">
+<nav class="shadow-md p-2 bg-gray-200 text-sm font-semibold text-slate-700">
+  <div class="container w-full flex justify-between items-center">
+    <div class="flex space-x-10 group-hover:cols-span-1">
       <% if logged_in? %>
         <%= link_to "Home", current_user, class: "hover:rounded-sm hover:bg-indigo-200" %>
         <%= link_to "Settings", edit_user_path(current_user), class: "hover:rounded-sm hover:bg-indigo-200" %>
