@@ -1,21 +1,29 @@
+
 <%= content_for :title, @page.title || "untitled" %>
-<div class="grid-body relative">
-  <%= render "sidebar" %>
-  <main class="col-span-2 w-full md:col-start-2">
+<div class="grid grid-cols-12 gap-4 relative">
+  <!-- Sidebar -->
+  <aside class="col-span-2 hidden md:block bg-gray-100 h-screen sticky top-0">
+    <%= render "sidebar" %>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="col-span-8 md:col-span-8">
     <div class="sticky top-0 bg-gray-100 z-50 w-full">
       <%= render partial: "navbar" %>
       <%= render partial: "layouts/flash" %>
+      <%= render partial: "chat_form" %>
     </div>
 
     <div>
       <img class="block h-[30vh] w-full object-cover object-[center_50%]" src="https://images.unsplash.com/photo-1616757729729-c59374fc50fa?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwzMjIwNjR8MHwxfHJhbmRvbXx8fHx8fHx8fDE2NTA3NTcyNDc&ixlib=rb-1.2.1&q=80&w=1080" />
     </div>
+
     <div class="flex w-full justify-center">
       <div class="w-[900px]">
         <%= render "header" %>
-        <%# render "comments" %>
       </div>
     </div>
+
     <%= form_with model: [@campaign, @page], data: { controller: "tiptap"} do |f| %>
       <%= render partial: "body",
                   locals: { initial_content: @page.body,
@@ -23,4 +31,11 @@
                             field_name: :body } %>
     <% end %>
   </main>
+
+  <!-- TODO: potentially add sidebar for ai chat
+  <aside class="col-span-2 hidden md:block bg-gray-100 h-screen sticky top-0">
+    <%# render partial: "second_sidebar" %>
+    </aside> 
+  -->
 </div>
+

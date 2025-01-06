@@ -7,10 +7,30 @@ class PagesController < ApplicationController
   # GET /pages/1 or /pages/1.json
   def show
     @top_pages = @campaign.pages.top_level
+    @chat_message = []
+  end
+
+  def create_chat_message
+    message = params[:chat_message]
+
+    # Call the ChatService to send the message
+    chat_service = ChatService.new(message: message)
+    response = chat_service.call
+
+    # Logic to save the message to a campaign, if necessary
+    # Example: @campaign.messages.create(content: message, user: current_user)
+
+    # Turbo Stream to append the new message
+    respond_to do |format|
+      format.turbo_stream do
+        render turbo_stream: turbo_stream.append("chat-messages", partial: "pages/chat_message", locals: { message: response })
+      end
+    end
   end
 
   # GET /pages or /pages.json
   def index
+    @chat_message = []
     if (@page = @campaign.pages.top_level.first)
     else
       @page = @campaign.pages.create!
