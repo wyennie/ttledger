@@ -1,4 +1,4 @@
-<div data-controller="toggle">
+<div data-controller="toggle" data-container-id="<%= page.id %>">
   <button class="top group !justify-between !py-0">
     <div class="flex items-center space-x-2 py-1">
       <a 
@@ -43,7 +43,7 @@
     </div>
   </button>
 
-  <div id="child-container-<%= page.id %>"  data-toggle-target="container" class="pl-3 flex flex-col items-start hidden">
+  <div id="child-container-<%= page.id %>" data-toggle-target="container" class="pl-3 flex flex-col items-start hidden">
     <% page.children.each do |child| %>
       <%= render "sidebar_child_level_page", page: child %>
     <% end %>
