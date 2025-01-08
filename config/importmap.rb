@@ -51,3 +51,5 @@ pin "rope-sequence" # @1.3.4
 pin "@tiptap/extension-link", to: "@tiptap--extension-link.js" # @2.11.0
 pin "linkifyjs" # @4.2.0
 pin "@tiptap/extension-image", to: "@tiptap--extension-image.js" # @2.11.0
+pin "marked" # @15.0.6
+pin "dompurify" # @3.2.3

@@ -12,8 +12,8 @@ class PagesController < ApplicationController
   end
 
   def chat_response
-    response.headers['Content-Type']  = 'text/event-stream'
-    response.headers['Last-Modified'] = Time.now.httpdate
+    response.headers["Content-Type"]  = "text/event-stream"
+    response.headers["Last-Modified"] = Time.now.httpdate
     sse                               = SSE.new(response.stream, event: "message")
     client                            = OpenAI::Client.new(
         access_token: Rails.application.credentials.open_ai_api_key,
@@ -24,7 +24,7 @@ class PagesController < ApplicationController
         "Do you know what tabletop roleplaying games are? Your job is to assist the game master",
         addPageContext
       ]
-    
+
     messages = training_prompts.map do |prompt|
       { role: "user", content: prompt }
     end
@@ -41,9 +41,9 @@ class PagesController < ApplicationController
             if content.nil?
               return
             end
-            
+
             sse.write({
-                        message: content,
+                        message: content
                       })
           end
         }
