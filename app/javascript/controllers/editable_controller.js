@@ -21,7 +21,7 @@ export default class extends Controller {
   static targets = ["content", "input"]
 
   changed = debounce (() => {
-    const content = this.contentTarget.innerHTML.trim();
+    const content = this.contentTarget.innerHTML;
 
     if (content === "<br>" || content === "") {
       this.contentTarget.innerHTML = "";

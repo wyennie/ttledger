@@ -1,26 +1,27 @@
 <!-- AI Chat Conversation Area Sidebar on the Right -->
-<div class="fixed bottom-0 right-0 w-full md:w-[600px] max-h-[600px] rounded-lg flex flex-col">
-  <!-- chat log -->
-  <div class="flex-1 overflow-y-auto p-4">
-    <div id="chat-messages"></div>
+<div data-controller="chat" 
+     data-campaign-id="<%= @campaign.id %>" 
+     data-page-slug="<%= @page.slug %>" 
+     class="chat-container fixed bottom-0 right-0 w-full md:w-[600px] max-h-[600px] bg-opacity-80 rounded-lg flex flex-col">
+  <!-- Chat log -->
+  <div id="chat-messages" 
+       data-chat-target="conversation" 
+       class="chat-conversation p-4 flex-1 overflow-y-auto bg-gray-200 bg-gray-200">
   </div>
-
   <!-- Input form -->
   <div class="bg-gray-200 p-4 rounded-b-lg">
-    <%= form_with url: create_chat_message_campaign_page_path(@campaign, @page), method: :post, local: false, 
-      data: { turbo_frame: "chat", controller: "chat", action: "submit->chat#clearInput" },
+    <%= form_with data: { action: "chat#generateResponse" },
       class: "flex items-center gap-2" do |f| %>
 
       <!-- Chat Input Section -->
       <%= text_area_tag :chat_message, nil, id: "chat-message-input", 
         class:"w-full p-2 rounded-lg border border-gray-300", 
         placeholder:"Type a message...",
-        data: { chat_target: "chatMessage" }
+        data: { chat_target: "prompt" }
       %>
     <%= submit_tag "Send", class: "p-2 bg-slate-500 text-slate-100 font-semibold rounded-lg" %>
     <button class="text-sm text-rose-500">Close</button>
     <% end %>
   </div>
-
 </div>
 

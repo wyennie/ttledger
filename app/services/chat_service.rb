@@ -27,15 +27,20 @@ class ChatService
     { user_message: message, bot_message: bot_message }
   end
 
+  def stream
+  end
+
+  def training_prompts
+    [
+      "Do you know what tabletop roleplaying games are? Your job is to assist the game master",
+      @context
+    ]
+  end
+
   private
 
 
-    def training_prompts
-      [
-        "Do you know what tabletop roleplaying games are? Your job is to assist the game master",
-        @context
-      ]
-    end
+
 
     def client
       @_client ||= OpenAI::Client.new(

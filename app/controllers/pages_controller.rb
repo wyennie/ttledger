@@ -1,4 +1,5 @@
 class PagesController < ApplicationController
+  include ActionController::Live
   before_action :set_page, only: %i[ show update destroy ]
   before_action :set_user_and_campaigns
   before_action :set_campaign
@@ -10,28 +11,51 @@ class PagesController < ApplicationController
     @chat_message = []
   end
 
-  def create_chat_message
-    @page = Page.find_by(slug: params[:slug], campaign_id: params[:campaign_id])
+  def chat_response
+    response.headers['Content-Type']  = 'text/event-stream'
+    response.headers['Last-Modified'] = Time.now.httpdate
+    sse                               = SSE.new(response.stream, event: "message")
+    client                            = OpenAI::Client.new(
+        access_token: Rails.application.credentials.open_ai_api_key,
+        log_errors: true
+      )
 
-    message = params[:chat_message]
-    context = addPageContext
-    # Call the ChatService to send the message
-    chat_service = ChatService.new(message: message, context: context)
-    response = chat_service.call
+    training_prompts = [
+        "Do you know what tabletop roleplaying games are? Your job is to assist the game master",
+        addPageContext
+      ]
+    
+    messages = training_prompts.map do |prompt|
+      { role: "user", content: prompt }
+    end
 
-    # Logic to save the message to a campaign, if necessary
-    # Example: @campaign.messages.create(content: message, user: current_user)
+    messages << { role: "user", content: params[:prompt] }
 
-    # Turbo Stream to append the new message
-    respond_to do |format|
-      format.turbo_stream do
-        render turbo_stream: turbo_stream.append("chat-messages", partial: "pages/chat_message", locals: { message: response })
-      end
+    begin
+      client.chat(
+        parameters: {
+          model:    "gpt-4o-mini-2024-07-18",
+          messages: messages,
+          stream:   proc do |chunk|
+            content = chunk.dig("choices", 0, "delta", "content")
+            if content.nil?
+              return
+            end
+            
+            sse.write({
+                        message: content,
+                      })
+          end
+        }
+      )
+    ensure
+      sse.close
     end
   end
 
   def addPageContext
-    body = @page.body
+    page = Page.find_by(slug: params[:page_slug])
+    body = page.body
             .gsub(/<\/ul>/, "")
             .gsub(/<ul>/, "\n")
             .gsub(/<\/li>/, "")
