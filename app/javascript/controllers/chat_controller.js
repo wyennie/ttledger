@@ -6,9 +6,29 @@ export default class extends Controller {
   static targets = ["prompt", "conversation"]
 
   connect() {
-    this.campaignId = this.element.dataset.campaignId;
-    this.pageSlug = this.element.dataset.pageSlug;
-    this.accumulatedMessage = ""
+    this.checkForPromptTarget();
+  }
+
+  checkForPromptTarget() {
+    const observer = new MutationObserver(() => {
+      if (this.hasPromptTarget) {
+        observer.disconnect();
+        this.campaignId = this.element.dataset.campaignId;
+        this.pageSlug = this.element.dataset.pageSlug;
+        this.accumulatedMessage = "";
+        this.promptTarget.addEventListener("keydown", this.handleKeyDown.bind(this));
+      }
+    });
+
+    observer.observe(document.body, { childList: true, subtree: true });
+  }
+
+  toggleChat(event) {
+    const chatFormContent = document.querySelector('[data-chat-target="chatFormContent"]');
+    const chatFormInput   = document.querySelector('[data-chat-target="chatFormInput"]');
+    chatFormContent.classList.toggle("hidden");
+    chatFormInput.classList.toggle("hidden");
+    const button = event.currentTarget;
   }
 
   clearInput(event) {
@@ -24,6 +44,7 @@ export default class extends Controller {
   }
 
   generateResponse(event) {
+      this.accumulatedMessage = ""
       event.preventDefault()
       this.#createLabel('You')
       this.#createMessage(this.promptTarget.value)
@@ -35,6 +56,19 @@ export default class extends Controller {
       this.promptTarget.value = ""
   }
 
+  handleKeyDown(event) {
+    if (event.key === "Enter" && !event.ctrlKey) {
+      // Submit the form when Enter is pressed, without Ctrl
+      event.preventDefault();  // Prevent new line
+      this.generateResponse(event);  // Call the generateResponse method to submit
+    } else if (event.key === "Enter" && event.ctrlKey) {
+      // Allow new line if Ctrl + Enter is pressed
+      event.preventDefault();  // Prevent form submission
+      const cursorPos = this.promptTarget.selectionStart;
+      this.promptTarget.value = this.promptTarget.value.slice(0, cursorPos) + "\n" + this.promptTarget.value.slice(cursorPos);
+    }
+  }
+
   #createLabel(text) {
       const label = document.createElement('strong');
       label.innerHTML = `${text}:`;
@@ -43,7 +77,7 @@ export default class extends Controller {
 
   #createMessage(text = '') {
       const preElement = document.createElement('p');
-      preElement.className = "bg-gray-100 p-4 rounded-lg text-gray-800"
+      preElement.className = "bg-white p-4 rounded-lg text-gray-800"
       preElement.innerHTML = text;
       this.conversationTarget.appendChild(preElement);
       return preElement
@@ -57,19 +91,9 @@ export default class extends Controller {
 
   #handleMessage(event) {
     const parsedData = JSON.parse(event.data);
-
-    // Accumulate the message chunks
     this.accumulatedMessage += parsedData.message;
-    console.log(parsedData)
-
-    // Parse the accumulated message with the markdown parser
     const parsedMarkdown = this.#parseMarkdown(this.accumulatedMessage);
-
-    console.log(parsedMarkdown)
-    // Update the current message element
     this.currentPre.innerHTML = parsedMarkdown;
-
-
     this.conversationTarget.scrollTop = this.conversationTarget.scrollHeight;
   }
 

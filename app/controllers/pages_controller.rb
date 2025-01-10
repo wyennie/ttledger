@@ -55,13 +55,16 @@ class PagesController < ApplicationController
 
   def addPageContext
     page = Page.find_by(slug: params[:page_slug])
-    body = page.body
-            .gsub(/<\/ul>/, "")
-            .gsub(/<ul>/, "\n")
-            .gsub(/<\/li>/, "")
-            .gsub(/<li>/, "\n- ")
-            .gsub(/<\/?p>|<br\s*\/?>/, "\n")
-            .gsub(/\n+/, "\n")
+    body = ""
+    if !!page.body
+      body = page.body
+              .gsub(/<\/ul>/, "")
+              .gsub(/<ul>/, "\n")
+              .gsub(/<\/li>/, "")
+              .gsub(/<li>/, "\n- ")
+              .gsub(/<\/?p>|<br\s*\/?>/, "\n")
+              .gsub(/\n+/, "\n")
+    end
     "Given the following information:\n" + body + "\n" + "Answer the following: \n"
   end
 
@@ -92,9 +95,7 @@ class PagesController < ApplicationController
   def update
     respond_to do |format|
       if @page.update(page_params)
-        if @page.body_previously_changed?
-          format.turbo_stream
-        end
+        format.turbo_stream
         format.html { redirect_to campaign_page_path(@campaign, @page) }
       else
         format.html { render :edit, status: :unprocessable_entity }

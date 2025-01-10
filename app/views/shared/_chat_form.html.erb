@@ -1,15 +1,22 @@
-<!-- AI Chat Conversation Area Sidebar on the Right -->
-<div data-controller="chat" 
+<div id="chat-form"
+     data-controller="chat" 
      data-campaign-id="<%= @campaign.id %>" 
      data-page-slug="<%= @page.slug %>" 
-     class="chat-container fixed bottom-0 right-0 w-full md:w-[600px] max-h-[600px] bg-opacity-80 rounded-lg flex flex-col">
-  <!-- Chat log -->
-  <div id="chat-messages" 
-       data-chat-target="conversation" 
-       class="chat-conversation p-4 flex-1 overflow-y-auto bg-gray-200 bg-gray-200">
+     data-chat-target="chatForm"
+     class="chat-container w-full fixed bottom-0 right-0 w-[84%] max-h-[100vh] rounded-lg flex flex-col">
+
+  <div data-chat-target="chatFormContent" class="flex-1 overflow-y-auto hidden" >
+    <div id="chat-messages" 
+         data-chat-target="conversation" 
+         class="chat-conversation p-4 bg-gray-100">
+    </div>
   </div>
-  <!-- Input form -->
-  <div class="bg-gray-200 p-4 rounded-b-lg">
+
+  <!-- Input form: Remain fixed at the bottom -->
+  <div class="bg-gray-100 p-4 rounded-b-lg hidden" data-chat-target="chatFormInput">
+    <div class="flex gap-2">
+      <button class="text-sm text-rose-500">Close</button>
+    </div>
     <%= form_with data: { action: "chat#generateResponse" },
       class: "flex items-center gap-2" do |f| %>
 
@@ -19,9 +26,11 @@
         placeholder:"Type a message...",
         data: { chat_target: "prompt" }
       %>
-    <%= submit_tag "Send", class: "p-2 bg-slate-500 text-slate-100 font-semibold rounded-lg" %>
-    <button class="text-sm text-rose-500">Close</button>
+      <button type="submit" class="p-2 bg-gray-300 font-semibold rounded-full hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-6 w-6 text-indigo">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5" />
+        </svg>
+      </button>
     <% end %>
   </div>
 </div>
-
