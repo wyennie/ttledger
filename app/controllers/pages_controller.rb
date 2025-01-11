@@ -14,58 +14,25 @@ class PagesController < ApplicationController
   def chat_response
     response.headers["Content-Type"]  = "text/event-stream"
     response.headers["Last-Modified"] = Time.now.httpdate
-    sse                               = SSE.new(response.stream, event: "message")
-    client                            = OpenAI::Client.new(
-        access_token: Rails.application.credentials.open_ai_api_key,
-        log_errors: true
-      )
-
-    training_prompts = [
-        "Do you know what tabletop roleplaying games are? Your job is to assist the game master",
-        addPageContext
-      ]
-
-    messages = training_prompts.map do |prompt|
-      { role: "user", content: prompt }
-    end
-
-    messages << { role: "user", content: params[:prompt] }
+    sse = SSE.new(response.stream, event: "message")
+    chat_service = ChatService.new()
+    page_context = chat_service.add_page_context(params[:page_slug])
+    prompts = [
+      "Do you know what tabletop roleplaying games are? Your job is to assist the game master",
+      page_context
+    ]
 
     begin
-      client.chat(
-        parameters: {
-          model:    "gpt-4o-mini-2024-07-18",
-          messages: messages,
-          stream:   proc do |chunk|
-            content = chunk.dig("choices", 0, "delta", "content")
-            if content.nil?
-              return
-            end
-
-            sse.write({
-                        message: content
-                      })
-          end
-        }
-      )
+        chat_service.generate_response(prompts, params[:prompt]) do |chunk|
+        content = chunk.dig("choices", 0, "delta", "content")
+        sse.write({ message: content }) if content.present?
+      end
+    rescue => e
+      logger.error "ChatService Error: #{e.message}"
+      sse.write({ error: "An error occurred while generating the response." })
     ensure
       sse.close
     end
-  end
-
-  def addPageContext
-    page = Page.find_by(slug: params[:page_slug])
-    body = ""
-    if !!page.body
-      body = page.body
-              .gsub(/<\/ul>/, "")
-              .gsub(/<ul>/, "\n")
-              .gsub(/<\/li>/, "")
-              .gsub(/<li>/, "\n- ")
-              .gsub(/<\/?p>|<br\s*\/?>/, "\n")
-              .gsub(/\n+/, "\n")
-    end
-    "Given the following information:\n" + body + "\n" + "Answer the following: \n"
   end
 
   # GET /pages or /pages.json
