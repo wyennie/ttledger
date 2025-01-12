@@ -1,125 +1,16 @@
-<div>
+<%= content_for :title, @user.username || "" %>
+<div class="grid grid-cols-12 gap-4 relative">
+  <!-- Sidebar -->
+  <aside class="col-span-2 hidden md:block bg-gray-100 h-screen sticky top-0">
+    <%= render "shared/sidebar" %>
+  </aside>
+
   <!-- Main Content -->
-  <h2 class="text-5xl font-semibold text-slate-400 mb-4">Characters</h2>
-  <ul class="space-y-4 p-4 rounded shadow-md text-3xl">
-    <%= render @characters %>
-  </ul>
-
-
-
-
-
-  <!-- Pending Campaign Invitations -->
-  <div id="pending-campaign-invitations">
-    <h3 class="text-3xl font-semibold text-slate-400 mb-4 text-left">Pending Campaign Invitations</h3>
-    <% @invitations.each do |invitation| %>
-      <div class="mb-4">
-        <ul class="space-y-2">
-          <li class="flex items-center text-left">
-            <p>Campaign: <span class="text-xl font-semibold"><%= invitation.campaign.name %></span></p>
-            <%= button_to "Join", accept_invitation_campaign_path(invitation.campaign, invitation_id: invitation.id), 
-              method: :post, class: "py-1 px-3 bg-green-500 text-white font-semibold rounded-lg 
-                                      shadow-md hover:bg-green-600 focus:outline-none focus:ring-2 
-                                      focus:ring-green-400 focus:ring-opacity-75 text-sm" %>
-          </li>
-        </ul>
-      </div>
-    <% end %>
-  </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  <h2 class="text-5xl font-semibold text-slate-400 mb-4">Users</h2>
-
-  <!-- Container for friends lists -->
-  <div class="flex space-x-8">
-
-  <!-- Friends -->
-    <div class="flex-1">
-      <h2 class="text-3xl font-semibold text-slate-400 mb-4">Friends</h2>
-      <div class="mb-4">
-        <ul class="space-y-2">
-        <% @accepted_friendships.each do |friendship| %>
-          <li class="text-2xl font-semibold">
-            <% if current_user.username == friendship.receiver.username %>
-              <%= friendship.sender.username %>
-            <% else %>
-              <%= friendship.receiver.username %>
-            <% end %>
-          </li>
-        <% end %>
-        </ul>
-      </div>
+  <main class="col-span-8 md:col-span-8">
+    <div class="sticky top-0 bg-gray-100 z-50 w-full">
+      <%= render partial: "layouts/flash" %>
+      <%= render partial: "body" %>
     </div>
-    <!-- Pending Friend Requests -->
-    <div class="flex-1">
-      <h2 class="text-3xl font-semibold text-slate-400 mb-4">Pending</h2>
-      <div class="mb-4">
-        <ul class="space-y-2">
-        <% @pending_friendships.each do |friendship| %>
-            <li class="flex items-center">
-              <% if current_user == friendship.sender %>
-                <p>
-                  Awaiting for response from <span class="text-2xl font-semibold"><%= friendship.receiver.username %></span>
-                </p>
-              <% else %>
-                <span class="text-2xl font-semibold">
-                  <%= friendship.sender.username %>
-                </span>
-
-                <div class="flex flex-col space-y-2">
-                  <!--  friendship PATCH  /friendships/:id(.:format)    friendships#update -->
-                  <%= form_with(model: friendship, method: :patch) do |f| %>
-                    <input type="hidden" name="_method" value="put">
-                    <input type="hidden" name="friendship[status]" value="accepted">
-                    <%= f.submit "Accept",  class: "w-full py-1 px-3 bg-green-500 text-white font-semibold rounded-lg 
-                                  shadow-md hover:bg-green-600 focus:outline-none focus:ring-2 
-                                  focus:ring-green-400 focus:ring-opacity-75 text-sm" %>
-                  <% end %>
-                  <%= form_with(model: friendship, method: :patch) do |f| %>
-                    <input type="hidden" name="_method" value="put">
-                    <input type="hidden" name="friendship[status]" value="denied">
-                    <%= f.submit "Deny",  class: "w-full py-1 px-3 bg-red-500 text-white font-semibold rounded-lg 
-                                  shadow-md hover:bg-red-600 focus:outline-none focus:ring-2 
-                                  focus:ring-red-400 focus:ring-opacity-75 text-sm" %>
-                  <% end %>
-                </div>
-              <% end %>
-            </li>
-        <% end %>
-        </ul>
-      </div>
-    </div>
-
-  </div>
-
-<%= form_with url: friendships_path, method: :post, local: true do |form| %>
-  <div class="flex flex-col space-y-4">
-    <div>
-      <%= form.label :username, "Enter a username to send a friend request", class: "block text-lg font-medium text-slate-300" %>
-    </div>
-    <div class="flex items-center space-x-4">
-      <div class="flex-1">
-        <%= form.text_field :username, class: "w-full p-2 border bg-slate-500 text-slate-300 border-slate-600 rounded-lg focus:ring-slate-300 focus:border-slate-300" %>
-      </div>
-      <%= form.submit "Send Friend Request", class: "p-2 bg-slate-700 text-slate-100 font-semibold rounded-lg shadow-md hover:bg-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-opacity-75" %>
-    </div>
-  </div>
-<% end %>
-
+  </main>
+</div>
 

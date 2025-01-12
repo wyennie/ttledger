@@ -1,27 +1,16 @@
-<h1 class="text-4xl font-bold text-center text-slate-300 mb-6">Edit campaign details</h1>
-<div class="max-w-md mx-auto bg-slate-800 p-6 rounded-lg shadow-lg">
-  <%= form_with(model: @campaign) do |f| %>
-    <% render "shared/error_messages", object: @campaign %>
+<%= content_for :title, @user.username || "" %>
+<div class="grid grid-cols-12 gap-4 relative">
+  <!-- Sidebar -->
+  <aside class="col-span-2 hidden md:block bg-gray-100 h-screen sticky top-0">
+    <%= render "shared/sidebar" %>
+  </aside>
 
-    <div class="mb-4">
-      <%= f.label :name, "Title", class: "block text-lg font-medium text-slate-300" %>
-      <%= f.text_field :name, class: "mt-1 block w-full p-2 border bg-slate-500 text-slate-300
-      border-slate-600 rounded-lg focus:ring-slate-300 focus:border-slate-300" %>
+  <!-- Main Content -->
+  <main class="col-span-8 md:col-span-8">
+    <div class="sticky top-0 bg-gray-100 z-50 w-full">
+      <%= render partial: "layouts/flash" %>
+      <%= render partial: "edit_form" %>
     </div>
-
-    <div class="mb-4">
-      <%= f.label :description, class: "block text-lg font-medium text-slate-300" %>
-      <%= f.text_area :description, class: "mt-1 block w-full p-2 border bg-slate-500 text-slate-300
-      border-slate-600 rounded-lg focus:ring-slate-300 focus:border-slate-300" %>
-    </div>
-
-    <div>
-      <%= f.submit "Save changes", class: "w-full py-2 px-4 bg-slate-700 text-slate-100 font-semibold
-      rounded-lg shadow-md hover:bg-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-opacity-75" %>
-    </div>
-  <% end %>
-  <br>
-  <%= link_to "DELETE", @campaign, data: { "turbo-method": :delete,
-                                           turbo_confirm: "Are you sure you want to delete this campaign?" },
-                                           class: "w-full py-2 px-4 bg-red-500 text-white font-semibold rounded-lg shadow-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-opacity-75" %>
+  </main>
 </div>
+

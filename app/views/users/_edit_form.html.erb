@@ -1,0 +1,43 @@
+
+<h1 class="text-4xl font-bold text-center mb-6">Edit</h1>
+
+<div class="max-w-md mx-auto bg-gray-200 p-6 rounded-lg shadow-lg">
+  <%= form_with(model: @user) do |f| %>
+    <%= render 'shared/error_messages', object: @user %>
+
+    <div class="mb-4">
+      <%= f.label :username, class: "block text-lg font-medium " %>
+      <%= f.text_field :username, class: "mt-1 block w-full p-2 border bg-gray-100 
+      border-gray-600 rounded-lg focus:ring-slate-300 focus:border-slate-300" %>
+    </div>
+
+    <div class="mb-4">
+      <%= f.label :name, class: "block text-lg font-medium " %>
+      <%= f.text_field :name, class: "mt-1 block w-full p-2 border bg-gray-100  
+      border-gray-600 rounded-lg focus:ring-slate-300 focus:border-slate-300" %>
+    </div>
+
+    <div class="mb-4">
+      <%= f.label :email, class: "block text-lg font-medium " %>
+      <%= f.email_field :email, class: "mt-1 block w-full p-2 border bg-gray-100 
+      border-gray-600 rounded-lg focus:ring-slate-300 focus:border-slate-300" %>
+    </div>
+
+    <div class="mb-4">
+      <%= f.label :password, class: "block text-lg font-medium " %>
+      <%= f.password_field :password, class: "mt-1 block w-full p-2 border bg-gray-100 
+      border-gray-600 rounded-lg focus:ring-slate-300 focus:border-slate-300" %>
+    </div>
+
+    <div class="mb-4">
+      <%= f.label :password_confirmation, "Confirmation", class: "block text-lg font-medium " %>
+      <%= f.password_field :password_confirmation, class: "mt-1 block w-full p-2 border bg-gray-100 
+       border-slate-600 rounded-lg focus:ring-slate-300 focus:border-slate-300" %>
+    </div>
+
+    <div>
+      <%= f.submit "Save changes", class: "w-full py-2 px-4 bg-gray-400 font-semibold
+      rounded-lg shadow-md hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:ring-opacity-75" %>
+    </div>
+  <% end %>
+</div>

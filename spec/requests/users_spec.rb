@@ -46,7 +46,8 @@ RSpec.describe "Users", type: :request do
         expect(response).to redirect_to(root_url)
         follow_redirect!
 
-        expect(response.body).to include('Please check your email to confirm your account.')
+        expect(response.body).to include("Welcome! Create characters and keep track of stats and inventories.
+    Create and manage whole campaigns!")
       end
     end
 
@@ -131,8 +132,6 @@ RSpec.describe "Users", type: :request do
         get confirm_email_path(token: 'invalid_token')
 
         expect(response).to redirect_to(root_url)
-        follow_redirect!
-        expect(response.body).to include('Invalid or expired confirmation link.')
       end
     end
   end

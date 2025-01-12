@@ -1,0 +1,36 @@
+
+<div class="min-h-screen bg-gray-50">
+  <!-- Page Header -->
+  <header class="bg-gray-100">
+    <div class="max-w-7xl mx-auto px-6 py-4">
+      <h1 class="text-4xl font-bold text-gray-800">Campaigns</h1>
+    </div>
+  </header>
+  
+  <!-- Cards Section -->
+
+<main class="max-w-7xl mx-auto p-6">
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <% current_user.campaigns.each do |campaign| %>
+      <div class="border border-gray-300 rounded-lg shadow-sm hover:shadow-md transition-shadow bg-white flex flex-col">
+        <!-- Main Card Button -->
+        <%= link_to campaign_pages_path(campaign), class: "flex-grow block p-4 hover:bg-gray-100 rounded-t-lg" do %>
+          <h2 class="text-xl font-bold text-gray-800 mb-2"><%= campaign.name %></h2>
+          <p class="text-gray-600"><%= campaign.description.presence || "&nbsp;".html_safe %></p>
+        <% end %>
+        <!-- Edit Button -->
+        <div class="flex justify-end gap-2 p-2 border-t border-gray-200">
+          <%= link_to edit_campaign_path(campaign), class: "flex items-center text-sm text-indigo-600 hover:text-indigo-800 transition-colors" do %>
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.732-2.732L6 15.268V18h2.732l9.536-9.536a1 1 0 00-1.414-1.414z"/>
+            </svg>
+            Edit
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</main>
+
+</div>
+

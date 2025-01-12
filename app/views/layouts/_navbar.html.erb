@@ -1,51 +1,9 @@
 <nav class="bg-gray-100 p-4 shadow-md">
   <div class="container mx-auto flex justify-between items-center">
     <div class="flex space-x-4">
-      <% if logged_in? %>
-        <%= link_to "Home", current_user, class: "hover:underline" %>
-
-        <!-- Campaigns Dropdown -->
-        <div class="group relative">
-          <button class="focus:outline-none">
-            Campaigns
-          </button>
-          <div 
-            id="campaignsDropdown" 
-            class="hidden group-hover:block bg-gray-700 rounded shadow-md mt-2",
-          >
-            <%= link_to "New Campaign", new_campaign_path, class: "block px-4 py-2 hover:bg-gray-800" %>
-            <% @campaigns.each do |campaign| %>
-              <%= link_to campaign.name, campaign_path(campaign.id), class: "block px-4 py-2 hover:bg-gray-800" %>
-            <% end %>
-          </div>
-        </div>
-
-      <% else %>
-        <%= link_to "About", root_path, class: " hover:underline" %>
-        <% unless request.fullpath == login_path || flash[:danger] %>
-          <%= link_to "Log in", login_path, class: " hover:underline" %>
-        <% end %>
-        <% unless request.fullpath == signup_path || @user&.errors&.any? %>
-          <%= link_to "Sign Up", signup_path, class: "hover:underline" %>
-        <% end %>
-      <% end %>
+      <%= link_to "Log in", login_path, class: " hover:underline" %>
+      <%= link_to "Sign Up", signup_path, class: "hover:underline" %>
     </div>
-
-    <% if logged_in? %>
-      <!-- Profile Dropdown -->
-      <div class="relative group">
-        <button class="focus:outline-none">
-          Profile
-        </button>
-        <div 
-          id="profileDropdown" 
-          class="hidden top-full z-10 group-hover:block bg-gray-700 rounded shadow-md mt-2",
-        >
-          <%= link_to "Settings", edit_user_path(current_user), class: "block px-4 py-2 hover:bg-gray-800" %>
-          <%= link_to "Log out", logout_path, class: "block px-4 py-2 hover:bg-gray-800", data: { "turbo-method": :delete } %>
-        </div>
-      </div>
-    <% end %>
   </div>
 </nav>
 

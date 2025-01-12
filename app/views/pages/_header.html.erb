@@ -1,5 +1,12 @@
 <div class="group w-full cursor-pointer pl-[2rem] md:pl-[96px]">
   <div class="flex justify-start">
+    <!-- 
+   TODO: Implement icons and covers
+    - a way to add an icon to pages, so they're easier to spot on the sidebar (and for the future mobile styling)
+    - importing images for use as cover, as well as genereating a cover via test description (by calling dall-e)
+    -->
+
+    <!--
     <button class="mt-4 flex h-6 items-center rounded-sm px-2 text-sm text-gray-400 opacity-100 md:opacity-0 transition-colors hover:bg-gray-100 group-hover:opacity-100">
       <svg class="mr-1 h-4 w-4" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
         <path fill="none" d="M0 0h24v24H0z" />
@@ -13,6 +20,7 @@
       </svg>
       Add cover
     </button>
+    -->
   </div>
   <div class="pr-[2rem] md:pr-[96px]">
     <%= form_with model: [@campaign, @page], data: {controller: "editable"} do |f| %>

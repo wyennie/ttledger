@@ -1,5 +1,5 @@
 class ChatService
-  def initialize()
+  def initialize
     @client = self.client
   end
 
