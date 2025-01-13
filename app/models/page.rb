@@ -1,4 +1,7 @@
 class Page < ApplicationRecord
+  extend FriendlyId
+  friendly_id :title, use: [ :slugged, :history ]
+
   belongs_to :parent, class_name: "Page", optional: true
   belongs_to :campaign
 
@@ -7,21 +10,11 @@ class Page < ApplicationRecord
 
   scope :top_level, -> { where(parent_id: nil).order(:position) }
 
-  after_create :create_slug
-  before_update :update_slug
-
-  def to_param
-    slug
+  def slug_candidates
+    title.present? ? [ title ] : [ "untitled-page-#{id || SecureRandom.hex(4)}" ]
   end
 
-  private
-
-    def create_slug
-      update_slug
-      save!
-    end
-
-    def update_slug
-      self.slug = [ title&.parameterize, id ].compact.join("-")
-    end
+  def should_generate_new_friendly_id?
+    title_changed? || slug.blank?
+  end
 end

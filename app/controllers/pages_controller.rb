@@ -49,7 +49,6 @@ class PagesController < ApplicationController
     @page = @campaign.pages.new(create_page_params)
     @page.parent_id = params[:parent_id] if params[:parent_id]
 
-
     if @page.save
       redirect_to campaign_page_path(@campaign, @page)
     else
@@ -62,10 +61,17 @@ class PagesController < ApplicationController
   def update
     respond_to do |format|
       if @page.update(page_params)
-        format.turbo_stream
-        format.html { redirect_to campaign_page_path(@campaign, @page) }
+        if @page.saved_change_to_slug? && @page.slug_changed?
+          # Check if the new slug already exists
+          if Page.exists?(slug: @page.slug)
+            @page.slug = "#{@page.slug}-#{SecureRandom.hex(4)}" # Add a unique identifier
+            @page.save!
+          end
+          redirect_to campaign_page_path(@campaign, @page)
+        else
+          redirect_to campaign_page_path(@campaign, @page)
+        end
       else
-        format.html { render :edit, status: :unprocessable_entity }
       end
     end
   end
