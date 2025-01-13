@@ -57,24 +57,23 @@ class PagesController < ApplicationController
     end
   end
 
-  # PATCH/PUT /pages/1 or /pages/1.json
-  def update
-    respond_to do |format|
-      if @page.update(page_params)
-        if @page.saved_change_to_slug? && @page.slug_changed?
-          # Check if the new slug already exists
-          if Page.exists?(slug: @page.slug)
-            @page.slug = "#{@page.slug}-#{SecureRandom.hex(4)}" # Add a unique identifier
-            @page.save!
-          end
-          redirect_to campaign_page_path(@campaign, @page)
-        else
-          redirect_to campaign_page_path(@campaign, @page)
-        end
+
+def update
+  respond_to do |format|
+    if @page.update(page_params)
+      if @page.saved_change_to_title?
+        redirect_to campaign_page_path(@campaign, @page)
+      elsif @page.saved_change_to_body?
+        format.turbo_stream
       else
+        format.html { redirect_to campaign_page_path(@campaign, @page) }
       end
+    else
+      format.html { render :edit, status: :unprocessable_entity }
     end
   end
+end
+
 
   # DELETE /pages/1 or /pages/1.json
   def destroy
