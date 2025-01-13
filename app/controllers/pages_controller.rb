@@ -65,11 +65,9 @@ def update
         redirect_to campaign_page_path(@campaign, @page)
       elsif @page.saved_change_to_body?
         format.turbo_stream
-      else
-        format.html { redirect_to campaign_page_path(@campaign, @page) }
       end
     else
-      format.html { render :edit, status: :unprocessable_entity }
+      format.turbo_stream
     end
   end
 end
