@@ -46,8 +46,7 @@ RSpec.describe "Users", type: :request do
         expect(response).to redirect_to(root_url)
         follow_redirect!
 
-        expect(response.body).to include("Welcome! Create characters and keep track of stats and inventories.
-    Create and manage whole campaigns!")
+        expect(response.body).to include("Welcome! Create and manage whole campaigns with the help of AI assistants!")
       end
     end
 
