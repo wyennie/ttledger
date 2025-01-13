@@ -70,6 +70,9 @@ class CampaignsController < ApplicationController
 
   def destroy
     @campaign.roles.destroy_all
+    @campaign.characters.each do |character|
+      character.items.destroy_all
+    end
     @campaign.characters.destroy_all
     @campaign.pages.destroy_all
     @campaign.destroy
