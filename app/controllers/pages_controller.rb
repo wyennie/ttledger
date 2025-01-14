@@ -59,6 +59,7 @@ class PagesController < ApplicationController
 
 
 def update
+ Rails.logger.info "Request format: #{request.format}"
   respond_to do |format|
     if @page.update(page_params)
       if @page.saved_change_to_title?
@@ -66,6 +67,8 @@ def update
       elsif @page.saved_change_to_body?
         format.turbo_stream
       end
+
+        format.turbo_stream
     else
       format.turbo_stream
     end
