@@ -48,7 +48,7 @@ export default class extends Controller {
       event.preventDefault()
       this.#createLabel('You')
       this.#createMessage(this.promptTarget.value)
-      this.#createLabel('ChatGPT')
+      this.#createLabel('Assistant')
       this.currentPre = this.#createMessage()
 
       this.#setupEventSource()
@@ -57,11 +57,13 @@ export default class extends Controller {
   }
 
   handleKeyDown(event) {
-    if (event.key === "Enter" && !event.ctrlKey) {
+    if (event.key === "Enter" && !event.ctrlKey && !event.shiftKey) {
       // Submit the form when Enter is pressed, without Ctrl
       event.preventDefault();  // Prevent new line
       this.generateResponse(event);  // Call the generateResponse method to submit
-    } else if (event.key === "Enter" && event.ctrlKey) {
+    } else if (
+        (event.key === "Enter" && event.ctrlKey) || 
+        (event.key === "Enter" && event.shiftKey)) {
       // Allow new line if Ctrl + Enter is pressed
       event.preventDefault();  // Prevent form submission
       const cursorPos = this.promptTarget.selectionStart;
