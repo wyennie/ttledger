@@ -12,7 +12,7 @@ class PagesController < ApplicationController
 
   def clear_messages
     @page = Page.find_by(slug: params[:page_slug], campaign_id: params[:campaign_id])
-    
+
     if @page
       @page.chat_messages.destroy_all # Destroy all related chat messages
       redirect_to campaign_page_path(@campaign, @page)

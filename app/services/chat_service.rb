@@ -1,6 +1,6 @@
 class ChatService
   def initialize
-    @client = self.client    
+    @client = self.client
   end
 
   def generate_response(prompts, user_input, page_slug, campaign_id, user)
