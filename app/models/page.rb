@@ -4,6 +4,7 @@ class Page < ApplicationRecord
 
   belongs_to :parent, class_name: "Page", optional: true
   belongs_to :campaign
+  has_many :chat_messages, dependent: :destroy
 
   acts_as_list scope: :parent
   acts_as_tree order: :position

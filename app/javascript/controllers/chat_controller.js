@@ -3,10 +3,37 @@ import { marked } from "marked"
 import DOMPurify from "dompurify"
 
 export default class extends Controller {
-  static targets = ["prompt", "conversation"]
+  static targets = ["prompt", "conversation", "chatFormContent"]
 
   connect() {
     this.checkForPromptTarget();
+    this.loadPreviousMessages();
+  }
+
+  async loadPreviousMessages() {
+    this.pageSlug = this.element.dataset.pageSlug;
+    this.campaignId = this.element.dataset.campaignId
+    if (!this.pageSlug || !this.campaignId) {
+      console.warn("Skipping fetch until page finished loading.");
+      return;
+    }
+    try {
+      const response = await fetch(`/campaigns/${this.campaignId}/pages/${this.pageSlug}/chat_messages`);
+      // const response = await fetch(`${this.campaignId}/pages/${this.pageSlug}/chat_messages`);
+      if (this.pageSlug != undefined) {
+        const messages = await response.json();
+        messages.forEach((message) => {
+          const label = message.role === "assistant" ? "Assistant" : "You";
+          this.#createLabel(label);
+          const parsedMarkdown = this.#parseMarkdown(message.content);
+          this.#createMessage(parsedMarkdown);
+        });
+      } else {
+        console.error("Failed to fetch previous messages");
+      }
+    } catch (error) {
+      console.error("Error loading messages:", error);
+    }
   }
 
   checkForPromptTarget() {
@@ -29,6 +56,7 @@ export default class extends Controller {
     chatFormContent.classList.toggle("hidden");
     chatFormInput.classList.toggle("hidden");
     const button = event.currentTarget;
+    chatFormContent.scrollTop = chatFormContent.scrollHeight;
   }
 
   clearInput(event) {
@@ -96,7 +124,7 @@ export default class extends Controller {
     this.accumulatedMessage += parsedData.message;
     const parsedMarkdown = this.#parseMarkdown(this.accumulatedMessage);
     this.currentPre.innerHTML = parsedMarkdown;
-    this.conversationTarget.scrollTop = this.conversationTarget.scrollHeight;
+    this.chatFormContentTarget.scrollTop = this.chatFormContentTarget.scrollHeight;
   }
 
   #parseMarkdown(text) {

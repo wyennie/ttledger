@@ -25,7 +25,7 @@
       <%= link_to campaign_page_path(page.campaign_id, page.slug),
                   data: { 
                     "turbo-method": :delete, 
-                    turbo_confirm: "Deleting this will delete all child pages as well. Delete anyway?" 
+                    turbo_confirm: "Deleting this will delete all child pages as well. Delete anyway?",
                   },
                   class: "p-1 hover:rounded-sm hover:bg-indigo-400" do %>
         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-f" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="size-6">

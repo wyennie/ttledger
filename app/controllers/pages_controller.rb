@@ -8,7 +8,25 @@ class PagesController < ApplicationController
   # GET /pages/1 or /pages/1.json
   def show
     @top_pages = @campaign.pages.top_level
-    @chat_message = []
+  end
+
+  def clear_messages
+    @page = Page.find_by(slug: params[:page_slug], campaign_id: params[:campaign_id])
+    
+    if @page
+      @page.chat_messages.destroy_all # Destroy all related chat messages
+      redirect_to campaign_page_path(@campaign, @page)
+      logger.debug("hellojjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj")
+    else
+      flash[:error] = "Page not found"
+      redirect_to campaign_pages_path(@campaign)
+    end
+  end
+
+  def chat_messages
+    page = Page.find_by(slug: params[:slug])
+    @messages = ChatMessage.where(page_id: page.id).order(:created_at)
+    render json: @messages
   end
 
   def chat_response
@@ -17,13 +35,20 @@ class PagesController < ApplicationController
     sse = SSE.new(response.stream, event: "message")
     chat_service = ChatService.new()
     page_context = chat_service.add_page_context(params[:page_slug])
+    page = Page.find_by(slug: params[:page_slug])
+
+    messages = page.chat_messages
     prompts = [
       "Do you know what tabletop roleplaying games are? Your job is to assist the game master",
       page_context
     ]
 
+    messages.each do |message|
+      prompts << message.content
+    end
+
     begin
-        chat_service.generate_response(prompts, params[:prompt]) do |chunk|
+      chat_service.generate_response(prompts, params[:prompt], params[:page_slug], params[:campaign_id], current_user) do |chunk|
         content = chunk.dig("choices", 0, "delta", "content")
         sse.write({ message: content }) if content.present?
       end
@@ -59,7 +84,6 @@ class PagesController < ApplicationController
 
 
 def update
- Rails.logger.info "Request format: #{request.format}"
   respond_to do |format|
     if @page.update(page_params)
       if @page.saved_change_to_title?

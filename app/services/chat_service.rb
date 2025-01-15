@@ -1,27 +1,53 @@
 class ChatService
   def initialize
-    @client = self.client
+    @client = self.client    
   end
 
-  def generate_response(prompts, user_input)
+  def generate_response(prompts, user_input, page_slug, campaign_id, user)
     messages = prompts.map { |prompt| { role: "user", content: prompt } }
     messages << { role: "user", content: user_input }
+
+    page = Page.find_by(slug: page_slug)
+    page_id = page.id
+    # Save user input as a message
+    ChatMessage.create!(
+      content: user_input,
+      role: "user",
+      page_id: page_id,
+      campaign_id: campaign_id,
+      user: user
+    )
+
+    response_content = "" # Variable to accumulate the full assistant's response
 
     @client.chat(
       parameters: {
         model:    "gpt-4o-mini-2024-07-18",
         messages: messages,
         stream:   proc do |chunk|
+          content = chunk.dig("choices", 0, "delta", "content")
+          if content.present?
+            response_content += content # Accumulate content in the response_content variable
+          end
           yield chunk if block_given? # Pass chunk back to the caller
         end
       }
     )
+
+    # Save the final response once the stream is complete
+    if response_content.present?
+      ChatMessage.create!(
+        content: response_content,
+        role: "assistant",
+        page_id: page_id,
+        campaign_id: campaign_id,
+        user: user
+      )
+    end
   end
 
   def add_page_context(page_slug)
     page = Page.find_by(slug: page_slug)
-    return "Page not found." unless page
-
     body = ""
     if page.body.present?
       body = page.body

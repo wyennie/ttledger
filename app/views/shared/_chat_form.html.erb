@@ -14,6 +14,11 @@
 
   <!-- Input form: Remain fixed at the bottom -->
   <div class="bg-gray-100 p-4 rounded-b-lg hidden" data-chat-target="chatFormInput">
+    <%= link_to "Clear", campaign_page_clear_messages_path(@campaign.id, @page.slug), 
+                data: {
+                  "turbo-method": :delete,
+                },
+                class: "text-sm text-rose-500" %>
     <%= form_with data: { action: "chat#generateResponse" },
       class: "flex items-center gap-2" do |f| %>
 
