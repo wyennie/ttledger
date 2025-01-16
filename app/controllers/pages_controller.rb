@@ -31,6 +31,7 @@ class PagesController < ApplicationController
   def chat_response
     response.headers["Content-Type"]  = "text/event-stream"
     response.headers["Last-Modified"] = Time.now.httpdate
+    response.headers["Connection"] = "keep-alive"
     sse = SSE.new(response.stream, event: "message")
     chat_service = ChatService.new()
     page_context = chat_service.add_page_context(params[:page_slug])

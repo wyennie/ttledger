@@ -25,6 +25,11 @@ proxy:
     requests: false        # Disable buffering for requests (streaming optimization)
     responses: false       # Disable buffering for responses (streaming optimization)
 
+  routes:
+      - path: /campaigns/*/pages/*/chat_responses 
+      http2: false
+      compression: false
+
 # Credentials for your image host.
 registry:
   # Specify the registry server, if you're not using Docker Hub
