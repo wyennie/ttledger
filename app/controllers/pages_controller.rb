@@ -82,21 +82,21 @@ class PagesController < ApplicationController
   end
 
 
-def update
-  respond_to do |format|
-    if @page.update(page_params)
-      if @page.saved_change_to_title?
-        redirect_to campaign_page_path(@campaign, @page)
-      elsif @page.saved_change_to_body?
+  def update
+    respond_to do |format|
+      if @page.update(page_params)
+        if @page.saved_change_to_title?
+          redirect_to campaign_page_path(@campaign, @page)
+        elsif @page.saved_change_to_body?
+          format.turbo_stream
+        end
+
+          format.turbo_stream
+      else
         format.turbo_stream
       end
-
-        format.turbo_stream
-    else
-      format.turbo_stream
     end
   end
-end
 
 
   # DELETE /pages/1 or /pages/1.json
