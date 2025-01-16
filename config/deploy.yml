@@ -20,7 +20,7 @@ servers:
 proxy:
   ssl: true
   host: ttledger.com, www.ttledger.com
-
+  forward_headers: true
   buffering:
     requests: false        # Disable buffering for requests (streaming optimization)
     responses: false       # Disable buffering for responses (streaming optimization)
