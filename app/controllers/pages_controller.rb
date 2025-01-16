@@ -32,7 +32,7 @@ class PagesController < ApplicationController
   def chat_response
     response.headers["Content-Type"]  = "text/event-stream"
     response.headers["Last-Modified"] = Time.now.httpdate
-    response.headers['Cache-Control'] = "no-store, no-cache, must-revalidate, proxy-revalidate"
+    response.headers["Cache-Control"] = "no-store, no-cache, must-revalidate, proxy-revalidate"
     response.headers["Connection"] = "keep-alive"
     response.headers["X-Accel-Buffering"] = "no"
     sse = SSE.new(response.stream, event: "message")
@@ -156,7 +156,7 @@ class PagesController < ApplicationController
     end
 
     def disable_caching
-      response.cache_control = 'no-store'
+      response.cache_control = "no-store"
       expires_now
     end
 end
