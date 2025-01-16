@@ -56,7 +56,6 @@ Rails.application.configure do
   # config.solid_queue.connects_to = { database: { writing: :queue } }
 
 
-  config.action_view.template_optimizer = :none
   # Ignore bad email addresses and do not raise email delivery errors.
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.
   # config.action_mailer.raise_delivery_errors = false
