@@ -49,12 +49,45 @@ class CampaignsController < ApplicationController
 
     if @campaign.save
       Role.create(user: current_user, campaign: @campaign, role_type: :gamemaster)
+
+
+      # Define the page hierarchy
+      pages_data = {
+        "Overview" => nil,
+        "World" => {
+          "Regions" => "World",
+          "Factions" => "World",
+          "Major Events" => "World"
+        },
+        "Characters" => {
+          "Player Characters" => "Characters",
+          "Key NPCs" => "Characters"
+        },
+        "Locations" => {
+          "Towns and Settlements" => "Locations",
+          "Dungeons" => "Locations",
+          "Landmarks" => "Locations"
+        },
+        "Current Adventure" => nil,
+        "Timeline" => nil,
+        "Bestiary" => {
+          "Monsters" => "Bestiary",
+          "Wildlife" => "Bestiary"
+        },
+        "Items and Loot" => nil,
+        "Player Notes" => nil
+      }
+
+      # Helper method to create pages recursively
+      create_pages(pages_data, nil, @campaign)
+
       flash[:success] = "Campaign created!"
       redirect_to campaign_pages_path(@campaign)
     else
       render "new", status: :unprocessable_entity
     end
   end
+
 
   def edit
   end
@@ -117,6 +150,19 @@ class CampaignsController < ApplicationController
 
       if role.nil? || !role.role_type.in?([ "gamemaster", "player" ])
         redirect_to root_path, alert: "You do not have access to this campaign."
+      end
+    end
+
+    # Recursively creates pages and establishes parent-child relationships
+    def create_pages(pages_data, parent, campaign)
+      pages_data.each do |title, children|
+        # Create the page for the current title
+        page = campaign.pages.create(title: title, parent_id: parent&.id)
+
+        # If there are children, recursively create them with the current page as the parent
+        if children.is_a?(Hash)
+          create_pages(children, page, campaign)
+        end
       end
     end
 end
