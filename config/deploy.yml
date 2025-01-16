@@ -26,7 +26,7 @@ proxy:
     responses: false       # Disable buffering for responses (streaming optimization)
 
   routes:
-      - path: /campaigns/*/pages/*/chat_responses 
+    - path: /campaigns/*/pages/*/chat_responses 
       http2: false
       compression: false
 
