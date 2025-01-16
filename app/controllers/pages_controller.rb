@@ -32,7 +32,6 @@ class PagesController < ApplicationController
     response.headers["Content-Type"]  = "text/event-stream"
     response.headers["Last-Modified"] = Time.now.httpdate
     response.headers['Cache-Control'] = "no-cache"
-    response.headers['Transfer-Encoding'] = "chunked"
     response.headers["Connection"] = "keep-alive"
     sse = SSE.new(response.stream, event: "message")
     chat_service = ChatService.new()
