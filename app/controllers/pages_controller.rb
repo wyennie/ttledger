@@ -33,6 +33,7 @@ class PagesController < ApplicationController
     response.headers["Last-Modified"] = Time.now.httpdate
     response.headers['Cache-Control'] = "no-cache"
     response.headers["Connection"] = "keep-alive"
+    response.headers["X-Accel-Buffering"] = "no"
     sse = SSE.new(response.stream, event: "message")
     chat_service = ChatService.new()
     page_context = chat_service.add_page_context(params[:page_slug])
