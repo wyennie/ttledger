@@ -388,12 +388,12 @@ DEPENDENCIES
   factory_bot_rails
   faker
   friendly_id (~> 5.5)
-  importmap-rails
-  jbuilder
+  importmap-rails (~> 2.0)
+  jbuilder (~> 2.0)
   kamal
   pg (>= 1.5.9)
   postmark-rails
-  propshaft
+  propshaft (~> 1.0)
   puma (>= 5.0)
   rails (~> 8.0.0)
   redcarpet (~> 3.6)
@@ -402,13 +402,13 @@ DEPENDENCIES
   rubocop-rails-omakase
   ruby-openai (~> 7.3)
   selenium-webdriver
-  solid_cable
-  solid_cache
+  solid_cable (~> 3.0)
+  solid_cache (~> 1.0)
   sqlite3 (>= 2.1)
-  stimulus-rails
-  tailwindcss-rails
+  stimulus-rails (~> 1.0)
+  tailwindcss-rails (~> 3.0)
   thruster
-  turbo-rails
+  turbo-rails (~> 2.0)
   tzinfo-data
   web-console
 

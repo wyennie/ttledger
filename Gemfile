@@ -1,20 +1,20 @@
 source "https://rubygems.org"
 
 gem "rails", "~> 8.0.0"
-gem "tailwindcss-rails"
-gem "propshaft"
+gem "tailwindcss-rails", "~> 3.0"
+gem "propshaft", "~> 1.0"
 gem "pg", ">= 1.5.9"
 gem "sqlite3", ">= 2.1"
 gem "puma", ">= 5.0"
-gem "importmap-rails"
-gem "turbo-rails"
-gem "stimulus-rails"
-gem "jbuilder"
+gem "importmap-rails", "~> 2.0"
+gem "turbo-rails", "~> 2.0"
+gem "stimulus-rails", "~> 1.0"
+gem "jbuilder", "~> 2.0"
 gem "bcrypt", "~> 3.1.7"
 gem "tzinfo-data", platforms: %i[ windows jruby ]
-gem "solid_cache"
+gem "solid_cache", "~> 1.0"
 # gem "solid_queue"
-gem "solid_cable"
+gem "solid_cable", "~> 3.0"
 gem "bootsnap", require: false
 gem "kamal", require: false
 gem "thruster", require: false
