@@ -1,7 +1,7 @@
 source "https://rubygems.org"
 
 gem "rails", "~> 8.0.0"
-gem "tailwindcss-rails", "~> 3.0"
+gem "tailwindcss-rails", "~> 3.2"
 gem "propshaft", "~> 1.0"
 gem "pg", ">= 1.5.9"
 gem "sqlite3", ">= 2.1"
