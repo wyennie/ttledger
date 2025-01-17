@@ -4,7 +4,6 @@ class PagesController < ApplicationController
   before_action :set_user_and_campaigns
   before_action :set_campaign
   before_action :authorize_user
-  before_action :disable_caching, only: [ :chat_response ]
 
   # GET /pages/1 or /pages/1.json
   def show
@@ -32,9 +31,6 @@ class PagesController < ApplicationController
   def chat_response
     response.headers["Content-Type"]  = "text/event-stream"
     response.headers["Last-Modified"] = Time.now.httpdate
-    response.headers["Cache-Control"] = "no-store, no-cache, must-revalidate, proxy-revalidate"
-    response.headers["Connection"] = "keep-alive"
-    response.headers["X-Accel-Buffering"] = "no"
     sse = SSE.new(response.stream, event: "message")
     chat_service = ChatService.new()
     page_context = chat_service.add_page_context(params[:page_slug])
@@ -153,10 +149,5 @@ class PagesController < ApplicationController
       if role.nil? || !role.role_type.in?([ "gamemaster", "player" ])
         redirect_to root_path, alert: "You do not have access to this campaign."
       end
-    end
-
-    def disable_caching
-      response.cache_control = "no-store"
-      expires_now
     end
 end
