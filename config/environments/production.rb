@@ -16,11 +16,12 @@ Rails.application.configure do
   config.action_controller.perform_caching = false
 
   # Cache assets for far-future expiry since they are all digest stamped.
+
+  config.serve_static_files = true
   config.public_file_server.headers = { "cache-control" => "public, max-age=#{1.year.to_i}" }
   config.assets.compile = false # Assets must be precompiled
   config.public_file_server.enabled = ENV["RAILS_SERVE_STATIC_FILES"].present?
-  config.assets.debug = true
-
+  config.assets.digest = true
   # Enable serving of images, stylesheets, and JavaScripts from an asset server.
   # config.asset_host = "http://assets.example.com"
 
