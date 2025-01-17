@@ -5,7 +5,7 @@ module.exports = {
     './public/*.html.erb',
     './app/helpers/**/*.rb',
     './app/javascript/**/*.js',
-    './app/views/**/*.{erb,haml,html,slim}'
+    './app/views/**/*.{erb,haml,html,slim}',
     '.app/assets/sylesheets/**/*.css'
   ],
   theme: {
