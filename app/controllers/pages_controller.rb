@@ -28,11 +28,15 @@ class PagesController < ApplicationController
     render json: @messages
   end
 
+
   def chat_response
-    response.headers["Content-Type"]  = "text/event-stream"
-    response.headers["Last-Modified"] = Time.now.httpdate
+    response.headers["content-type"]  = "text/event-stream"
+    response.headers["cache-control"] = "no-cache"
+    response.headers["connection"] = "keep-alive"
+    response.headers["last-modified"] = Time.now.httpdate
+
     sse = SSE.new(response.stream, event: "message")
-    chat_service = ChatService.new()
+    chat_service = ChatService.new
     page_context = chat_service.add_page_context(params[:page_slug])
     page = Page.find_by(slug: params[:page_slug])
 
@@ -49,7 +53,9 @@ class PagesController < ApplicationController
     begin
       chat_service.generate_response(prompts, params[:prompt], params[:page_slug], params[:campaign_id], current_user) do |chunk|
         content = chunk.dig("choices", 0, "delta", "content")
-        sse.write({ message: content }) if content.present?
+        if content.present?
+          sse.write({ message: content })
+        end
       end
     rescue => e
       logger.error "ChatService Error: #{e.message}"
@@ -58,6 +64,7 @@ class PagesController < ApplicationController
       sse.close
     end
   end
+
 
   # GET /pages or /pages.json
   def index
