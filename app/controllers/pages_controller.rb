@@ -4,6 +4,7 @@ class PagesController < ApplicationController
   before_action :set_user_and_campaigns
   before_action :set_campaign
   before_action :authorize_user
+  before_action :disable_compression_for_sse, only: [:chat_response]
 
   # GET /pages/1 or /pages/1.json
   def show
@@ -116,6 +117,12 @@ class PagesController < ApplicationController
   end
 
   private
+
+    def disable_compression_for_sse
+      # Manually disable compression here for SSE route
+      response.headers.delete('Content-Encoding')
+    end
+
     # Use callbacks to share common setup or constraints between actions.
     def set_page
       @page = Page.find_by(slug: params[:slug], campaign_id: params[:campaign_id])
