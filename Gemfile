@@ -1,6 +1,6 @@
 source "https://rubygems.org"
 
-gem "rails", "~> 8.0.0"
+gem "rails", "~> 8.0.1"
 gem "tailwindcss-rails", "~> 3.0"
 gem "propshaft", "~> 1.0"
 gem "pg", ">= 1.5.9"
