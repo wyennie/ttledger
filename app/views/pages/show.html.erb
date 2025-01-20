@@ -7,23 +7,23 @@
 
   <!-- Main Content -->
   <main class="col-span-8 md:col-span-8">
-    <div class="sticky top-0 bg-gray-50 z-50 w-full">
       <%= render partial: "layouts/flash" %>
       <%= render partial: "shared/chat_form" %>
-    </div>
 
-    <div class="flex w-full justify-center">
-      <div class="w-[900px]">
-        <%= render "header" %>
+    <div class="absolute z-10">
+      <div class="flex w-full justify-center">
+        <div class="w-[900px]">
+          <%= render "header" %>
+        </div>
       </div>
-    </div>
 
-    <%= form_with model: [@campaign, @page], data: { controller: "tiptap"} do |f| %>
-      <%= render partial: "body",
-                  locals: { initial_content: @page.body,
-                            form: f,
-                            field_name: :body } %>
-    <% end %>
+      <%= form_with model: [@campaign, @page], data: { controller: "tiptap"} do |f| %>
+        <%= render partial: "body",
+                    locals: { initial_content: @page.body,
+                              form: f,
+                              field_name: :body } %>
+      <% end %>
+    </div>
   </main>
 </div>
 

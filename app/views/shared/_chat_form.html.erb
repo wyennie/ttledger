@@ -1,11 +1,12 @@
+
 <div id="chat-form"
      data-controller="chat" 
      data-campaign-id="<%= @campaign.id %>" 
      data-page-slug="<%= @page.slug %>" 
      data-chat-target="chatForm"
-     class="chat-container w-full fixed bottom-0 right-0 w-[84%!important] max-h-[100vh] rounded-lg flex flex-col">
+     class="chat-container w-full fixed bottom-0 right-0 w-[84%!important] max-h-[100vh] rounded-lg flex flex-col z-50">
 
-  <div data-chat-target="chatFormContent" class="flex-1 overflow-y-auto hidden" >
+  <div data-chat-target="chatFormContent" class="flex-1 z-50 overflow-y-auto hidden">
     <div id="chat-messages" 
          data-chat-target="conversation" 
          class="chat-conversation p-4 bg-gray-100">
@@ -35,4 +36,5 @@
       </button>
     <% end %>
   </div>
-</div
+</div>
+
