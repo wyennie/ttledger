@@ -33,13 +33,7 @@ module TTLedger
     # These settings can be overridden in specific environments using the files
     # in config/environments, which are processed later.
 
-    config.middleware.insert_before Rack::Sendfile, Rack::Deflater, if: proc { |env|
-      path = env['PATH_INFO']
-      # Match paths like /campaigns/:id/pages/:name/chat_responses
-      path.match?(/^\/campaigns\/\d+\/pages\/\w+\/chat_responses/)
-    }
-
-    #
+    config.middleware.delete Rack::Deflater
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
 
