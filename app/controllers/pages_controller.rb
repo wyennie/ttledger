@@ -35,7 +35,7 @@ def chat_response
   response.headers["Content-Type"]  = "text/event-stream"
   response.headers["Cache-Control"] = "no-cache"
   response.headers["Connection"] = "keep-alive"
-  response.heasers["Transfer-Encoding"] = "chunked"
+  response.headers["Transfer-Encoding"] = "chunked"
   logger.info "Response headers set: #{response.headers}"
 
   logger.info "Initializing SSE and ChatService..."
