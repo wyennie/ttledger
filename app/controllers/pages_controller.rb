@@ -33,13 +33,10 @@ class PagesController < ApplicationController
 def chat_response
   logger.info "Setting response headers..."
   response.headers["Content-Type"]  = "text/event-stream"
-  response.headers["Cache-Control"] = "no-cache"
-  response.headers["Connection"] = "keep-alive"
-  response.headers["Transfer-Encoding"] = "chunked"
   logger.info "Response headers set: #{response.headers}"
 
   logger.info "Initializing SSE and ChatService..."
-  sse = SSE.new(response.stream, event: "message")
+  sse = SSE.new(response.stream,retry: 300, event: "message")
   chat_service = ChatService.new
 
   logger.info "Adding page context for page slug: #{params[:page_slug]}"
