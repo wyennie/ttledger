@@ -34,6 +34,7 @@ class PagesController < ApplicationController
     logger.info "Setting response headers..."
     response.headers["Content-Type"]  = "text/event-stream"
     response.headers["Content-Encoding"] = "chunked"
+    response.headers["Last-Modified"] = Time.now.httpdate
     logger.info "Response headers set: #{response.headers}"
 
     logger.info "Initializing SSE and ChatService..."
