@@ -66,17 +66,16 @@ def chat_response
     prompts << message.content
   end
 
-  begin
-    logger.info "Generating chat response with prompts: #{prompts}"
-    chat_service.generate_response(prompts, params[:prompt], params[:page_slug], params[:campaign_id], current_user) do |chunk|
-      content = chunk.dig("choices", 0, "delta", "content")
-      if content.present?
-        logger.debug "Received content chunk: #{content}"
-        sse.write({ message: content })
-      else
-        logger.debug "No content in the current chunk."
-      end
+  logger.info "Generating chat response with prompts: #{prompts}"
+  chat_service.generate_response(prompts, params[:prompt], params[:page_slug], params[:campaign_id], current_user) do |chunk|
+    content = chunk.dig("choices", 0, "delta", "content")
+    if content.present?
+      logger.debug "Received content chunk: #{content}"
+      sse.write({ message: content })
+    else
+      logger.debug "No content in the current chunk."
     end
+  end
   rescue => e
     logger.error "ChatService Error: #{e.message}\n#{e.backtrace.join("\n")}"
     sse.write({ error: "An error occurred while generating the response." })
