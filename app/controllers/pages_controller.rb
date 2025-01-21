@@ -32,7 +32,7 @@ class PagesController < ApplicationController
 
 def chat_response
   logger.info "Setting response headers..."
-  response.headers["Content-Type"]  = "text/event-stream"
+  response.headers["Content-Type"]  = "text/json"
   response.headers["Cache-Control"] = "no-cache"
   response.headers["Connection"] = "keep-alive"
   logger.info "Response headers set: #{response.headers}"
