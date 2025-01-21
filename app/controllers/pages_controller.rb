@@ -34,7 +34,6 @@ def chat_response
   logger.info "Setting response headers..."
   response.headers["Content-Type"]  = "text/event-stream"
   response.headers["Content-Encoding"] = "chunked"
-  response.headers["Transfer-Encoding"] = "chunked"
   logger.info "Response headers set: #{response.headers}"
 
   logger.info "Initializing SSE and ChatService..."
