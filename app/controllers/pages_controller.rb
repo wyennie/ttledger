@@ -31,51 +31,52 @@ class PagesController < ApplicationController
 
 
 def chat_response
-  logger.info "Setting response headers..."
-  response.headers["Content-Type"]  = "text/event-stream"
-  logger.info "Response headers set: #{response.headers}"
+  begin
+    logger.info "Setting response headers..."
+    response.headers["Content-Type"]  = "text/event-stream"
+    logger.info "Response headers set: #{response.headers}"
 
-  logger.info "Initializing SSE and ChatService..."
-  sse = SSE.new(response.stream,retry: 300, event: "message")
-  chat_service = ChatService.new
+    logger.info "Initializing SSE and ChatService..."
+    sse = SSE.new(response.stream,retry: 300, event: "message")
+    chat_service = ChatService.new
 
-  logger.info "Adding page context for page slug: #{params[:page_slug]}"
-  page_context = chat_service.add_page_context(params[:page_slug])
-  logger.debug "Page context: #{page_context}"
+    logger.info "Adding page context for page slug: #{params[:page_slug]}"
+    page_context = chat_service.add_page_context(params[:page_slug])
+    logger.debug "Page context: #{page_context}"
 
-  logger.info "Fetching page by slug: #{params[:page_slug]}"
-  page = Page.find_by(slug: params[:page_slug])
-  if page.nil?
-    logger.error "Page not found for slug: #{params[:page_slug]}"
-    sse.write({ error: "Page not found." })
-    return
-  end
-
-  logger.info "Fetching chat messages for the page..."
-  messages = page.chat_messages
-  logger.debug "Chat messages: #{messages.map(&:content)}"
-
-  prompts = [
-    "Do you know what tabletop roleplaying games are? Your job is to assist the game master",
-    page_context
-  ]
-
-  logger.info "Adding chat messages to prompts..."
-  messages.each do |message|
-    logger.debug "Adding message to prompts: #{message.content}"
-    prompts << message.content
-  end
-
-  logger.info "Generating chat response with prompts: #{prompts}"
-  chat_service.generate_response(prompts, params[:prompt], params[:page_slug], params[:campaign_id], current_user) do |chunk|
-    content = chunk.dig("choices", 0, "delta", "content")
-    if content.present?
-      logger.debug "Received content chunk: #{content}"
-      sse.write({ message: content })
-    else
-      logger.debug "No content in the current chunk."
+    logger.info "Fetching page by slug: #{params[:page_slug]}"
+    page = Page.find_by(slug: params[:page_slug])
+    if page.nil?
+      logger.error "Page not found for slug: #{params[:page_slug]}"
+      sse.write({ error: "Page not found." })
+      return
     end
-  end
+
+    logger.info "Fetching chat messages for the page..."
+    messages = page.chat_messages
+    logger.debug "Chat messages: #{messages.map(&:content)}"
+
+    prompts = [
+      "Do you know what tabletop roleplaying games are? Your job is to assist the game master",
+      page_context
+    ]
+
+    logger.info "Adding chat messages to prompts..."
+    messages.each do |message|
+      logger.debug "Adding message to prompts: #{message.content}"
+      prompts << message.content
+    end
+
+    logger.info "Generating chat response with prompts: #{prompts}"
+    chat_service.generate_response(prompts, params[:prompt], params[:page_slug], params[:campaign_id], current_user) do |chunk|
+      content = chunk.dig("choices", 0, "delta", "content")
+      if content.present?
+        logger.debug "Received content chunk: #{content}"
+        sse.write({ message: content })
+      else
+        logger.debug "No content in the current chunk."
+      end
+    end
   rescue => e
     logger.error "ChatService Error: #{e.message}\n#{e.backtrace.join("\n")}"
     sse.write({ error: "An error occurred while generating the response." })
