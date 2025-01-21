@@ -1,14 +1,14 @@
 <%= content_for :title, @page.title || "untitled" %>
-<div class="grid grid-cols-12 gap-4 relative">
+<div class="grid grid-cols-12 gap-4 relative h-full">
   <!-- Sidebar -->
   <aside class="col-span-2 hidden md:block bg-gray-100 h-screen sticky top-0">
     <%= render "sidebar" %>
   </aside>
 
   <!-- Main Content -->
-  <main class="col-span-8 md:col-span-8">
-      <%= render partial: "layouts/flash" %>
-      <%= render partial: "shared/chat_form" %>
+  <main class="col-span-8 md:col-span-8 overflow-auto">
+    <%= render partial: "layouts/flash" %>
+    <%= render partial: "shared/chat_form" %>
 
     <div class="absolute z-10">
       <div class="flex w-full justify-center">
