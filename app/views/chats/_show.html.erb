@@ -1,0 +1,20 @@
+<div class="flex">
+  <div class="w-full">
+
+    <div class="w-full bg-gray-100 py-8">
+      <div class="flex-1 z-50 overflow-y-auto">
+        <ul role="list" class="mx-auto">
+          <%= turbo_stream_from "#{dom_id(@chat)}_messages" %>
+          <div id="<%= dom_id(@chat) %>_messages">
+            <%= render @chat.messages %>
+          </div>
+        </ul>
+
+        <%= render partial: "messages/form", locals: { chat: @chat } %>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+

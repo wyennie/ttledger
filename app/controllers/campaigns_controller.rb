@@ -46,7 +46,6 @@ class CampaignsController < ApplicationController
 
   def create
     @campaign = Campaign.new(campaign_params)
-
     if @campaign.save
       Role.create(user: current_user, campaign: @campaign, role_type: :gamemaster)
 
@@ -78,6 +77,8 @@ class CampaignsController < ApplicationController
         "Player Notes" => nil
       }
 
+      @chat = Chat.new(campaign_id: @campaign.id)
+      @chat.save
       # Helper method to create pages recursively
       create_pages(pages_data, nil, @campaign)
 
@@ -106,12 +107,16 @@ class CampaignsController < ApplicationController
     @campaign.characters.each do |character|
       character.items.destroy_all
     end
+    @chat = Chat.find_by(campaign_id: @campaign.id)
+    @chat.messages.destroy_all
+    @chat.destroy
     @campaign.characters.destroy_all
-    @campaign.pages.destroy_all
+    @campaign.pages.delete_all
     @campaign.destroy
     flash[:success] = "Campaign was successfully deleted."
-    redirect_to user_path(current_user), status: :see_other
+    redirect_to current_user, status: :see_other
   rescue ActiveRecord::RecordNotFound
+    flash[:message] = "Record not found"
     render plain: "Campaign not found", status: :not_found
   end
 

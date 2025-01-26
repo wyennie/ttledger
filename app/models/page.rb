@@ -1,13 +1,12 @@
 class Page < ApplicationRecord
   extend FriendlyId
   friendly_id :title, use: [ :slugged, :history ]
-
   belongs_to :parent, class_name: "Page", optional: true
   belongs_to :campaign
   has_many :chat_messages, dependent: :destroy
-
+  has_many :children, class_name: "Page", foreign_key: "parent_id", dependent: :destroy
   acts_as_list scope: :parent
-  acts_as_tree order: :position
+  acts_as_tree order: :position, dependent: :destroy
 
   scope :top_level, -> { where(parent_id: nil).order(:position) }
 

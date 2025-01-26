@@ -53,3 +53,5 @@ pin "linkifyjs" # @4.2.0
 pin "@tiptap/extension-image", to: "@tiptap--extension-image.js" # @2.11.0
 pin "marked" # @15.0.6
 pin "dompurify" # @3.2.3
+pin "@rails/actioncable", to: "actioncable.esm.js"
+pin_all_from "app/javascript/channels", under: "channels"

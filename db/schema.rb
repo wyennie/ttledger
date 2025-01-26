@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_01_14_184545) do
+ActiveRecord::Schema[8.0].define(version: 2025_01_24_233603) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -104,6 +104,13 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_14_184545) do
     t.index ["user_id"], name: "index_chat_messages_on_user_id"
   end
 
+  create_table "chats", force: :cascade do |t|
+    t.bigint "campaign_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["campaign_id"], name: "index_chats_on_campaign_id"
+  end
+
   create_table "containers", force: :cascade do |t|
     t.integer "capacity"
     t.datetime "created_at", null: false
@@ -150,6 +157,16 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_14_184545) do
     t.index ["character_id"], name: "index_items_on_character_id"
     t.index ["container_id"], name: "index_items_on_container_id"
     t.index ["item_type_type", "item_type_id"], name: "index_items_on_item_type"
+  end
+
+  create_table "messages", force: :cascade do |t|
+    t.bigint "chat_id"
+    t.integer "message_role", default: 0, null: false
+    t.string "content", null: false
+    t.integer "response_number", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["chat_id"], name: "index_messages_on_chat_id"
   end
 
   create_table "pages", force: :cascade do |t|
@@ -204,8 +221,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_14_184545) do
   add_foreign_key "chat_messages", "campaigns"
   add_foreign_key "chat_messages", "pages"
   add_foreign_key "chat_messages", "users"
+  add_foreign_key "chats", "campaigns"
   add_foreign_key "items", "characters"
   add_foreign_key "items", "items", column: "container_id"
+  add_foreign_key "messages", "chats"
   add_foreign_key "pages", "campaigns"
   add_foreign_key "pages", "pages", column: "parent_id"
   add_foreign_key "roles", "campaigns"

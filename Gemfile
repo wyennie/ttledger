@@ -24,6 +24,9 @@ gem "acts_as_list", "~> 1.2"
 gem "acts_as_tree", "~> 2.9"
 gem "redcarpet", "~> 3.6"
 gem "friendly_id", "~> 5.5"
+gem "responders", "~> 3.1"
+gem "sidekiq", "~> 7.3"
+gem "redis", "~> 5.3"
 
 group :development, :test do
   gem "rspec"

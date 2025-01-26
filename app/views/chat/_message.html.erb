@@ -1,0 +1,7 @@
+<turbo-stream action="append" target="chat_messages">
+  <template>
+    <div class="chat-message <%= message[:role] %>">
+      <p><%= message[:content] %></p>
+    </div>
+  </template>
+</turbo-stream>

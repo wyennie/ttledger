@@ -3,37 +3,30 @@ import { marked } from "marked"
 import DOMPurify from "dompurify"
 
 export default class extends Controller {
-  static targets = ["prompt", "conversation", "chatFormContent"]
+  static targets = ["prompt", "chatFormContent", "textarea"]
 
   connect() {
     this.checkForPromptTarget();
-    this.loadPreviousMessages();
+    if (this.hasTextareaTarget) {
+      this.setupFocus();
+      this.setupKeyboardEvents();
+    }
   }
 
-  async loadPreviousMessages() {
-    this.pageSlug = this.element.dataset.pageSlug;
-    this.campaignId = this.element.dataset.campaignId
-    if (!this.pageSlug || !this.campaignId) {
-      console.warn("Skipping fetch until page finished loading.");
-      return;
-    }
-    try {
-      const response = await fetch(`/campaigns/${this.campaignId}/pages/${this.pageSlug}/chat_messages`);
-      // const response = await fetch(`${this.campaignId}/pages/${this.pageSlug}/chat_messages`);
-      if (this.pageSlug != undefined) {
-        const messages = await response.json();
-        messages.forEach((message) => {
-          const label = message.role === "assistant" ? "Assistant" : "You";
-          this.#createLabel(label);
-          const parsedMarkdown = this.#parseMarkdown(message.content);
-          this.#createMessage(parsedMarkdown);
-        });
-      } else {
-        console.error("Failed to fetch previous messages");
+  setupFocus() {
+    const textarea = this.textareaTarget;
+    textarea.focus();
+  }
+
+  setupKeyboardEvents() {
+    const textarea = this.textareaTarget;
+
+    textarea.addEventListener("keydown", (event) => {
+      if (event.ctrlKey && event.key === "Enter") {
+        event.preventDefault(); // Prevent default behavior (newline)
+        textarea.form.requestSubmit(); // Submit the form programmatically
       }
-    } catch (error) {
-      console.error("Error loading messages:", error);
-    }
+    });
   }
 
   checkForPromptTarget() {
@@ -42,8 +35,6 @@ export default class extends Controller {
         observer.disconnect();
         this.campaignId = this.element.dataset.campaignId;
         this.pageSlug = this.element.dataset.pageSlug;
-        this.accumulatedMessage = "";
-        this.promptTarget.addEventListener("keydown", this.handleKeyDown.bind(this));
       }
     });
 
@@ -54,7 +45,6 @@ export default class extends Controller {
     const chatFormContent = document.querySelector('[data-chat-target="chatFormContent"]');
     const chatFormInput   = document.querySelector('[data-chat-target="chatFormInput"]');
     chatFormContent.classList.toggle("hidden");
-    chatFormInput.classList.toggle("hidden");
     const button = event.currentTarget;
     chatFormContent.scrollTop = chatFormContent.scrollHeight;
   }
@@ -71,60 +61,10 @@ export default class extends Controller {
       }
   }
 
-  generateResponse(event) {
-      this.accumulatedMessage = ""
-      event.preventDefault()
-      this.#createLabel('You')
-      this.#createMessage(this.promptTarget.value)
-      this.#createLabel('Assistant')
-      this.currentPre = this.#createMessage()
-
-      this.#setupEventSource()
-
-      this.promptTarget.value = ""
-  }
-
-  handleKeyDown(event) {
-    if (event.key === "Enter" && !event.ctrlKey && !event.shiftKey) {
-      // Submit the form when Enter is pressed, without Ctrl
-      event.preventDefault();  // Prevent new line
-      this.generateResponse(event);  // Call the generateResponse method to submit
-    } else if (
-        (event.key === "Enter" && event.ctrlKey) || 
-        (event.key === "Enter" && event.shiftKey)) {
-      // Allow new line if Ctrl + Enter is pressed
-      event.preventDefault();  // Prevent form submission
-      const cursorPos = this.promptTarget.selectionStart;
-      this.promptTarget.value = this.promptTarget.value.slice(0, cursorPos) + "\n" + this.promptTarget.value.slice(cursorPos);
-    }
-  }
-
-  #createLabel(text) {
-      const label = document.createElement('strong');
-      label.innerHTML = `${text}:`;
-      this.conversationTarget.appendChild(label);
-  }
-
-  #createMessage(text = '') {
-      const preElement = document.createElement('p');
-      preElement.className = "bg-white p-4 rounded-lg text-gray-800"
-      preElement.innerHTML = text;
-      this.conversationTarget.appendChild(preElement);
-      return preElement
-  }
 
   #setupEventSource() {
       this.eventSource = new EventSource(`/campaigns/${this.campaignId}/pages/${this.pageSlug}/chat_responses?prompt=${this.promptTarget.value}`)
-      this.eventSource.addEventListener("message", this.#handleMessage.bind(this))
       this.eventSource.addEventListener("error", this.#handleError.bind(this))
-  }
-
-  #handleMessage(event) {
-    const parsedData = JSON.parse(event.data);
-    this.accumulatedMessage += parsedData.message;
-    const parsedMarkdown = this.#parseMarkdown(this.accumulatedMessage);
-    this.currentPre.innerHTML = parsedMarkdown;
-    this.chatFormContentTarget.scrollTop = this.chatFormContentTarget.scrollHeight;
   }
 
   #parseMarkdown(text) {

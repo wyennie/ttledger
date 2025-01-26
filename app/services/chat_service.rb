@@ -22,7 +22,7 @@ class ChatService
 
     @client.chat(
       parameters: {
-        model:    "gpt-4o-mini-2024-07-18",
+        model:    "gpt-4o",
         messages: messages,
         stream:   proc do |chunk|
           content = chunk.dig("choices", 0, "delta", "content")

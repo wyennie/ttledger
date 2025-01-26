@@ -1,3 +1,5 @@
+require 'sidekiq/web'
+
 Rails.application.routes.draw do
   root    "static_pages#home"
   get     "/signup",  to: "users#new"
@@ -23,6 +25,13 @@ Rails.application.routes.draw do
       get  :manage
     end
   end
-
+  resources :chats, only: %i[create show] do
+    resources :messages, only: %i[create] do
+      collection do
+        delete :destroy_all
+      end
+    end
+  end
+  mount Sidekiq::Web => '/sidekiq'
   get "up" => "rails/health#show", as: :rails_health_check
 end

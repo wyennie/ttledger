@@ -1,0 +1,11 @@
+<div id="<%= dom_id(message) %>_messages">
+  <% if message.user? %>
+    <div class="bg-indigo-200 rounded-lg m-8 p-4">
+      <%= simple_format message.content %>
+    </div>
+  <% else %>
+    <div class="markedown bg-gray-200 rounded-lg m-8 p-4">
+      <%= render_markdown(message.content) %>
+    </div>
+  <% end %>
+</div>
