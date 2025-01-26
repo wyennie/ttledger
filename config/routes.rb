@@ -1,4 +1,3 @@
-require 'sidekiq/web'
 
 Rails.application.routes.draw do
   root    "static_pages#home"
@@ -32,6 +31,5 @@ Rails.application.routes.draw do
       end
     end
   end
-  mount Sidekiq::Web => '/sidekiq'
   get "up" => "rails/health#show", as: :rails_health_check
 end
