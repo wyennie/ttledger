@@ -1,6 +1,4 @@
-<%= turbo_stream.replace "#{dom_id(@chat)}_messages" do %>
-  <!-- Render an empty state or leave blank to clear messages -->
-  <p class="text-gray-500 italic">No messages yet. Start the conversation!</p>
+<%= turbo_stream.update "#{dom_id(@chat)}_messages" do %>
 <% end %>
 <%= turbo_stream.replace "#{dom_id(@chat)}_message_form" do %>
   <%= render "form", chat: @chat %>
