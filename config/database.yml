@@ -44,6 +44,7 @@ production:
   primary: &primary_production
     <<: *default
     database: ttledger_development
+    url: <%= Rails.application.credentials.db_url %>
   cache:
     <<: *sqlite
     database: storage/ttledger_production_cache.sqlite3
