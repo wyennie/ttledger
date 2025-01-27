@@ -20,10 +20,6 @@ servers:
 proxy:
   ssl: true
   host: ttledger.com, www.ttledger.com
-  forward_headers: true
-  buffering:
-      requests: false
-      responses: false
 
 # Credentials for your image host.
 registry:
