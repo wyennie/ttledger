@@ -13,7 +13,7 @@ gem "jbuilder", "~> 2.0"
 gem "bcrypt", "~> 3.1.7"
 gem "tzinfo-data", platforms: %i[ windows jruby ]
 gem "solid_cache", "~> 1.0"
-# gem "solid_queue"
+gem "solid_queue"
 gem "solid_cable", "~> 3.0"
 gem "bootsnap", require: false
 gem "kamal", require: false
