@@ -9,30 +9,15 @@ class PagesController < ApplicationController
   def show
     @top_pages = @campaign.pages.top_level
     @chat = Chat.find_by(campaign_id: params[:campaign_id])
+    @chat.messages.create!(
+      message_role: :system,
+      content: add_page_context
+    )
     @chats = @chat.messages
   end
 
-  def clear_messages
-    @page = Page.find_by(slug: params[:page_slug], campaign_id: params[:campaign_id])
-    if @page
-      @page.chat_messages.destroy_all
-      # ActionCable.server.broadcast "chat_#{params[:campaign_id]}_#{params[:page_slug]}", { type: 'clear' }
-    else
-      flash[:error] = "Page not found"
-      redirect_to campaign_pages_path(@campaign)
-    end
-  end
-
-  def chat_messages
-    page = Page.find_by(slug: params[:slug])
-    @messages = page.chat_messages
-    render json: @messages
-  end
-
-
   # GET /pages or /pages.json
   def index
-    @chat_message = []
     if (@page = @campaign.pages.top_level.first)
     else
       @page = @campaign.pages.create!
@@ -130,5 +115,21 @@ class PagesController < ApplicationController
       if role.nil? || !role.role_type.in?([ "gamemaster", "player" ])
         redirect_to root_path, alert: "You do not have access to this campaign."
       end
+    end
+
+    def add_page_context()
+      body = ""
+      if @page.body.present?
+        body = @page.body
+                .gsub(/<\/ul>/, "")
+                .gsub(/<ul>/, "\n")
+                .gsub(/<\/li>/, "")
+                .gsub(/<li>/, "\n- ")
+                .gsub(/<\/?p>|<br\s*\/?>/, "\n")
+                .gsub(/\n+/, "\n")
+      end
+
+      "Your job is to assist the Game-Master in developing their tabletop roleplaying campaign. 
+      Given the following information:\n#{body}\nAnswer the following:\n"
     end
 end

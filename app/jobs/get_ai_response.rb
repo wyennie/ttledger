@@ -42,6 +42,4 @@ class GetAiResponse < ApplicationJob
       message.update(content: message.content + new_content) if new_content
     end
   end
-
-  
 end
