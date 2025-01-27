@@ -41,19 +41,18 @@ test:
 # Store production database in the storage/ directory, which by default
 # is mounted as a persistent Docker volume in config/deploy.yml.
 production:
-  primary: &primary_production
+  primary:
     <<: *default
-    database: ttledger_production
-    url: <%= Rails.application.credentials.db_url %>
+    database: ttledger_development
   cache:
-    <<: *primary_production
-    database: production_cache
+    <<: *sqlite
+    database: storage/ttledger_production_cache.sqlite3
     migrations_paths: db/cache_migrate
-  queue:
-    <<: *primary_production
-    database: production_queue
-    migrations_paths: db/queue_migrate
   cable:
-    <<: *primary_production
-    database: production_cable
+    <<: *sqlite
+    database: storage/ttledger_production_cable.sqlite3
     migrations_paths: db/cable_migrate
+  queue:
+    <<: *sqlite
+    database: storage/ttledger_production_queue.sqlite3
+    migrations_paths: db/queue_migrate
