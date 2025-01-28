@@ -13,5 +13,3 @@ class ConditionalDeflater
     end
   end
 end
-
-

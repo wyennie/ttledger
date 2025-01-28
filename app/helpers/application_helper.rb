@@ -4,4 +4,3 @@ module ApplicationHelper
     renderer.render(text).html_safe
   end
 end
-

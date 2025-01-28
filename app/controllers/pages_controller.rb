@@ -118,7 +118,7 @@ class PagesController < ApplicationController
       end
     end
 
-    def add_page_context()
+    def add_page_context
       body = ""
       if @page.body.present?
         body = @page.body
@@ -130,7 +130,7 @@ class PagesController < ApplicationController
                 .gsub(/\n+/, "\n")
       end
 
-      "Your job is to assist the Game-Master in developing their tabletop roleplaying campaign. 
+      "Your job is to assist the Game-Master in developing their tabletop roleplaying campaign.
       Given the following information:\n#{body}\nAnswer the following:\n"
     end
 end
