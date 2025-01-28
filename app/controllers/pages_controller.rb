@@ -9,6 +9,7 @@ class PagesController < ApplicationController
   def show
     @top_pages = @campaign.pages.top_level
     @chat = Chat.find_by(campaign_id: params[:campaign_id])
+    @chat.messages.where(message_role: :system).delete_all
     @chat.messages.create!(
       message_role: :system,
       content: add_page_context

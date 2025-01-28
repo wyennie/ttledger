@@ -15,7 +15,7 @@ class GetAiResponse < ApplicationJob
       )
     client.chat(
       parameters: {
-        model: "gpt-4",
+        model: "gpt-4o-mini-2024-07-18",
         messages: Message.for_openai(chat.messages),
         temperature: 0.8,
         stream: stream_proc(chat: chat),
