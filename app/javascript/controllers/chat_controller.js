@@ -9,7 +9,6 @@ export default class extends Controller {
     this.checkForPromptTarget();
     if (this.hasTextareaTarget) {
       this.setupFocus();
-      this.setupKeyboardEvents();
     }
   }
 

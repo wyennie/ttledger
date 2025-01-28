@@ -1,29 +1,58 @@
 <%= turbo_frame_tag "#{dom_id(chat)}_message_form" do %>
-  <%= form_with(model: Message.new, url: [chat, chat.messages.new], class: "w-full") do |form| %>
-    <div class="grid justify-items-end">
-      <div class="flex">
-        <%= link_to destroy_all_chat_messages_path(@chat), 
-                    data: { "turbo-method": :delete},
-                    class: "rounded-lg py-3 px-5 bg-indigo-200 inline-block font-medium cursor-pointer" do %>
-          <i class="fas fa-trash"></i>
-          <span class="pl-2">Clear All</span>
-        <% end %>
-      </div>
+  <%= form_with(model: Message.new, url: [chat, chat.messages.new], class: "w-full flex flex-col space-y-4 bg-gray-100 rounded-xl shadow-md p-4") do |form| %>
+    <!-- Clear All Button -->
+    <div class="flex justify-end">
+      <%= link_to destroy_all_chat_messages_path(@chat), 
+                  data: { "turbo-method": :delete },
+                  class: "flex items-center space-x-2 rounded-md py-2 px-4 bg-red-600 text-white font-medium hover:bg-red-700 transition cursor-pointer" do %>
+        <i class="fas fa-trash"></i>
+        <span>Clear All</span>
+      <% end %>
     </div>
-    <div class="p-5 flex">
-      <%= form.text_area :content, rows: 4, id: "message_content",
-        class: "shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full",
-        data: { chat_target: "textarea" },
-        autofocus: true,
-        "x-on:keydown.cmd.enter" => "$event.target.form.requestSubmit();" %>
 
-      <%= form.button type: :submit, class: "rounded-lg py-3 px-5 bg-blue-600 font-medium cursor-pointer" do %>
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-6 w-6 text-indigo">
+    <!-- Message Input Area -->
+    <div class="flex items-center bg-white border border-gray-300 rounded-lg shadow-sm px-4 py-2">
+      <%= form.text_area :content, 
+        rows: 1, 
+        id: "message_content", 
+        class: "w-full resize-none focus:outline-none text-sm placeholder-gray-400",
+        data: { chat_target: "textarea" },
+        placeholder: "Type your message here...",
+        autofocus: true,
+        oninput: "autoResize(this)",
+        style: "overflow:hidden; min-height: 40px;" %>
+
+      <!-- Send Button -->
+      <%= form.button type: :submit, 
+        class: "ml-4 bg-blue-600 text-white rounded-lg p-2 hover:bg-blue-700 transition flex items-center justify-center" do %>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-5 w-5">
           <path stroke-linecap="round" stroke-linejoin="round" d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5" />
         </svg>
       <% end %>
     </div>
-
   <% end %>
 <% end %>
+
+<script>
+  function autoResize(textarea) {
+    textarea.style.height = "auto"; // Reset the height to calculate new height
+    const maxHeight = 200; // Set a maximum height (e.g., 200px)
+    textarea.style.height = Math.min(textarea.scrollHeight, maxHeight) + "px";
+  }
+  function setupKeyboardEvents() {
+    const textarea = document.querySelector("textarea");
+    
+    if (textarea) {
+      textarea.addEventListener("keydown", function(event) {
+        if (event.ctrlKey && event.key === "Enter") {
+          event.preventDefault();
+          textarea.form.requestSubmit(); // Submit the form programmatically
+        }
+      });
+    }
+  }
+
+  // Call this function directly to set up the event listeners
+  setupKeyboardEvents();
+</script>
 
