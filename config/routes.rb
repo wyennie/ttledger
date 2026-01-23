@@ -10,11 +10,7 @@ Rails.application.routes.draw do
   resources :users
   resources :friendships, only: [ :create, :update ]
   resources :campaigns do
-    resources :pages, param: :slug do
-      get "chat_responses", to: "pages#chat_response"
-      get "chat_messages", on: :member
-      delete "clear_messages", to: "pages#clear_messages"
-    end
+    resources :pages, param: :slug
     resources :characters, only: [ :create, :edit, :update, :destroy ] do
       resources :items, only: [ :create, :edit, :update, :destroy ]
     end

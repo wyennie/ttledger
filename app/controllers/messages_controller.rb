@@ -5,9 +5,9 @@ class MessagesController < ApplicationController
   before_action :set_chat
 
   def create
-    @message = Message.create(message_params.merge(chat_id: params[:chat_id], message_role: "user"))
+    @message = Message.create(message_params.merge(chat_id: params[:chat_id], message_role: "user", user: current_user))
 
-    GetAiResponse.perform_later(@message.chat_id)
+    GetAiResponse.perform_later(@message.chat_id, current_user.id)
 
     respond_to do |format|
       format.turbo_stream
@@ -15,7 +15,7 @@ class MessagesController < ApplicationController
   end
 
   def destroy_all
-    @chat.messages.destroy_all
+    @chat.messages.where(message_role: [ :user, :assistant ]).destroy_all
 
     respond_to do |format|
       format.turbo_stream

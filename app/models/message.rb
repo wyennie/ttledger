@@ -6,6 +6,7 @@ class Message < ApplicationRecord
   enum :message_role, { system: 0, assistant: 10, user: 20 }
 
   belongs_to :chat
+  belongs_to :user, optional: true
 
   after_create :broadcast_created
   after_update :broadcast_updated
@@ -26,9 +27,5 @@ class Message < ApplicationRecord
       locals: { message: self, scroll_to: true },
       target: "#{dom_id(chat)}_messages"
     )
-  end
-
-  def self.for_openai(messages)
-    messages.map { |message| { role: message.message_role, content: message.content } }
   end
 end

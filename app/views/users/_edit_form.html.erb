@@ -41,3 +41,52 @@
     </div>
   <% end %>
 </div>
+
+<div class="max-w-md mx-auto bg-gray-200 p-6 rounded-lg shadow-lg mt-6">
+  <h2 class="text-2xl font-bold mb-2">Chat API Keys</h2>
+  <p class="text-sm text-slate-700 mb-4">
+    Bring your own key to chat without limits. Anthropic is used by default;
+    if only an OpenAI key is set, OpenAI is used. The demo (no key) is rate-limited to
+    <%= LLMResolver::DEMO_DAILY_LIMIT %> messages per day.
+  </p>
+
+  <%= form_with(model: @user, html: { autocomplete: "off" }) do |f| %>
+    <div class="mb-4">
+      <%= f.label :anthropic_api_key, "Anthropic API key", class: "block text-lg font-medium" %>
+      <p class="text-xs text-slate-600 mb-1">
+        Status:
+        <% if @user.anthropic_api_key.present? %>
+          <span class="font-semibold text-green-700">Set ✓</span>
+        <% else %>
+          <span class="font-semibold text-slate-500">Not set</span>
+        <% end %>
+      </p>
+      <%= f.password_field :anthropic_api_key, value: nil, placeholder: "sk-ant-...", class: "mt-1 block w-full p-2 border bg-gray-100 border-gray-600 rounded-lg focus:ring-slate-300 focus:border-slate-300" %>
+    </div>
+
+    <div class="mb-4">
+      <%= f.label :openai_api_key, "OpenAI API key", class: "block text-lg font-medium" %>
+      <p class="text-xs text-slate-600 mb-1">
+        Status:
+        <% if @user.openai_api_key.present? %>
+          <span class="font-semibold text-green-700">Set ✓</span>
+        <% else %>
+          <span class="font-semibold text-slate-500">Not set</span>
+        <% end %>
+      </p>
+      <%= f.password_field :openai_api_key, value: nil, placeholder: "sk-...", class: "mt-1 block w-full p-2 border bg-gray-100 border-gray-600 rounded-lg focus:ring-slate-300 focus:border-slate-300" %>
+    </div>
+
+    <div>
+      <%= f.submit "Save keys", class: "w-full py-2 px-4 bg-gray-400 font-semibold rounded-lg shadow-md hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:ring-opacity-75" %>
+    </div>
+  <% end %>
+
+  <% if @user.anthropic_api_key.present? || @user.openai_api_key.present? %>
+    <%= form_with(model: @user, method: :patch, class: "mt-2") do |f| %>
+      <%= f.hidden_field :anthropic_api_key, value: "" %>
+      <%= f.hidden_field :openai_api_key, value: "" %>
+      <%= f.submit "Remove all keys", class: "w-full py-2 px-4 bg-red-200 font-semibold rounded-lg shadow-md hover:bg-red-300 focus:outline-none focus:ring-2 focus:ring-red-300 focus:ring-opacity-75", data: { turbo_confirm: "Remove your stored API keys?" } %>
+    <% end %>
+  <% end %>
+</div>

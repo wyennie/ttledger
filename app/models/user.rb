@@ -14,6 +14,9 @@ class User < ApplicationRecord
   has_many :roles
   has_many :campaigns, through: :roles
 
+  encrypts :openai_api_key
+  encrypts :anthropic_api_key
+
   before_save { self.email = email.downcase }
   before_create :create_confirmation_token
 
