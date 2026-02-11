@@ -91,7 +91,7 @@ GEM
     bindex (0.8.1)
     bootsnap (1.18.4)
       msgpack (~> 1.2)
-    brakeman (7.0.0)
+    brakeman (8.0.4)
       racc
     builder (3.3.0)
     capybara (3.40.0)
@@ -403,7 +403,7 @@ DEPENDENCIES
   anthropic (~> 1.10)
   bcrypt (~> 3.1.7)
   bootsnap
-  brakeman (~> 7.0.0)
+  brakeman (~> 8.0)
   capybara (~> 3.40)
   debug
   factory_bot_rails
