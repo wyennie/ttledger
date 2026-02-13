@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_05_01_185606) do
+ActiveRecord::Schema[8.0].define(version: 2026_05_06_025843) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -104,6 +104,30 @@ ActiveRecord::Schema[8.0].define(version: 2026_05_01_185606) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "entities", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "slug"
+    t.text "summary"
+    t.bigint "campaign_id", null: false
+    t.bigint "entity_kind_id", null: false
+    t.bigint "bio_page_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["bio_page_id"], name: "index_entities_on_bio_page_id"
+    t.index ["campaign_id", "name"], name: "index_entities_on_campaign_id_and_name"
+    t.index ["campaign_id"], name: "index_entities_on_campaign_id"
+    t.index ["entity_kind_id"], name: "index_entities_on_entity_kind_id"
+  end
+
+  create_table "entity_kinds", force: :cascade do |t|
+    t.string "name", null: false
+    t.bigint "campaign_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["campaign_id", "name"], name: "index_entity_kinds_on_campaign_id_and_name", unique: true
+    t.index ["campaign_id"], name: "index_entity_kinds_on_campaign_id"
+  end
+
   create_table "friendly_id_slugs", force: :cascade do |t|
     t.string "slug", null: false
     t.integer "sluggable_id", null: false
@@ -144,6 +168,19 @@ ActiveRecord::Schema[8.0].define(version: 2026_05_01_185606) do
     t.index ["character_id"], name: "index_items_on_character_id"
     t.index ["container_id"], name: "index_items_on_container_id"
     t.index ["item_type_type", "item_type_id"], name: "index_items_on_item_type"
+  end
+
+  create_table "mentions", force: :cascade do |t|
+    t.bigint "entity_id", null: false
+    t.string "mentionable_type", null: false
+    t.bigint "mentionable_id", null: false
+    t.integer "position", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["entity_id", "mentionable_type", "mentionable_id", "position"], name: "index_mentions_uniqueness", unique: true
+    t.index ["entity_id", "mentionable_type"], name: "index_mentions_on_entity_id_and_mentionable_type"
+    t.index ["entity_id"], name: "index_mentions_on_entity_id"
+    t.index ["mentionable_type", "mentionable_id"], name: "index_mentions_on_mentionable_type_and_mentionable_id"
   end
 
   create_table "messages", force: :cascade do |t|
@@ -210,8 +247,13 @@ ActiveRecord::Schema[8.0].define(version: 2026_05_01_185606) do
   add_foreign_key "characters", "campaigns"
   add_foreign_key "characters", "users"
   add_foreign_key "chats", "campaigns"
+  add_foreign_key "entities", "campaigns"
+  add_foreign_key "entities", "entity_kinds"
+  add_foreign_key "entities", "pages", column: "bio_page_id"
+  add_foreign_key "entity_kinds", "campaigns"
   add_foreign_key "items", "characters"
   add_foreign_key "items", "items", column: "container_id"
+  add_foreign_key "mentions", "entities"
   add_foreign_key "messages", "chats"
   add_foreign_key "messages", "users"
   add_foreign_key "pages", "campaigns"
