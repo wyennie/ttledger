@@ -1,0 +1,45 @@
+<%= content_for :title, "Entities — #{@campaign.name}" %>
+
+<div class="max-w-4xl mx-auto p-6">
+  <%= render partial: "layouts/flash" %>
+
+  <div class="flex items-center justify-between mb-6">
+    <h1 class="text-3xl font-bold">Entities</h1>
+    <div class="flex gap-2">
+      <%= link_to "Manage kinds", campaign_entity_kinds_path(@campaign),
+          class: "py-2 px-4 font-semibold rounded-lg border border-gray-400 hover:bg-gray-100" %>
+      <%= link_to "+ New entity", new_campaign_entity_path(@campaign),
+          class: "py-2 px-4 bg-gray-300 font-semibold rounded-lg shadow-md hover:bg-gray-400" %>
+    </div>
+  </div>
+
+  <% if @entities.empty? %>
+    <p class="text-gray-600">No entities yet. Create characters, locations, factions and more, then mention them with <code>@</code> in any page.</p>
+  <% else %>
+    <% @grouped.each do |kind_name, entities| %>
+      <section class="mb-8">
+        <h2 class="text-xl font-semibold capitalize border-b mb-3"><%= kind_name %></h2>
+        <ul class="divide-y">
+          <% entities.each do |entity| %>
+            <li class="py-2 flex items-start justify-between gap-4">
+              <div class="flex-1">
+                <%= link_to entity.name, edit_campaign_entity_path(@campaign, entity),
+                    class: "font-semibold underline" %>
+                <% if entity.summary.present? %>
+                  <p class="text-sm text-gray-700 mt-0.5"><%= entity.summary %></p>
+                <% end %>
+                <% if entity.bio_page %>
+                  <p class="text-xs text-gray-500 mt-0.5">Bio: <%= link_to entity.bio_page.title, campaign_page_path(@campaign, entity.bio_page), class: "underline" %></p>
+                <% end %>
+              </div>
+              <%= button_to "Delete", campaign_entity_path(@campaign, entity),
+                  method: :delete,
+                  data: { turbo_confirm: "Delete #{entity.name}? This will remove all mentions of them." },
+                  class: "text-sm text-red-700 hover:underline" %>
+            </li>
+          <% end %>
+        </ul>
+      </section>
+    <% end %>
+  <% end %>
+</div>

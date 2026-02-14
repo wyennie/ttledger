@@ -14,6 +14,12 @@ Rails.application.routes.draw do
     resources :characters, only: [ :create, :edit, :update, :destroy ] do
       resources :items, only: [ :create, :edit, :update, :destroy ]
     end
+    resources :entities, param: :slug do
+      collection do
+        get :suggestions, defaults: { format: :json }
+      end
+    end
+    resources :entity_kinds, only: [ :index, :create, :update, :destroy ]
     member do
       post :invite_user
       post :accept_invitation
