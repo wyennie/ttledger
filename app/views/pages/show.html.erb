@@ -18,7 +18,7 @@
         </div>
       </div>
 
-      <%= form_with model: [@campaign, @page], data: { controller: "tiptap"} do |f| %>
+      <%= form_with model: [@campaign, @page], data: { controller: "tiptap", "tiptap-campaign-id-value": @campaign.id } do |f| %>
         <%= render partial: "body",
                     locals: { initial_content: @page.body,
                               form: f,

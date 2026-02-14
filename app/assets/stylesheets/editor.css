@@ -52,3 +52,13 @@
 .ProseMirror:focus {
   outline: none;
 }
+
+.ProseMirror .mention,
+.mention {
+  @apply inline-block rounded bg-indigo-100 text-indigo-900 px-1 -mx-0.5 font-medium no-underline cursor-pointer;
+}
+
+.tiptap__mention-popup button {
+  cursor: pointer;
+}
+
