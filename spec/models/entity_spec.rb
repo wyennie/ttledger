@@ -50,7 +50,7 @@ RSpec.describe Entity, type: :model do
   describe "associations" do
     it "destroys mentions when destroyed" do
       e = create(:entity, campaign: campaign)
-      page = create(:page, campaign: campaign, body: %{<span data-mention="entity" data-entity-id="#{e.id}" data-entity-type="character">@x</span>})
+      page = create(:page, campaign: campaign, body: %(<span data-mention="entity" data-entity-id="#{e.id}" data-entity-type="character">@x</span>))
       expect(e.mentions.count).to eq(1)
       e.destroy
       expect(Mention.where(entity_id: e.id)).to be_empty

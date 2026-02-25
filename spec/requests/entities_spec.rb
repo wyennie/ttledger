@@ -70,7 +70,7 @@ RSpec.describe "Entities", type: :request do
     it "deletes the entity and cascades mentions" do
       e = create(:entity, campaign: campaign)
       page = create(:page, campaign: campaign,
-        body: %{<span data-mention="entity" data-entity-id="#{e.id}" data-entity-type="character">@x</span>})
+        body: %(<span data-mention="entity" data-entity-id="#{e.id}" data-entity-type="character">@x</span>))
       expect(page.mentions.count).to eq(1)
 
       delete campaign_entity_path(campaign, e)

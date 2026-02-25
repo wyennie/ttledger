@@ -8,7 +8,7 @@ RSpec.describe MentionExtractor do
 
   def mention_span(entity, type: "character", label: nil)
     label ||= entity.name
-    %{<span data-mention="entity" data-entity-id="#{entity.id}" data-entity-type="#{type}" data-entity-label="#{label}">@#{label}</span>}
+    %(<span data-mention="entity" data-entity-id="#{entity.id}" data-entity-type="#{type}" data-entity-label="#{label}">@#{label}</span>)
   end
 
   it "indexes a single mention from page body via after_commit" do
@@ -30,7 +30,7 @@ RSpec.describe MentionExtractor do
   end
 
   it "drops malformed entity ids" do
-    bad = %{<span data-mention="entity" data-entity-id="not-a-number">@?</span>}
+    bad = %(<span data-mention="entity" data-entity-id="not-a-number">@?</span>)
     page.update!(body: "<p>#{mention_span(aria)} #{bad}</p>")
     expect(page.mentions.pluck(:entity_id)).to eq([ aria.id ])
   end
