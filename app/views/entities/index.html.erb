@@ -1,15 +1,21 @@
 <%= content_for :title, "Entities — #{@campaign.name}" %>
 
-<div class="container-medium">
-  <%= render partial: "layouts/flash" %>
+<div class="app-grid">
+  <aside class="app-grid__sidebar">
+    <%= render "pages/sidebar" %>
+  </aside>
 
-  <div class="page-toolbar">
-    <h1>Entities</h1>
-    <div class="page-toolbar__actions">
-      <%= link_to "Manage kinds", campaign_entity_kinds_path(@campaign), class: "btn btn--secondary" %>
-      <%= link_to "+ New entity", new_campaign_entity_path(@campaign), class: "btn" %>
-    </div>
-  </div>
+  <main class="app-grid__main">
+    <div class="container-medium">
+      <%= render partial: "layouts/flash" %>
+
+      <div class="page-toolbar">
+        <h1>Entities</h1>
+        <div class="page-toolbar__actions">
+          <%= link_to "Manage kinds", campaign_entity_kinds_path(@campaign), class: "btn btn--secondary" %>
+          <%= link_to "+ New entity", new_campaign_entity_path(@campaign), class: "btn" %>
+        </div>
+      </div>
 
   <% if @entities.empty? %>
     <p class="muted">No entities yet. Create characters, locations, factions and more, then mention them with <code>@</code> in any page.</p>
@@ -39,4 +45,6 @@
       </section>
     <% end %>
   <% end %>
+    </div>
+  </main>
 </div>

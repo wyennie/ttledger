@@ -1,47 +1,55 @@
 <%= content_for :title, "Entity kinds — #{@campaign.name}" %>
 
-<div class="container-narrow">
-  <%= render partial: "layouts/flash" %>
+<div class="app-grid">
+  <aside class="app-grid__sidebar">
+    <%= render "pages/sidebar" %>
+  </aside>
 
-  <div class="page-toolbar">
-    <h1>Entity kinds</h1>
-    <%= link_to "Back to entities", campaign_entities_path(@campaign), class: "btn btn--secondary" %>
-  </div>
+  <main class="app-grid__main">
+    <div class="container-narrow">
+      <%= render partial: "layouts/flash" %>
 
-  <p class="muted" style="margin-bottom: 1rem;">
-    Kinds let you group entities (e.g. <code>character</code>, <code>location</code>, <code>faction</code>). Add your own to fit the campaign.
-  </p>
-
-  <div class="form-card form-card--medium" style="margin-bottom: 1.5rem;">
-    <%= form_with(model: [@campaign, @entity_kind], url: campaign_entity_kinds_path(@campaign)) do |f| %>
-      <%= render 'shared/error_messages', object: @entity_kind %>
-      <div class="form-actions" style="align-items: flex-end;">
-        <div style="flex: 1;">
-          <%= f.label :name, "Add a kind", class: "form-label" %>
-          <%= f.text_field :name, required: true, placeholder: "e.g. deity", class: "form-input" %>
-        </div>
-        <%= f.submit "Add", class: "btn" %>
+      <div class="page-toolbar">
+        <h1>Entity kinds</h1>
+        <%= link_to "Back to entities", campaign_entities_path(@campaign), class: "btn btn--secondary" %>
       </div>
-    <% end %>
-  </div>
 
-  <ul class="item-list">
-    <% @entity_kinds.each do |kind| %>
-      <li class="item-list__row">
-        <%= form_with(model: [@campaign, kind], method: :patch, class: "item-list__inline-form") do |f| %>
-          <%= f.text_field :name, value: kind.name, class: "item-list__inline-input" %>
-          <%= f.submit "Rename", class: "btn btn--small" %>
+      <p class="muted" style="margin-bottom: 1rem;">
+        Kinds let you group entities (e.g. <code>character</code>, <code>location</code>, <code>faction</code>). Add your own to fit the campaign.
+      </p>
+
+      <div class="form-card form-card--medium" style="margin-bottom: 1.5rem;">
+        <%= form_with(model: [@campaign, @entity_kind], url: campaign_entity_kinds_path(@campaign)) do |f| %>
+          <%= render 'shared/error_messages', object: @entity_kind %>
+          <div class="form-actions" style="align-items: flex-end;">
+            <div style="flex: 1;">
+              <%= f.label :name, "Add a kind", class: "form-label" %>
+              <%= f.text_field :name, required: true, placeholder: "e.g. deity", class: "form-input" %>
+            </div>
+            <%= f.submit "Add", class: "btn" %>
+          </div>
         <% end %>
-        <span class="item-list__meta">
-          <%= pluralize(kind.entities.size, "entity", plural: "entities") %>
-        </span>
-        <%= button_to "Delete", campaign_entity_kind_path(@campaign, kind),
-            method: :delete,
-            data: { turbo_confirm: kind.entities.any? ? "This kind is in use and cannot be deleted." : "Delete '#{kind.name}'?" },
-            class: "btn btn--link",
-            style: ("opacity: 0.5;" if kind.entities.any?),
-            disabled: kind.entities.any? %>
-      </li>
-    <% end %>
-  </ul>
+      </div>
+
+      <ul class="item-list">
+        <% @entity_kinds.each do |kind| %>
+          <li class="item-list__row">
+            <%= form_with(model: [@campaign, kind], method: :patch, class: "item-list__inline-form") do |f| %>
+              <%= f.text_field :name, value: kind.name, class: "item-list__inline-input" %>
+              <%= f.submit "Rename", class: "btn btn--small" %>
+            <% end %>
+            <span class="item-list__meta">
+              <%= pluralize(kind.entities.size, "entity", plural: "entities") %>
+            </span>
+            <%= button_to "Delete", campaign_entity_kind_path(@campaign, kind),
+                method: :delete,
+                data: { turbo_confirm: kind.entities.any? ? "This kind is in use and cannot be deleted." : "Delete '#{kind.name}'?" },
+                class: "btn btn--link",
+                style: ("opacity: 0.5;" if kind.entities.any?),
+                disabled: kind.entities.any? %>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+  </main>
 </div>

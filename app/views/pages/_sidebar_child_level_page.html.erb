@@ -45,7 +45,7 @@
 
   <div id="child-container-<%= page.id %>" data-toggle-target="container" class="page-node__children hidden">
     <% page.children.each do |child| %>
-      <%= render "sidebar_child_level_page", page: child %>
+      <%= render "pages/sidebar_child_level_page", page: child %>
     <% end %>
   </div>
 </div>

@@ -1,9 +1,17 @@
 <%= content_for :title, "New entity — #{@campaign.name}" %>
 
-<div class="container-narrow">
-  <%= render partial: "layouts/flash" %>
-  <h1 style="margin-bottom: 1rem;">New entity</h1>
-  <div class="form-card form-card--medium">
-    <%= render "form" %>
-  </div>
+<div class="app-grid">
+  <aside class="app-grid__sidebar">
+    <%= render "pages/sidebar" %>
+  </aside>
+
+  <main class="app-grid__main">
+    <div class="container-narrow">
+      <%= render partial: "layouts/flash" %>
+      <h1 style="margin-bottom: 1rem;">New entity</h1>
+      <div class="form-card form-card--medium">
+        <%= render "form" %>
+      </div>
+    </div>
+  </main>
 </div>

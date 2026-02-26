@@ -1,20 +1,28 @@
 <%= content_for :title, "Edit #{@entity.name} — #{@campaign.name}" %>
 
-<div class="container-narrow">
-  <%= render partial: "layouts/flash" %>
-  <h1 style="margin-bottom: 1rem;"><%= @entity.name %></h1>
-  <div class="form-card form-card--medium">
-    <%= render "form" %>
-  </div>
+<div class="app-grid">
+  <aside class="app-grid__sidebar">
+    <%= render "pages/sidebar" %>
+  </aside>
 
-  <% if @entity.pages_mentioning.any? %>
-    <section class="section" style="margin-top: 2rem;">
-      <h2 class="section__heading">Mentioned on <%= pluralize(@entity.pages_mentioning.count, "page") %></h2>
-      <ul style="list-style: disc; padding-left: 1.25rem;">
-        <% @entity.pages_mentioning.distinct.order(:title).each do |page| %>
-          <li><%= link_to page.title, campaign_page_path(@campaign, page), style: "text-decoration: underline;" %></li>
-        <% end %>
-      </ul>
-    </section>
-  <% end %>
+  <main class="app-grid__main">
+    <div class="container-narrow">
+      <%= render partial: "layouts/flash" %>
+      <h1 style="margin-bottom: 1rem;"><%= @entity.name %></h1>
+      <div class="form-card form-card--medium">
+        <%= render "form" %>
+      </div>
+
+      <% if @entity.pages_mentioning.any? %>
+        <section class="section" style="margin-top: 2rem;">
+          <h2 class="section__heading">Mentioned on <%= pluralize(@entity.pages_mentioning.count, "page") %></h2>
+          <ul style="list-style: disc; padding-left: 1.25rem;">
+            <% @entity.pages_mentioning.distinct.order(:title).each do |page| %>
+              <li><%= link_to page.title, campaign_page_path(@campaign, page), style: "text-decoration: underline;" %></li>
+            <% end %>
+          </ul>
+        </section>
+      <% end %>
+    </div>
+  </main>
 </div>

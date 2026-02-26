@@ -2,6 +2,7 @@ class EntitiesController < ApplicationController
   before_action :authenticate_user!
   before_action :set_campaign
   before_action :authorize_user
+  before_action :set_sidebar_context
   before_action :set_entity, only: %i[show edit update destroy]
 
   def index
@@ -55,6 +56,11 @@ class EntitiesController < ApplicationController
 
     def set_campaign
       @campaign = Campaign.find(params[:campaign_id])
+    end
+
+    def set_sidebar_context
+      @user = current_user
+      @top_pages = @campaign.pages.top_level
     end
 
     def set_entity
