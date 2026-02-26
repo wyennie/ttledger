@@ -1,66 +1,50 @@
 <!-- app/views/items/edit.html.erb -->
 <turbo-frame id="item-modal">
-  <div class="fixed inset-0 bg-opacity-50 p-6 flex justify-center items-center">
-    <div class="p-6 bg-slate-900 rounded-lg shadow-lg w-96">
-      <h1 class="text-4xl font-bold text-center text-slate-300 mb-6">Item Details</h1>
+  <div class="item-modal__overlay">
+    <div class="item-modal__panel item-modal">
+      <h1 class="item-modal__heading">Item Details</h1>
 
-      <% input_classes = "mt-1 block w-full p-2 border bg-slate-500 text-slate-300
-        border-slate-600 rounded-lg focus:ring-slate-400 focus:border-slate-300" %>
-      <!-- Displaying validation error messages -->
       <%= render "shared/error_messages", object: @item %>
-      
+
       <%= form_with model: [@campaign, @character, @item], url: campaign_character_item_path(@campaign, @character, @item), method: :patch, data: { turbo: true } do |f| %>
-        
-        <!-- Item Name -->
-        <div class="mb-4">
-          <%= f.label :name, "Item Name", class: "block text-sm font-medium text-slate-200" %>
-          <%= f.text_field :name, class: input_classes %>
-        </div>
-        
-        <!-- Description -->
-        <div class="mb-4">
-          <%= f.label :description, "Description", class: "block text-sm font-medium text-slate-200" %>
-          <%= f.text_area :description, class: input_classes, rows: 4 %>
+
+        <div class="form-field">
+          <%= f.label :name, "Item Name", class: "form-label form-label--small" %>
+          <%= f.text_field :name, class: "form-input" %>
         </div>
 
-        <!-- Weight -->
-        <div class="mb-4">
-          <%= f.label :weight, "Weight (optional)", class: "block text-sm font-medium text-slate-200" %>
-          <%= f.number_field :weight, class: input_classes %>
+        <div class="form-field">
+          <%= f.label :description, "Description", class: "form-label form-label--small" %>
+          <%= f.text_area :description, class: "form-textarea", rows: 4 %>
         </div>
 
-        <!-- Value -->
-        <div class="mb-4">
-          <%= f.label :value, "Value (optional)", class: "block text-sm font-medium text-slate-200" %>
-          <%= f.number_field :value, class: input_classes %>
+        <div class="form-field">
+          <%= f.label :weight, "Weight (optional)", class: "form-label form-label--small" %>
+          <%= f.number_field :weight, class: "form-input" %>
         </div>
 
-        <!-- Count -->
-        <div class="mb-4">
-          <%= f.label :count, "Quantity", class: "block text-sm font-medium text-slate-200" %>
-          <%= f.number_field :count, class: input_classes %>
+        <div class="form-field">
+          <%= f.label :value, "Value (optional)", class: "form-label form-label--small" %>
+          <%= f.number_field :value, class: "form-input" %>
         </div>
 
-        <!-- Item Type (Dropdown) -->
-        <div class="mb-4">
-          <%= f.label :item_type, "Item Type", class: "block text-sm font-medium text-slate-200" %>
-          <%= f.collection_select :item_type_id, ItemType.all, :id, :name, { prompt: "Select Item Type" }, 
-            class: input_classes %>
+        <div class="form-field">
+          <%= f.label :count, "Quantity", class: "form-label form-label--small" %>
+          <%= f.number_field :count, class: "form-input" %>
         </div>
 
-        <!-- Submit Button -->
-        <div class="mb-4">
-          <%= f.submit "Save Changes", data: { turbo_frame: "item-modal" },
-          class: "w-full py-2 px-4 bg-slate-400 text-slate-900 font-semibold 
-          rounded-lg shadow-md hover:bg-slate-200 focus:outline-none focus:ring-2 focus:ring-slate-400 
-          focus:ring-opacity-75" %>
+        <div class="form-field">
+          <%= f.label :item_type, "Item Type", class: "form-label form-label--small" %>
+          <%= f.collection_select :item_type_id, ItemType.all, :id, :name, { prompt: "Select Item Type" }, class: "form-select" %>
         </div>
-        
+
+        <div class="form-field">
+          <%= f.submit "Save Changes", data: { turbo_frame: "item-modal" }, class: "btn btn--full btn--dark" %>
+        </div>
+
       <% end %>
 
-      <!-- Close Button -->
-      <%= link_to "Close", "#", data: { turbo_frame: "item-modal" }, 
-        class: "text-sm text-slate-500 hover:text-slate-200 mt-2 block text-center" %>
+      <%= link_to "Close", "#", data: { turbo_frame: "item-modal" }, class: "item-modal__close" %>
     </div>
   </div>
 </turbo-frame>

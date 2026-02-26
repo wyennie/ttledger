@@ -1,21 +1,17 @@
 <%= content_for :title, @page.title || "untitled" %>
-<div class="grid grid-cols-12 gap-4 relative h-full">
-  <!-- Sidebar -->
-  <aside class="col-span-2 md:col-span-2 lg:col-span-1bg-gray-100 h-screen sticky top-0">
+<div class="app-grid">
+  <aside class="app-grid__sidebar">
     <%= render "sidebar" %>
   </aside>
 
-  <!-- Main Content -->
-  <main class="col-span-8 md:col-span-8 overflow-auto">
+  <main class="app-grid__main">
     <%= render partial: "layouts/flash" %>
     <%= render partial: "shared/chat_form" %>
     <%# render partial: "chats/show" %>
 
-    <div class="relative z-10">
-      <div class="flex w-full justify-center">
-        <div class="w-[900px]">
-          <%= render "header" %>
-        </div>
+    <div class="page-shell">
+      <div class="page-shell__center">
+        <%= render "header" %>
       </div>
 
       <%= form_with model: [@campaign, @page], data: { controller: "tiptap", "tiptap-campaign-id-value": @campaign.id } do |f| %>

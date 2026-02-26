@@ -1,16 +1,13 @@
 <%= content_for :title, @user.username || "" %>
-<div class="grid grid-cols-12 gap-4 relative">
-  <!-- Sidebar -->
-  <aside class="col-span-2 hidden md:block bg-gray-100 h-screen sticky top-0">
+<div class="app-grid">
+  <aside class="app-grid__sidebar">
     <%= render "shared/sidebar" %>
   </aside>
 
-  <!-- Main Content -->
-  <main class="col-span-8 md:col-span-8">
-    <div class="sticky top-0 bg-gray-50 z-50 w-full">
+  <main class="app-grid__main">
+    <div class="app-grid__main-sticky">
       <%= render partial: "layouts/flash" %>
       <%= render partial: "new_form" %>
     </div>
   </main>
 </div>
-

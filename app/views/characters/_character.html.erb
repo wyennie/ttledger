@@ -1,12 +1,7 @@
-<div id="character_<%= character.id %>" class="space-y-2 mt-4 rounded shadow-md">
-  <li class="w-full py-2 px-4 bg-gray-200 font-semibold rounded-lg 
-                        shadow-md hover:bg-gray-400 focus:outline-none focus:ring-2 
-                        focust:ring-gray-100 focus:ring-opacity-75 ml-auto" >
-
+<div id="character_<%= character.id %>" class="character-card">
+  <li class="character-card__row">
     <% if character.persisted? %>
-      <%= link_to "#{character.name}", edit_campaign_character_path((@campaign || character.campaign), character), 
-        class: "btn btn-secondary" %>
-
-                    <% end %>
+      <%= link_to "#{character.name}", edit_campaign_character_path((@campaign || character.campaign), character) %>
+    <% end %>
   </li>
 </div>

@@ -1,8 +1,7 @@
-<div class="flex flex-col space-y-1 h-screen">
-  <%= button_to "Start a new conversation to keep her awake...", chats_path, method: :post, class: "bg-blue-300 text-white py-2 px-4 rounded m-2" %>
+<div class="chat-navigation">
+  <%= button_to "Start a new conversation to keep her awake...", chats_path, method: :post, class: "chat-navigation__new" %>
 
   <% @chats.each do |chat| %>
-    <%= link_to chat.messages[0]&.content&.truncate_words(16), chat_path(chat), class: "bg-blue-500 text-white py-2 px-2 rounded mx-2" %>
+    <%= link_to chat.messages[0]&.content&.truncate_words(16), chat_path(chat), class: "chat-navigation__entry" %>
   <% end %>
-
 </div>

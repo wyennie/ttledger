@@ -18,14 +18,12 @@
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/icon.png">
 
-    <%# Includes all stylesheet files in app/assets/stylesheets %>
-    <%= stylesheet_link_tag "application.tailwind", "data-turbo-track": "reload" %>
-    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
   </head>
 
-  <body class="h-full font-sans antialiased font-normal leading-normal bg-gray-50">
-    <div class="main flex flex-col">
-      <div class="px-3 lg:px-0 h-full">
+  <body>
+    <div class="main-shell">
+      <div class="main-shell__inner">
         <%= yield %>
         <%= debug(params) if Rails.env.development? %>
       </div>

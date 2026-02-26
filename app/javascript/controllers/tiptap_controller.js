@@ -60,7 +60,7 @@ const EntityMention = Mention.extend({
 class SuggestionPopup {
   constructor() {
     this.el = document.createElement("div");
-    this.el.className = "tiptap__mention-popup hidden absolute z-50 bg-white border border-gray-300 rounded-md shadow-lg max-h-64 overflow-y-auto min-w-[220px] text-sm";
+    this.el.className = "mention-popup hidden";
     document.body.appendChild(this.el);
     this.items = [];
     this.selected = 0;
@@ -102,15 +102,15 @@ class SuggestionPopup {
 
   render() {
     if (this.items.length === 0) {
-      this.el.innerHTML = `<div class="px-3 py-2 text-gray-500">No matching entities. <span class="text-xs">Create one in Entities.</span></div>`;
+      this.el.innerHTML = `<div class="mention-popup__empty">No matching entities. <span class="mention-popup__empty-hint">Create one in Entities.</span></div>`;
       return;
     }
     this.el.innerHTML = this.items.map((item, idx) => `
       <button type="button"
               data-idx="${idx}"
-              class="w-full text-left px-3 py-2 hover:bg-indigo-50 flex items-center justify-between gap-2 ${idx === this.selected ? 'bg-indigo-100' : ''}">
-        <span class="font-medium">${this.escape(item.name)}</span>
-        <span class="text-xs text-gray-500">${this.escape(item.kind)}</span>
+              class="mention-popup__option ${idx === this.selected ? 'mention-popup__option--active' : ''}">
+        <span class="mention-popup__name">${this.escape(item.name)}</span>
+        <span class="mention-popup__kind">${this.escape(item.kind)}</span>
       </button>
     `).join("");
     this.el.querySelectorAll("button[data-idx]").forEach(btn => {
@@ -195,7 +195,7 @@ export default class extends Controller {
       element: textArea,
       extensions: [
         StarterKit,
-        Link.configure({ HTMLAttributes: { class: "cursor-pointer" } }),
+        Link,
         Image,
         EntityMention.configure({
           HTMLAttributes: { class: "mention" },

@@ -1,18 +1,18 @@
 <%= content_for :title, "Edit #{@entity.name} — #{@campaign.name}" %>
 
-<div class="max-w-2xl mx-auto p-6">
+<div class="container-narrow">
   <%= render partial: "layouts/flash" %>
-  <h1 class="text-3xl font-bold mb-4"><%= @entity.name %></h1>
-  <div class="bg-gray-200 p-6 rounded-lg shadow-lg">
+  <h1 style="margin-bottom: 1rem;"><%= @entity.name %></h1>
+  <div class="form-card form-card--medium">
     <%= render "form" %>
   </div>
 
   <% if @entity.pages_mentioning.any? %>
-    <section class="mt-8">
-      <h2 class="text-xl font-semibold mb-2">Mentioned on <%= pluralize(@entity.pages_mentioning.count, "page") %></h2>
-      <ul class="list-disc pl-5">
+    <section class="section" style="margin-top: 2rem;">
+      <h2 class="section__heading">Mentioned on <%= pluralize(@entity.pages_mentioning.count, "page") %></h2>
+      <ul style="list-style: disc; padding-left: 1.25rem;">
         <% @entity.pages_mentioning.distinct.order(:title).each do |page| %>
-          <li><%= link_to page.title, campaign_page_path(@campaign, page), class: "underline" %></li>
+          <li><%= link_to page.title, campaign_page_path(@campaign, page), style: "text-decoration: underline;" %></li>
         <% end %>
       </ul>
     </section>
