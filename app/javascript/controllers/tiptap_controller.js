@@ -58,27 +58,32 @@ const EntityMention = Mention.extend({
 });
 
 class SuggestionPopup {
-  constructor() {
+  constructor({ onCreate } = {}) {
     this.el = document.createElement("div");
     this.el.className = "mention-popup hidden";
     document.body.appendChild(this.el);
     this.items = [];
     this.selected = 0;
     this.command = null;
+    this.query = "";
+    this.onCreate = onCreate;
+    this.creating = false;
   }
 
-  show({ items, command, clientRect }) {
+  show({ items, command, clientRect, query }) {
     this.items = items;
     this.command = command;
+    this.query = query || "";
     this.selected = 0;
     this.render();
     this.position(clientRect);
     this.el.classList.remove("hidden");
   }
 
-  update({ items, command, clientRect }) {
+  update({ items, command, clientRect, query }) {
     this.items = items;
     this.command = command;
+    this.query = query || "";
     if (this.selected >= items.length) this.selected = 0;
     this.render();
     this.position(clientRect);
@@ -102,7 +107,26 @@ class SuggestionPopup {
 
   render() {
     if (this.items.length === 0) {
-      this.el.innerHTML = `<div class="mention-popup__empty">No matching entities. <span class="mention-popup__empty-hint">Create one in Entities.</span></div>`;
+      const trimmed = this.query.trim();
+      if (trimmed && this.onCreate) {
+        this.el.innerHTML = `
+          <div class="mention-popup__empty">No matching entities.</div>
+          <button type="button"
+                  data-create
+                  class="mention-popup__option mention-popup__option--create">
+            <span class="mention-popup__name">${this.creating ? "Creating…" : `Create entity “${this.escape(trimmed)}”`}</span>
+          </button>
+        `;
+        const btn = this.el.querySelector("button[data-create]");
+        if (btn) {
+          btn.addEventListener("mousedown", (event) => {
+            event.preventDefault();
+            this.createFromQuery();
+          });
+        }
+      } else {
+        this.el.innerHTML = `<div class="mention-popup__empty">No matching entities. <span class="mention-popup__empty-hint">Type a name to create one.</span></div>`;
+      }
       return;
     }
     this.el.innerHTML = this.items.map((item, idx) => `
@@ -122,6 +146,22 @@ class SuggestionPopup {
     });
   }
 
+  async createFromQuery() {
+    if (this.creating) return;
+    const name = this.query.trim();
+    if (!name || !this.onCreate || !this.command) return;
+    this.creating = true;
+    this.render();
+    try {
+      const entity = await this.onCreate(name);
+      if (entity && entity.id) {
+        this.command({ id: entity.id, label: entity.name, kind: entity.kind });
+      }
+    } finally {
+      this.creating = false;
+    }
+  }
+
   escape(str) {
     return String(str).replace(/[&<>"']/g, c => ({
       "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
@@ -130,6 +170,14 @@ class SuggestionPopup {
 
   onKeyDown({ event }) {
     if (this.el.classList.contains("hidden")) return false;
+
+    if (event.key === "Enter" && this.items.length === 0) {
+      const trimmed = this.query.trim();
+      if (trimmed && this.onCreate) {
+        this.createFromQuery();
+        return true;
+      }
+    }
 
     if (event.key === "ArrowDown") {
       this.selected = (this.selected + 1) % Math.max(this.items.length, 1);
@@ -169,7 +217,9 @@ export default class extends Controller {
     masterElement.setAttribute("data-action", "input->tiptap#formSubmit");
     masterElement.setAttribute("data-action", "keyup->tiptap#formSubmit");
 
-    this.popup = new SuggestionPopup();
+    this.popup = new SuggestionPopup({
+      onCreate: name => this.quickCreateEntity(name),
+    });
     this.initTiptap(masterElement);
     this.formSubmit = debounce(this.formSubmit.bind(this), 500);
     masterElement.addEventListener('click', this.handleClick.bind(this));
@@ -227,6 +277,26 @@ export default class extends Controller {
       return await res.json();
     } catch (_e) {
       return [];
+    }
+  }
+
+  async quickCreateEntity(name) {
+    if (!this.hasCampaignIdValue) return null;
+    const csrf = document.querySelector('meta[name="csrf-token"]')?.content;
+    try {
+      const res = await fetch(`/campaigns/${this.campaignIdValue}/entities/quick_create`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json",
+          ...(csrf ? { "X-CSRF-Token": csrf } : {}),
+        },
+        body: JSON.stringify({ name }),
+      });
+      if (!res.ok) return null;
+      return await res.json();
+    } catch (_e) {
+      return null;
     }
   }
 

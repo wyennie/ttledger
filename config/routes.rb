@@ -16,7 +16,8 @@ Rails.application.routes.draw do
     end
     resources :entities, param: :slug do
       collection do
-        get :suggestions, defaults: { format: :json }
+        get  :suggestions,  defaults: { format: :json }
+        post :quick_create, defaults: { format: :json }
       end
     end
     resources :entity_kinds, only: [ :index, :create, :update, :destroy ]

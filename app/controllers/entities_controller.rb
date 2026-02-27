@@ -52,6 +52,24 @@ class EntitiesController < ApplicationController
     }
   end
 
+  def quick_create
+    name = params[:name].to_s.strip
+    return render(json: { error: "Name required" }, status: :unprocessable_entity) if name.blank?
+
+    existing = @campaign.entities.includes(:entity_kind).where("LOWER(name) = ?", name.downcase).first
+    if existing
+      return render(json: { id: existing.id, name: existing.name, kind: existing.entity_kind.name })
+    end
+
+    kind = @campaign.entity_kinds.order(:name).first ||
+           @campaign.entity_kinds.create!(name: "unspecified")
+
+    entity = @campaign.entities.create!(name: name, entity_kind: kind)
+    render json: { id: entity.id, name: entity.name, kind: kind.name }
+  rescue ActiveRecord::RecordInvalid => e
+    render json: { error: e.record.errors.full_messages.to_sentence }, status: :unprocessable_entity
+  end
+
   private
 
     def set_campaign
