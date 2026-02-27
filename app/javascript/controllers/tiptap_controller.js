@@ -57,6 +57,132 @@ const EntityMention = Mention.extend({
   },
 });
 
+class BubbleMenu {
+  constructor({ editor }) {
+    this.editor = editor;
+    this.el = document.createElement("div");
+    this.el.className = "editor-bubble-menu hidden";
+    this.el.innerHTML = this.template();
+    document.body.appendChild(this.el);
+
+    this.bind();
+    this.onSelectionChange = this.onSelectionChange.bind(this);
+    this.onScrollOrResize = this.onScrollOrResize.bind(this);
+    editor.on("selectionUpdate", this.onSelectionChange);
+    editor.on("transaction", this.onSelectionChange);
+    editor.on("blur", () => this.hide());
+    window.addEventListener("scroll", this.onScrollOrResize, true);
+    window.addEventListener("resize", this.onScrollOrResize);
+  }
+
+  template() {
+    return `
+      <button type="button" data-cmd="bold"   title="Bold"><strong>B</strong></button>
+      <button type="button" data-cmd="italic" title="Italic"><em>I</em></button>
+      <button type="button" data-cmd="strike" title="Strikethrough"><s>S</s></button>
+      <button type="button" data-cmd="code"   title="Inline code"><code>&lt;/&gt;</code></button>
+      <span class="editor-bubble-menu__sep"></span>
+      <button type="button" data-cmd="link"   title="Link">↗</button>
+    `;
+  }
+
+  bind() {
+    this.el.querySelectorAll("button[data-cmd]").forEach(btn => {
+      btn.addEventListener("mousedown", (event) => {
+        event.preventDefault();
+        const cmd = btn.dataset.cmd;
+        this.run(cmd);
+      });
+    });
+  }
+
+  run(cmd) {
+    const editor = this.editor;
+    switch (cmd) {
+      case "bold":   editor.chain().focus().toggleBold().run();   break;
+      case "italic": editor.chain().focus().toggleItalic().run(); break;
+      case "strike": editor.chain().focus().toggleStrike().run(); break;
+      case "code":   editor.chain().focus().toggleCode().run();   break;
+      case "link":   this.toggleLink(); break;
+    }
+    this.refreshActiveStates();
+  }
+
+  toggleLink() {
+    const editor = this.editor;
+    if (editor.isActive("link")) {
+      editor.chain().focus().unsetLink().run();
+      return;
+    }
+    const previous = editor.getAttributes("link")?.href || "";
+    const url = window.prompt("Link URL", previous);
+    if (url === null) return;
+    if (url.trim() === "") {
+      editor.chain().focus().unsetLink().run();
+      return;
+    }
+    editor.chain().focus().extendMarkRange("link").setLink({ href: url.trim() }).run();
+  }
+
+  refreshActiveStates() {
+    const editor = this.editor;
+    this.el.querySelectorAll("button[data-cmd]").forEach(btn => {
+      const cmd = btn.dataset.cmd;
+      let active = false;
+      if (cmd === "bold")   active = editor.isActive("bold");
+      if (cmd === "italic") active = editor.isActive("italic");
+      if (cmd === "strike") active = editor.isActive("strike");
+      if (cmd === "code")   active = editor.isActive("code");
+      if (cmd === "link")   active = editor.isActive("link");
+      btn.classList.toggle("editor-bubble-menu__btn--active", active);
+    });
+  }
+
+  onSelectionChange() {
+    const { state } = this.editor;
+    const { from, to, empty } = state.selection;
+    if (empty || !this.editor.isFocused) {
+      this.hide();
+      return;
+    }
+    this.position(from, to);
+    this.refreshActiveStates();
+    this.el.classList.remove("hidden");
+  }
+
+  onScrollOrResize() {
+    if (this.el.classList.contains("hidden")) return;
+    const { from, to } = this.editor.state.selection;
+    this.position(from, to);
+  }
+
+  position(from, to) {
+    try {
+      const start = this.editor.view.coordsAtPos(from);
+      const end   = this.editor.view.coordsAtPos(to);
+      const rect = {
+        top: Math.min(start.top, end.top),
+        left: (start.left + end.left) / 2,
+        bottom: Math.max(start.bottom, end.bottom),
+      };
+      this.el.style.top  = `${window.scrollY + rect.top - this.el.offsetHeight - 8}px`;
+      this.el.style.left = `${window.scrollX + rect.left - this.el.offsetWidth / 2}px`;
+    } catch (_e) {
+      this.hide();
+    }
+  }
+
+  hide() {
+    this.el.classList.add("hidden");
+  }
+
+  destroy() {
+    window.removeEventListener("scroll", this.onScrollOrResize, true);
+    window.removeEventListener("resize", this.onScrollOrResize);
+    if (this.el.parentNode) this.el.parentNode.removeChild(this.el);
+  }
+}
+
 class SuggestionPopup {
   constructor({ onCreate } = {}) {
     this.el = document.createElement("div");
@@ -266,6 +392,7 @@ export default class extends Controller {
     });
 
     masterElement.editor = editor;
+    this.bubble = new BubbleMenu({ editor });
   }
 
   async fetchSuggestions(query) {
@@ -303,6 +430,7 @@ export default class extends Controller {
   disconnect() {
     this.element.editor.destroy();
     this.popup?.destroy();
+    this.bubble?.destroy();
     this.element.removeEventListener('click', this.handleClick.bind(this));
   }
 
