@@ -57,9 +57,203 @@ const EntityMention = Mention.extend({
   },
 });
 
-class BubbleMenu {
+class LinkPopover {
   constructor({ editor }) {
     this.editor = editor;
+    this.el = document.createElement("div");
+    this.el.className = "editor-link-popover hidden";
+    this.el.innerHTML = `
+      <input type="url" class="editor-link-popover__input" placeholder="https://example.com" />
+      <button type="button" class="editor-link-popover__btn" data-action="save">Save</button>
+      <a class="editor-link-popover__btn editor-link-popover__open" target="_blank" rel="noopener">Open</a>
+      <button type="button" class="editor-link-popover__btn editor-link-popover__btn--danger" data-action="remove">Remove</button>
+    `;
+    document.body.appendChild(this.el);
+    this.input    = this.el.querySelector("input");
+    this.saveBtn  = this.el.querySelector('[data-action="save"]');
+    this.removeBtn= this.el.querySelector('[data-action="remove"]');
+    this.openA    = this.el.querySelector('.editor-link-popover__open');
+    this.markRange = null;
+    this.suppressAutoUntil = 0;
+
+    this.input.addEventListener("keydown", (event) => {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        this.commit();
+      } else if (event.key === "Escape") {
+        event.preventDefault();
+        this.hide();
+        this.editor.commands.focus();
+      }
+    });
+    this.saveBtn.addEventListener("mousedown", (event) => {
+      event.preventDefault();
+      this.commit();
+    });
+    this.removeBtn.addEventListener("mousedown", (event) => {
+      event.preventDefault();
+      this.remove();
+    });
+
+    this.onSelectionChange = this.onSelectionChange.bind(this);
+    this.onScrollOrResize = this.onScrollOrResize.bind(this);
+    editor.on("selectionUpdate", this.onSelectionChange);
+    editor.on("transaction", this.onSelectionChange);
+    window.addEventListener("scroll", this.onScrollOrResize, true);
+    window.addEventListener("resize", this.onScrollOrResize);
+    document.addEventListener("mousedown", (event) => {
+      if (this.el.contains(event.target)) return;
+      if (this.editor.view.dom.contains(event.target)) return;
+      this.hide();
+    });
+  }
+
+  onSelectionChange() {
+    if (Date.now() < this.suppressAutoUntil) return;
+    const editor = this.editor;
+    const { state } = editor;
+    const { from, to, empty } = state.selection;
+    if (!empty) {
+      this.hide();
+      return;
+    }
+    if (!editor.isActive("link")) {
+      this.hide();
+      return;
+    }
+    this.openForExistingLink();
+  }
+
+  openForExistingLink() {
+    const range = this.markRangeAtSelection("link");
+    if (!range) return this.hide();
+    const href = this.editor.getAttributes("link")?.href || "";
+    this.show({ range, href, focusInput: false });
+  }
+
+  openForSelection() {
+    const editor = this.editor;
+    const { state } = editor;
+    const { from, to, empty } = state.selection;
+    if (empty && !editor.isActive("link")) return;
+
+    if (editor.isActive("link")) {
+      this.openForExistingLink();
+      this.input.focus();
+      this.input.select();
+      return;
+    }
+    this.show({ range: { from, to }, href: "", focusInput: true });
+  }
+
+  markRangeAtSelection(markName) {
+    const { state } = this.editor;
+    const { $from } = state.selection;
+    const mark = state.schema.marks[markName];
+    if (!mark) return null;
+    let start = $from.pos;
+    let end = $from.pos;
+    const node = $from.parent;
+    const offset = $from.parentOffset;
+    let pos = $from.start();
+    let cursor = 0;
+    node.forEach((child, _o, _i) => {
+      const childEnd = cursor + child.nodeSize;
+      if (offset >= cursor && offset <= childEnd && child.marks.some(m => m.type === mark)) {
+        start = pos + cursor;
+        end = pos + childEnd;
+      }
+      cursor = childEnd;
+    });
+    if (start === end) return null;
+    return { from: start, to: end };
+  }
+
+  show({ range, href, focusInput }) {
+    this.markRange = range;
+    this.input.value = href || "";
+    this.openA.href = href || "#";
+    this.openA.style.visibility = href ? "visible" : "hidden";
+    this.removeBtn.style.display = href ? "" : "none";
+    this.position(range);
+    this.el.classList.remove("hidden");
+    if (focusInput) {
+      requestAnimationFrame(() => {
+        this.input.focus();
+        this.input.select();
+      });
+    }
+  }
+
+  hide() {
+    this.el.classList.add("hidden");
+    this.markRange = null;
+  }
+
+  commit() {
+    const url = this.input.value.trim();
+    if (!url) {
+      this.remove();
+      return;
+    }
+    const editor = this.editor;
+    if (this.markRange) {
+      editor.chain().focus()
+        .setTextSelection(this.markRange)
+        .extendMarkRange("link")
+        .setLink({ href: url })
+        .run();
+    } else {
+      editor.chain().focus().extendMarkRange("link").setLink({ href: url }).run();
+    }
+    this.suppressAutoUntil = Date.now() + 200;
+    this.hide();
+  }
+
+  remove() {
+    const editor = this.editor;
+    if (this.markRange) {
+      editor.chain().focus()
+        .setTextSelection(this.markRange)
+        .extendMarkRange("link")
+        .unsetLink()
+        .run();
+    } else {
+      editor.chain().focus().unsetLink().run();
+    }
+    this.suppressAutoUntil = Date.now() + 200;
+    this.hide();
+  }
+
+  onScrollOrResize() {
+    if (this.el.classList.contains("hidden") || !this.markRange) return;
+    this.position(this.markRange);
+  }
+
+  position(range) {
+    try {
+      const start = this.editor.view.coordsAtPos(range.from);
+      const end   = this.editor.view.coordsAtPos(range.to);
+      const top  = Math.max(start.bottom, end.bottom) + 6;
+      const left = (start.left + end.left) / 2;
+      this.el.style.top  = `${window.scrollY + top}px`;
+      this.el.style.left = `${window.scrollX + left - this.el.offsetWidth / 2}px`;
+    } catch (_e) {
+      this.hide();
+    }
+  }
+
+  destroy() {
+    window.removeEventListener("scroll", this.onScrollOrResize, true);
+    window.removeEventListener("resize", this.onScrollOrResize);
+    if (this.el.parentNode) this.el.parentNode.removeChild(this.el);
+  }
+}
+
+class BubbleMenu {
+  constructor({ editor, linkPopover }) {
+    this.editor = editor;
+    this.linkPopover = linkPopover;
     this.el = document.createElement("div");
     this.el.className = "editor-bubble-menu hidden";
     this.el.innerHTML = this.template();
@@ -103,25 +297,9 @@ class BubbleMenu {
       case "italic": editor.chain().focus().toggleItalic().run(); break;
       case "strike": editor.chain().focus().toggleStrike().run(); break;
       case "code":   editor.chain().focus().toggleCode().run();   break;
-      case "link":   this.toggleLink(); break;
+      case "link":   this.linkPopover?.openForSelection(); break;
     }
     this.refreshActiveStates();
-  }
-
-  toggleLink() {
-    const editor = this.editor;
-    if (editor.isActive("link")) {
-      editor.chain().focus().unsetLink().run();
-      return;
-    }
-    const previous = editor.getAttributes("link")?.href || "";
-    const url = window.prompt("Link URL", previous);
-    if (url === null) return;
-    if (url.trim() === "") {
-      editor.chain().focus().unsetLink().run();
-      return;
-    }
-    editor.chain().focus().extendMarkRange("link").setLink({ href: url.trim() }).run();
   }
 
   refreshActiveStates() {
@@ -392,7 +570,8 @@ export default class extends Controller {
     });
 
     masterElement.editor = editor;
-    this.bubble = new BubbleMenu({ editor });
+    this.linkPopover = new LinkPopover({ editor });
+    this.bubble = new BubbleMenu({ editor, linkPopover: this.linkPopover });
   }
 
   async fetchSuggestions(query) {
@@ -431,6 +610,7 @@ export default class extends Controller {
     this.element.editor.destroy();
     this.popup?.destroy();
     this.bubble?.destroy();
+    this.linkPopover?.destroy();
     this.element.removeEventListener('click', this.handleClick.bind(this));
   }
 
