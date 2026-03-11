@@ -577,6 +577,49 @@ export default class extends Controller {
     masterElement.editor = editor;
     this.linkPopover = new LinkPopover({ editor });
     this.bubble = new BubbleMenu({ editor, linkPopover: this.linkPopover });
+    this.attachImageHandlers(textArea, editor);
+  }
+
+  attachImageHandlers(textArea, editor) {
+    const insertImageFile = (file) => {
+      if (!file || !file.type.startsWith("image/")) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        editor.chain().focus().setImage({ src: reader.result }).run();
+      };
+      reader.readAsDataURL(file);
+    };
+
+    const handlePaste = (event) => {
+      const items = event.clipboardData?.items || [];
+      for (const item of items) {
+        if (item.kind === "file" && item.type.startsWith("image/")) {
+          event.preventDefault();
+          insertImageFile(item.getAsFile());
+          return;
+        }
+      }
+    };
+
+    const handleDragOver = (event) => {
+      if (event.dataTransfer?.types?.includes("Files")) {
+        event.preventDefault();
+      }
+    };
+
+    const handleDrop = (event) => {
+      const files = event.dataTransfer?.files;
+      if (!files || files.length === 0) return;
+      const images = Array.from(files).filter(f => f.type.startsWith("image/"));
+      if (images.length === 0) return;
+      event.preventDefault();
+      images.forEach(insertImageFile);
+    };
+
+    textArea.addEventListener("paste", handlePaste);
+    textArea.addEventListener("dragover", handleDragOver);
+    textArea.addEventListener("drop", handleDrop);
+    this._imageHandlers = { textArea, handlePaste, handleDragOver, handleDrop };
   }
 
   async fetchSuggestions(query) {
@@ -616,6 +659,12 @@ export default class extends Controller {
     this.popup?.destroy();
     this.bubble?.destroy();
     this.linkPopover?.destroy();
+    if (this._imageHandlers) {
+      const { textArea, handlePaste, handleDragOver, handleDrop } = this._imageHandlers;
+      textArea.removeEventListener("paste", handlePaste);
+      textArea.removeEventListener("dragover", handleDragOver);
+      textArea.removeEventListener("drop", handleDrop);
+    }
     this.element.removeEventListener('click', this.handleClick.bind(this));
   }
 
