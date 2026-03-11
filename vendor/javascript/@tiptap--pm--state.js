@@ -1,4 +1,4 @@
-// @tiptap/pm/state@2.11.0 downloaded from https://ga.jspm.io/npm:@tiptap/pm@2.11.0/state/dist/index.js
+// @tiptap/pm/state@2.27.2 downloaded from https://ga.jspm.io/npm:@tiptap/pm@2.27.2/state/dist/index.js
 
 export*from"prosemirror-state";
 

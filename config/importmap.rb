@@ -5,22 +5,22 @@ pin "@hotwired/turbo-rails", to: "turbo.min.js"
 pin "@hotwired/stimulus", to: "stimulus.min.js"
 pin "@hotwired/stimulus-loading", to: "stimulus-loading.js"
 pin_all_from "app/javascript/controllers", under: "controllers"
-pin "@tiptap/core", to: "@tiptap--core.js" # @2.11.0
-pin "@tiptap/pm/commands", to: "@tiptap--pm--commands.js" # @2.11.0
-pin "@tiptap/pm/keymap", to: "@tiptap--pm--keymap.js" # @2.11.0
-pin "@tiptap/pm/model", to: "@tiptap--pm--model.js" # @2.11.0
-pin "@tiptap/pm/schema-list", to: "@tiptap--pm--schema-list.js" # @2.11.0
-pin "@tiptap/pm/state", to: "@tiptap--pm--state.js" # @2.11.0
-pin "@tiptap/pm/transform", to: "@tiptap--pm--transform.js" # @2.11.0
-pin "@tiptap/pm/view", to: "@tiptap--pm--view.js" # @2.11.0
+pin "@tiptap/core", to: "@tiptap--core.js" # @2.27.2
+pin "@tiptap/pm/commands", to: "@tiptap--pm--commands.js" # @2.27.2
+pin "@tiptap/pm/keymap", to: "@tiptap--pm--keymap.js" # @2.27.2
+pin "@tiptap/pm/model", to: "@tiptap--pm--model.js" # @2.27.2
+pin "@tiptap/pm/schema-list", to: "@tiptap--pm--schema-list.js" # @2.27.2
+pin "@tiptap/pm/state", to: "@tiptap--pm--state.js" # @2.27.2
+pin "@tiptap/pm/transform", to: "@tiptap--pm--transform.js" # @2.27.2
+pin "@tiptap/pm/view", to: "@tiptap--pm--view.js" # @2.27.2
 pin "orderedmap" # @2.1.1
-pin "prosemirror-commands" # @1.6.2
-pin "prosemirror-keymap" # @1.2.2
-pin "prosemirror-model" # @1.24.1
-pin "prosemirror-schema-list" # @1.5.0
-pin "prosemirror-state" # @1.4.3
-pin "prosemirror-transform" # @1.10.2
-pin "prosemirror-view" # @1.37.1
+pin "prosemirror-commands" # @1.7.1
+pin "prosemirror-keymap" # @1.2.3
+pin "prosemirror-model" # @1.25.4
+pin "prosemirror-schema-list" # @1.5.1
+pin "prosemirror-state" # @1.4.4
+pin "prosemirror-transform" # @1.12.0
+pin "prosemirror-view" # @1.41.8
 pin "w3c-keyname" # @2.2.8
 pin "@tiptap/starter-kit", to: "@tiptap--starter-kit.js" # @2.11.0
 pin "@tiptap/extension-blockquote", to: "@tiptap--extension-blockquote.js" # @2.11.0
@@ -41,6 +41,7 @@ pin "@tiptap/extension-ordered-list", to: "@tiptap--extension-ordered-list.js" #
 pin "@tiptap/extension-paragraph", to: "@tiptap--extension-paragraph.js" # @2.11.0
 pin "@tiptap/extension-strike", to: "@tiptap--extension-strike.js" # @2.11.0
 pin "@tiptap/extension-text", to: "@tiptap--extension-text.js" # @2.11.0
+pin "@tiptap/extension-underline", to: "@tiptap--extension-underline.js" # @2.11.0
 pin "@tiptap/pm/dropcursor", to: "@tiptap--pm--dropcursor.js" # @2.11.0
 pin "@tiptap/pm/gapcursor", to: "@tiptap--pm--gapcursor.js" # @2.11.0
 pin "@tiptap/pm/history", to: "@tiptap--pm--history.js" # @2.11.0

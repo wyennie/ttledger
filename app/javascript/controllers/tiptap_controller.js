@@ -4,6 +4,7 @@ import StarterKit from '@tiptap/starter-kit'
 import Link from '@tiptap/extension-link'
 import Image from '@tiptap/extension-image'
 import Mention from '@tiptap/extension-mention'
+import Underline from '@tiptap/extension-underline'
 
 const debounce = function(func, wait, immediate) {
   let timeout, result;
@@ -271,12 +272,13 @@ class BubbleMenu {
 
   template() {
     return `
-      <button type="button" data-cmd="bold"   title="Bold"><strong>B</strong></button>
-      <button type="button" data-cmd="italic" title="Italic"><em>I</em></button>
-      <button type="button" data-cmd="strike" title="Strikethrough"><s>S</s></button>
-      <button type="button" data-cmd="code"   title="Inline code"><code>&lt;/&gt;</code></button>
+      <button type="button" data-cmd="bold"      title="Bold"><strong>B</strong></button>
+      <button type="button" data-cmd="italic"    title="Italic"><em>I</em></button>
+      <button type="button" data-cmd="underline" title="Underline"><u>U</u></button>
+      <button type="button" data-cmd="strike"    title="Strikethrough"><s>S</s></button>
+      <button type="button" data-cmd="code"      title="Inline code"><code>&lt;/&gt;</code></button>
       <span class="editor-bubble-menu__sep"></span>
-      <button type="button" data-cmd="link"   title="Link">↗</button>
+      <button type="button" data-cmd="link"      title="Link">↗</button>
     `;
   }
 
@@ -293,11 +295,12 @@ class BubbleMenu {
   run(cmd) {
     const editor = this.editor;
     switch (cmd) {
-      case "bold":   editor.chain().focus().toggleBold().run();   break;
-      case "italic": editor.chain().focus().toggleItalic().run(); break;
-      case "strike": editor.chain().focus().toggleStrike().run(); break;
-      case "code":   editor.chain().focus().toggleCode().run();   break;
-      case "link":   this.linkPopover?.openForSelection(); break;
+      case "bold":      editor.chain().focus().toggleBold().run();      break;
+      case "italic":    editor.chain().focus().toggleItalic().run();    break;
+      case "underline": editor.chain().focus().toggleUnderline().run(); break;
+      case "strike":    editor.chain().focus().toggleStrike().run();    break;
+      case "code":      editor.chain().focus().toggleCode().run();      break;
+      case "link":      this.linkPopover?.openForSelection();           break;
     }
     this.refreshActiveStates();
   }
@@ -307,11 +310,12 @@ class BubbleMenu {
     this.el.querySelectorAll("button[data-cmd]").forEach(btn => {
       const cmd = btn.dataset.cmd;
       let active = false;
-      if (cmd === "bold")   active = editor.isActive("bold");
-      if (cmd === "italic") active = editor.isActive("italic");
-      if (cmd === "strike") active = editor.isActive("strike");
-      if (cmd === "code")   active = editor.isActive("code");
-      if (cmd === "link")   active = editor.isActive("link");
+      if (cmd === "bold")      active = editor.isActive("bold");
+      if (cmd === "italic")    active = editor.isActive("italic");
+      if (cmd === "underline") active = editor.isActive("underline");
+      if (cmd === "strike")    active = editor.isActive("strike");
+      if (cmd === "code")      active = editor.isActive("code");
+      if (cmd === "link")      active = editor.isActive("link");
       btn.classList.toggle("editor-bubble-menu__btn--active", active);
     });
   }
@@ -549,6 +553,7 @@ export default class extends Controller {
       element: textArea,
       extensions: [
         StarterKit,
+        Underline,
         Link,
         Image,
         EntityMention.configure({
