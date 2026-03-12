@@ -58,3 +58,11 @@ pin "marked" # @15.0.6
 pin "dompurify" # @3.4.2
 pin "@rails/actioncable", to: "actioncable.esm.js"
 pin_all_from "app/javascript/channels", under: "channels"
+pin "@tiptap/extension-task-list", to: "@tiptap--extension-task-list.js" # @2.11.0
+pin "@tiptap/extension-task-item", to: "@tiptap--extension-task-item.js" # @2.11.0
+pin "@tiptap/extension-table", to: "@tiptap--extension-table.js" # @2.11.0
+pin "@tiptap/pm/tables", to: "@tiptap--pm--tables.js" # @2.27.2
+pin "prosemirror-tables" # @1.8.5
+pin "@tiptap/extension-table-row", to: "@tiptap--extension-table-row.js" # @2.11.0
+pin "@tiptap/extension-table-header", to: "@tiptap--extension-table-header.js" # @2.11.0
+pin "@tiptap/extension-table-cell", to: "@tiptap--extension-table-cell.js" # @2.11.0

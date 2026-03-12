@@ -1,10 +1,17 @@
 import { Controller } from "@hotwired/stimulus";
-import { Editor, mergeAttributes } from '@tiptap/core'
+import { Editor, Extension, mergeAttributes } from '@tiptap/core'
 import StarterKit from '@tiptap/starter-kit'
 import Link from '@tiptap/extension-link'
 import Image from '@tiptap/extension-image'
 import Mention from '@tiptap/extension-mention'
 import Underline from '@tiptap/extension-underline'
+import TaskList from '@tiptap/extension-task-list'
+import TaskItem from '@tiptap/extension-task-item'
+import Table from '@tiptap/extension-table'
+import TableRow from '@tiptap/extension-table-row'
+import TableHeader from '@tiptap/extension-table-header'
+import TableCell from '@tiptap/extension-table-cell'
+import Suggestion from '@tiptap/suggestion'
 
 const debounce = function(func, wait, immediate) {
   let timeout, result;
@@ -55,6 +62,218 @@ const EntityMention = Mention.extend({
   },
   renderText({ node }) {
     return `@${node.attrs.label ?? node.attrs.id}`;
+  },
+});
+
+const SLASH_ITEMS = [
+  {
+    title: "Heading 1",
+    description: "Big section heading",
+    keywords: ["h1", "heading", "title"],
+    run: ({ editor, range }) => editor.chain().focus().deleteRange(range).setNode("heading", { level: 1 }).run(),
+  },
+  {
+    title: "Heading 2",
+    description: "Medium section heading",
+    keywords: ["h2", "heading"],
+    run: ({ editor, range }) => editor.chain().focus().deleteRange(range).setNode("heading", { level: 2 }).run(),
+  },
+  {
+    title: "Heading 3",
+    description: "Small section heading",
+    keywords: ["h3", "heading"],
+    run: ({ editor, range }) => editor.chain().focus().deleteRange(range).setNode("heading", { level: 3 }).run(),
+  },
+  {
+    title: "Bullet list",
+    description: "A simple bulleted list",
+    keywords: ["bullet", "list", "ul"],
+    run: ({ editor, range }) => editor.chain().focus().deleteRange(range).toggleBulletList().run(),
+  },
+  {
+    title: "Ordered list",
+    description: "A numbered list",
+    keywords: ["ordered", "list", "ol", "numbered"],
+    run: ({ editor, range }) => editor.chain().focus().deleteRange(range).toggleOrderedList().run(),
+  },
+  {
+    title: "Task list",
+    description: "Checkable to-do items",
+    keywords: ["task", "todo", "checkbox", "check"],
+    run: ({ editor, range }) => editor.chain().focus().deleteRange(range).toggleTaskList().run(),
+  },
+  {
+    title: "Quote",
+    description: "Blockquote",
+    keywords: ["quote", "blockquote"],
+    run: ({ editor, range }) => editor.chain().focus().deleteRange(range).toggleBlockquote().run(),
+  },
+  {
+    title: "Code block",
+    description: "Multi-line code",
+    keywords: ["code", "codeblock", "pre"],
+    run: ({ editor, range }) => editor.chain().focus().deleteRange(range).toggleCodeBlock().run(),
+  },
+  {
+    title: "Divider",
+    description: "Horizontal rule",
+    keywords: ["divider", "hr", "rule", "line"],
+    run: ({ editor, range }) => editor.chain().focus().deleteRange(range).setHorizontalRule().run(),
+  },
+  {
+    title: "Image (URL)",
+    description: "Insert an image from a URL",
+    keywords: ["image", "img", "picture", "url"],
+    run: ({ editor, range }) => {
+      const url = window.prompt("Image URL");
+      if (!url || !url.trim()) {
+        editor.chain().focus().deleteRange(range).run();
+        return;
+      }
+      editor.chain().focus().deleteRange(range).setImage({ src: url.trim() }).run();
+    },
+  },
+  {
+    title: "Table",
+    description: "Insert a 3×3 table",
+    keywords: ["table", "grid"],
+    run: ({ editor, range }) => editor.chain().focus().deleteRange(range)
+      .insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run(),
+  },
+];
+
+function filterSlashItems(query) {
+  const q = (query || "").trim().toLowerCase();
+  if (!q) return SLASH_ITEMS;
+  return SLASH_ITEMS.filter(item => {
+    const haystack = [item.title, item.description, ...(item.keywords || [])].join(" ").toLowerCase();
+    return haystack.includes(q);
+  });
+}
+
+class SlashMenu {
+  constructor() {
+    this.el = document.createElement("div");
+    this.el.className = "slash-menu hidden";
+    document.body.appendChild(this.el);
+    this.items = [];
+    this.selected = 0;
+    this.command = null;
+  }
+
+  show({ items, command, clientRect }) {
+    this.items = items;
+    this.command = command;
+    this.selected = 0;
+    this.render();
+    this.position(clientRect);
+    this.el.classList.remove("hidden");
+  }
+
+  update({ items, command, clientRect }) {
+    this.items = items;
+    this.command = command;
+    if (this.selected >= items.length) this.selected = 0;
+    this.render();
+    this.position(clientRect);
+  }
+
+  hide() { this.el.classList.add("hidden"); }
+  destroy() { if (this.el.parentNode) this.el.parentNode.removeChild(this.el); }
+
+  position(clientRect) {
+    if (!clientRect) return;
+    const rect = clientRect();
+    if (!rect) return;
+    this.el.style.top  = `${window.scrollY + rect.bottom + 4}px`;
+    this.el.style.left = `${window.scrollX + rect.left}px`;
+  }
+
+  render() {
+    if (this.items.length === 0) {
+      this.el.innerHTML = `<div class="slash-menu__empty">No matches.</div>`;
+      return;
+    }
+    this.el.innerHTML = this.items.map((item, idx) => `
+      <button type="button" data-idx="${idx}"
+              class="slash-menu__option ${idx === this.selected ? 'slash-menu__option--active' : ''}">
+        <span class="slash-menu__title">${escapeHtml(item.title)}</span>
+        <span class="slash-menu__desc">${escapeHtml(item.description)}</span>
+      </button>
+    `).join("");
+    this.el.querySelectorAll("button[data-idx]").forEach(btn => {
+      btn.addEventListener("mousedown", (event) => {
+        event.preventDefault();
+        this.selected = Number(btn.dataset.idx);
+        this.commit();
+      });
+    });
+  }
+
+  onKeyDown({ event }) {
+    if (this.el.classList.contains("hidden")) return false;
+    if (event.key === "ArrowDown") {
+      this.selected = (this.selected + 1) % Math.max(this.items.length, 1);
+      this.render();
+      return true;
+    }
+    if (event.key === "ArrowUp") {
+      this.selected = (this.selected - 1 + this.items.length) % Math.max(this.items.length, 1);
+      this.render();
+      return true;
+    }
+    if (event.key === "Enter") {
+      this.commit();
+      return true;
+    }
+    if (event.key === "Escape") {
+      this.hide();
+      return true;
+    }
+    return false;
+  }
+
+  commit() {
+    const item = this.items[this.selected];
+    if (item && this.command) this.command(item);
+  }
+}
+
+function escapeHtml(str) {
+  return String(str ?? "").replace(/[&<>"']/g, c => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+  }[c]));
+}
+
+const SlashCommand = (slashMenu) => Extension.create({
+  name: "slashCommand",
+  addProseMirrorPlugins() {
+    return [
+      Suggestion({
+        editor: this.editor,
+        char: "/",
+        startOfLine: true,
+        allowSpaces: true,
+        items: ({ query }) => filterSlashItems(query),
+        command: ({ editor, range, props }) => {
+          props.run({ editor, range });
+        },
+        render: () => ({
+          onStart: props => slashMenu.show({
+            items: props.items,
+            clientRect: props.clientRect,
+            command: (item) => props.command(item),
+          }),
+          onUpdate: props => slashMenu.update({
+            items: props.items,
+            clientRect: props.clientRect,
+            command: (item) => props.command(item),
+          }),
+          onKeyDown: props => slashMenu.onKeyDown(props),
+          onExit: () => slashMenu.hide(),
+        }),
+      }),
+    ];
   },
 });
 
@@ -528,6 +747,7 @@ export default class extends Controller {
     this.popup = new SuggestionPopup({
       onCreate: name => this.quickCreateEntity(name),
     });
+    this.slashMenu = new SlashMenu();
     this.initTiptap(masterElement);
     this.formSubmit = debounce(this.formSubmit.bind(this), 500);
     masterElement.addEventListener('click', this.handleClick.bind(this));
@@ -554,6 +774,13 @@ export default class extends Controller {
       extensions: [
         StarterKit,
         Underline,
+        TaskList,
+        TaskItem.configure({ nested: true }),
+        Table.configure({ resizable: true }),
+        TableRow,
+        TableHeader,
+        TableCell,
+        SlashCommand(this.slashMenu),
         Link,
         Image,
         EntityMention.configure({
@@ -657,6 +884,7 @@ export default class extends Controller {
   disconnect() {
     this.element.editor.destroy();
     this.popup?.destroy();
+    this.slashMenu?.destroy();
     this.bubble?.destroy();
     this.linkPopover?.destroy();
     if (this._imageHandlers) {
