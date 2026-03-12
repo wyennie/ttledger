@@ -12,6 +12,7 @@ import TableRow from '@tiptap/extension-table-row'
 import TableHeader from '@tiptap/extension-table-header'
 import TableCell from '@tiptap/extension-table-cell'
 import Suggestion from '@tiptap/suggestion'
+import { NodeSelection } from 'prosemirror-state'
 
 const debounce = function(func, wait, immediate) {
   let timeout, result;
@@ -276,6 +277,158 @@ const SlashCommand = (slashMenu) => Extension.create({
     ];
   },
 });
+
+class DragHandle {
+  constructor({ editor }) {
+    this.editor = editor;
+    this.blockPos = null;
+    this.draggingFrom = null;
+
+    this.handle = document.createElement("div");
+    this.handle.className = "editor-drag-handle hidden";
+    this.handle.setAttribute("draggable", "true");
+    this.handle.setAttribute("contenteditable", "false");
+    this.handle.title = "Drag to move block";
+    this.handle.innerHTML = `<svg viewBox="0 0 10 16" width="10" height="16" fill="currentColor" aria-hidden="true">
+      <circle cx="2" cy="3"  r="1.4"/><circle cx="8" cy="3"  r="1.4"/>
+      <circle cx="2" cy="8"  r="1.4"/><circle cx="8" cy="8"  r="1.4"/>
+      <circle cx="2" cy="13" r="1.4"/><circle cx="8" cy="13" r="1.4"/>
+    </svg>`;
+    document.body.appendChild(this.handle);
+
+    this.onMove      = this.onMove.bind(this);
+    this.onLeave     = () => this.scheduleHide();
+    this.onDragStart = this.onDragStart.bind(this);
+    this.onDragEnd   = this.onDragEnd.bind(this);
+    this.onDragOver  = this.onDragOver.bind(this);
+    this.onDrop      = this.onDrop.bind(this);
+
+    editor.view.dom.addEventListener("mousemove", this.onMove);
+    editor.view.dom.addEventListener("mouseleave", this.onLeave);
+    editor.view.dom.addEventListener("dragover", this.onDragOver);
+    editor.view.dom.addEventListener("drop", this.onDrop);
+
+    this.handle.addEventListener("mouseenter", () => this.cancelHide());
+    this.handle.addEventListener("mouseleave", () => this.scheduleHide());
+    this.handle.addEventListener("dragstart", this.onDragStart);
+    this.handle.addEventListener("dragend",   this.onDragEnd);
+  }
+
+  onMove(event) {
+    if (this.draggingFrom !== null) return;
+    const view = this.editor.view;
+    const result = view.posAtCoords({ top: event.clientY, left: event.clientX });
+    if (!result) {
+      this.scheduleHide();
+      return;
+    }
+    const $pos = view.state.doc.resolve(result.pos);
+    if ($pos.depth < 1) {
+      this.scheduleHide();
+      return;
+    }
+    const blockStart = $pos.before(1);
+    const node = view.state.doc.nodeAt(blockStart);
+    if (!node) {
+      this.scheduleHide();
+      return;
+    }
+    this.blockPos = blockStart;
+    const dom = view.nodeDOM(blockStart);
+    if (!dom || dom.nodeType !== 1) {
+      this.scheduleHide();
+      return;
+    }
+    const rect = dom.getBoundingClientRect();
+    this.handle.style.top  = `${window.scrollY + rect.top + 4}px`;
+    this.handle.style.left = `${window.scrollX + rect.left - 22}px`;
+    this.handle.classList.remove("hidden");
+    this.cancelHide();
+  }
+
+  scheduleHide() {
+    this.cancelHide();
+    this.hideTimer = setTimeout(() => this.handle.classList.add("hidden"), 200);
+  }
+
+  cancelHide() { clearTimeout(this.hideTimer); }
+
+  onDragStart(event) {
+    if (this.blockPos === null) {
+      event.preventDefault();
+      return;
+    }
+    const { state, view } = this.editor;
+    const node = state.doc.nodeAt(this.blockPos);
+    if (!node) {
+      event.preventDefault();
+      return;
+    }
+    this.draggingFrom = { from: this.blockPos, size: node.nodeSize };
+    event.dataTransfer.setData("application/x-tiptap-block", "1");
+    event.dataTransfer.effectAllowed = "move";
+    try {
+      view.dispatch(state.tr.setSelection(NodeSelection.create(state.doc, this.blockPos)));
+      const dom = view.nodeDOM(this.blockPos);
+      if (dom && dom.nodeType === 1) {
+        event.dataTransfer.setDragImage(dom, 0, 0);
+      }
+    } catch (_e) {}
+  }
+
+  onDragEnd() {
+    this.draggingFrom = null;
+  }
+
+  onDragOver(event) {
+    if (this.draggingFrom === null) return;
+    event.preventDefault();
+    event.dataTransfer.dropEffect = "move";
+  }
+
+  onDrop(event) {
+    if (this.draggingFrom === null) return;
+    event.preventDefault();
+    const { from, size } = this.draggingFrom;
+    this.draggingFrom = null;
+    const view = this.editor.view;
+    const result = view.posAtCoords({ top: event.clientY, left: event.clientX });
+    if (!result) return;
+    const $drop = view.state.doc.resolve(result.pos);
+    if ($drop.depth < 1) return;
+    const targetStart = $drop.before(1);
+    const targetNode  = view.state.doc.nodeAt(targetStart);
+    if (!targetNode) return;
+    const targetDom = view.nodeDOM(targetStart);
+    let insertAt = targetStart;
+    if (targetDom && targetDom.nodeType === 1) {
+      const rect = targetDom.getBoundingClientRect();
+      const midpoint = rect.top + rect.height / 2;
+      if (event.clientY > midpoint) insertAt = targetStart + targetNode.nodeSize;
+    }
+    if (insertAt === from || insertAt === from + size) return;
+
+    const node = view.state.doc.nodeAt(from);
+    if (!node) return;
+    let tr = view.state.tr.delete(from, from + size);
+    let adjustedInsert = insertAt;
+    if (insertAt > from) adjustedInsert -= size;
+    tr = tr.insert(adjustedInsert, node);
+    view.dispatch(tr);
+    this.scheduleHide();
+  }
+
+  destroy() {
+    const dom = this.editor.view?.dom;
+    if (dom) {
+      dom.removeEventListener("mousemove", this.onMove);
+      dom.removeEventListener("mouseleave", this.onLeave);
+      dom.removeEventListener("dragover", this.onDragOver);
+      dom.removeEventListener("drop", this.onDrop);
+    }
+    if (this.handle.parentNode) this.handle.parentNode.removeChild(this.handle);
+  }
+}
 
 class LinkPopover {
   constructor({ editor }) {
@@ -804,6 +957,7 @@ export default class extends Controller {
     masterElement.editor = editor;
     this.linkPopover = new LinkPopover({ editor });
     this.bubble = new BubbleMenu({ editor, linkPopover: this.linkPopover });
+    this.dragHandle = new DragHandle({ editor });
     this.attachImageHandlers(textArea, editor);
   }
 
@@ -887,6 +1041,7 @@ export default class extends Controller {
     this.slashMenu?.destroy();
     this.bubble?.destroy();
     this.linkPopover?.destroy();
+    this.dragHandle?.destroy();
     if (this._imageHandlers) {
       const { textArea, handlePaste, handleDragOver, handleDrop } = this._imageHandlers;
       textArea.removeEventListener("paste", handlePaste);

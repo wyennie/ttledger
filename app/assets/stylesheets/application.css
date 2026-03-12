@@ -760,6 +760,34 @@ code {
 }
 
 /* ============================================================
+ * Block drag handle
+ * ============================================================ */
+.editor-drag-handle {
+  position: absolute;
+  z-index: 55;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 22px;
+  border-radius: var(--radius-sm);
+  color: var(--color-text-light);
+  cursor: grab;
+  user-select: none;
+  background: transparent;
+  transition: background-color 100ms ease, color 100ms ease;
+}
+
+.editor-drag-handle:hover {
+  background: var(--color-bg-soft);
+  color: var(--color-text-soft);
+}
+
+.editor-drag-handle:active {
+  cursor: grabbing;
+}
+
+/* ============================================================
  * Slash command menu
  * ============================================================ */
 .slash-menu {
