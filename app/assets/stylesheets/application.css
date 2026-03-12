@@ -86,10 +86,10 @@ input, textarea, select, button {
 
   /* Burgundy primary accent (like wax seals) */
   --color-accent:       #8a1c1c;
-  --color-accent-soft:  #c87575;
-  --color-accent-50:    #f7e4e0;
-  --color-accent-100:   #efcec9;
-  --color-accent-200:   #e0a59d;
+  --color-accent-soft:  #b8884b;  /* warm brass — used for accent hover states */
+  --color-accent-50:    #f1e2c0;  /* pale brass cream */
+  --color-accent-100:   #e6d09a;  /* brass cream */
+  --color-accent-200:   #cfae6b;  /* medium brass */
   --color-accent-text:  #5a0e0e;
 
   /* Brass/gold secondary accent */
@@ -98,8 +98,8 @@ input, textarea, select, button {
   --color-brass-deep:   #6e4e1c;
 
   --color-danger:        #b9301a;
-  --color-danger-bg:     #f3d3c4;
-  --color-danger-border: #db886a;
+  --color-danger-bg:     #ecc7a8;  /* warm terracotta, not pink */
+  --color-danger-border: #c97a4a;
   --color-danger-text:   #7a1f10;
 
   --color-success-bg:   #d6dfb0;
