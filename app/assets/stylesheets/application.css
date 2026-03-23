@@ -213,6 +213,41 @@ code {
 .muted { color: var(--color-text-muted); }
 .text-small { font-size: 0.875rem; }
 
+.flourish {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin: var(--space-6) 0;
+  color: var(--color-brass);
+}
+
+.flourish::before,
+.flourish::after {
+  content: "";
+  flex: 1 1 auto;
+  max-width: 8rem;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--color-brass), transparent);
+}
+
+.flourish__symbol {
+  font-size: 1.25rem;
+}
+
+.empty-state {
+  text-align: center;
+  padding: var(--space-8) var(--space-4);
+  color: var(--color-text-muted);
+}
+
+.empty-state__symbol {
+  font-size: 3rem;
+  color: var(--color-brass);
+  display: block;
+  margin-bottom: var(--space-2);
+}
+
 /* ============================================================
  * Layout shells
  * ============================================================ */
@@ -573,15 +608,22 @@ code {
 
 .page-title {
   width: 100%;
-  padding: 0.25rem;
-  font-size: 2.25rem;
-  font-weight: 700;
-  background: var(--color-bg);
+  padding: 0.25rem 0 0.5rem;
+  font-family: var(--font-display);
+  font-size: 2.5rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  background: transparent;
   color: var(--color-text);
   border: none;
   outline: none;
   white-space: pre-wrap;
   word-break: break-word;
+  border-bottom: 1px solid transparent;
+  background-image: linear-gradient(90deg, var(--color-brass) 0%, transparent 80%);
+  background-repeat: no-repeat;
+  background-size: 100% 1px;
+  background-position: 0 100%;
 }
 
 .page-title:focus {
@@ -1331,12 +1373,29 @@ code {
 .section { margin-bottom: var(--space-8); }
 
 .section__heading {
-  font-size: 1.25rem;
-  font-weight: 600;
-  border-bottom: 1px solid var(--color-border-soft);
+  font-size: 1.5rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
   margin-bottom: var(--space-3);
-  padding-bottom: 0.25rem;
+  padding-bottom: 0.5rem;
   text-transform: capitalize;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.section__heading::before {
+  content: "❦";
+  flex: 0 0 auto;
+  color: var(--color-brass);
+  font-size: 0.7em;
+}
+
+.section__heading::after {
+  content: "";
+  flex: 1 1 auto;
+  height: 1px;
+  background: linear-gradient(90deg, var(--color-brass) 0%, transparent 100%);
 }
 
 /* ============================================================

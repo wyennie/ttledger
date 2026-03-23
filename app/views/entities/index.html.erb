@@ -18,7 +18,10 @@
       </div>
 
   <% if @entities.empty? %>
-    <p class="muted">No entities yet. Create characters, locations, factions and more, then mention them with <code>@</code> in any page.</p>
+    <div class="empty-state">
+      <span class="empty-state__symbol">❦</span>
+      <p>No entities yet. Create characters, locations, factions and more, then mention them with <code>@</code> in any page.</p>
+    </div>
   <% else %>
     <% @grouped.each do |kind_name, entities| %>
       <section class="section">
