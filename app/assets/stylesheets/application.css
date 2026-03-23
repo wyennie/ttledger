@@ -1138,10 +1138,21 @@ code {
 }
 
 .form-page-title {
-  font-size: 2.25rem;
-  font-weight: 700;
+  font-size: 2.5rem;
+  font-weight: 600;
   text-align: center;
   margin-bottom: var(--space-6);
+  letter-spacing: 0.06em;
+  position: relative;
+  padding-bottom: 0.5rem;
+}
+
+.form-page-title::after {
+  content: "❦";
+  display: block;
+  font-size: 0.4em;
+  color: var(--color-brass);
+  margin-top: 0.5rem;
 }
 
 .form-field { margin-bottom: var(--space-4); }
@@ -1156,8 +1167,12 @@ code {
 
 .form-label {
   display: block;
-  font-size: 1.125rem;
+  font-family: var(--font-display);
+  font-size: 1rem;
   font-weight: 500;
+  letter-spacing: 0.04em;
+  color: var(--color-text-soft);
+  margin-bottom: 0.25rem;
 }
 
 .form-label--small {
@@ -1172,20 +1187,22 @@ code {
   display: block;
   width: 100%;
   margin-top: 0.25rem;
-  padding: 0.5rem;
-  background: var(--color-bg-muted);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius);
+  padding: 0.55rem 0.7rem;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border-medium);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-body);
   font-size: 1rem;
   color: inherit;
+  transition: border-color 120ms ease, box-shadow 120ms ease;
 }
 
 .form-input:focus,
 .form-textarea:focus,
 .form-select:focus {
   outline: none;
-  border-color: var(--color-border-soft);
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+  border-color: var(--color-brass);
+  box-shadow: 0 0 0 3px rgba(168, 123, 63, 0.18);
 }
 
 .form-textarea { resize: vertical; }
@@ -1603,13 +1620,23 @@ code {
  * Login meta line
  * ============================================================ */
 .login-meta {
-  margin-top: var(--space-4);
-  padding: var(--space-2);
-  border-radius: var(--radius-sm);
+  margin-top: var(--space-6);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--color-border-soft);
+  text-align: center;
+  font-style: italic;
+  color: var(--color-text-muted);
 }
 
 .login-meta__link {
-  color: var(--color-accent-text);
+  font-style: normal;
+  font-family: var(--font-display);
+  color: var(--color-accent);
+  text-decoration: none;
+  margin-left: 0.25rem;
+}
+
+.login-meta__link:hover {
   text-decoration: underline;
 }
 
