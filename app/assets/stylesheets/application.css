@@ -1494,22 +1494,43 @@ code {
  * ============================================================ */
 .campaign-page {
   min-height: 100vh;
-  background: var(--color-bg);
+  background: transparent;
 }
 
-.campaign-header { background: var(--color-bg-muted); }
+.campaign-header {
+  background:
+    linear-gradient(180deg, rgba(168, 123, 63, 0.10), transparent 70%),
+    var(--color-bg-muted);
+  border-bottom: 1px solid var(--color-brass);
+  margin-bottom: var(--space-6);
+}
 
 .campaign-header__inner {
   max-width: 80rem;
   margin: 0 auto;
-  padding: var(--space-4) var(--space-6);
+  padding: var(--space-6);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  flex-wrap: wrap;
 }
 
 .campaign-header__title {
-  font-size: 2.25rem;
-  font-weight: 700;
+  font-size: 2.5rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
   color: var(--color-text);
-  margin-bottom: var(--space-4);
+  margin-bottom: 0;
+}
+
+.campaign-header__title::before {
+  content: "❦";
+  display: inline-block;
+  margin-right: 0.75rem;
+  color: var(--color-brass);
+  font-size: 0.7em;
+  vertical-align: middle;
 }
 
 .campaign-grid-wrapper {
@@ -1529,56 +1550,105 @@ code {
 }
 
 .campaign-card {
+  position: relative;
   display: flex;
   flex-direction: column;
-  background: #fff;
-  border: 1px solid var(--color-border-soft);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.18) 0%, transparent 30%),
+    linear-gradient(180deg, var(--color-dark-3) 0%, var(--color-dark-2) 60%, var(--color-dark-3) 100%);
+  color: var(--color-dark-7);
+  border: 1px solid var(--color-brass-deep);
   border-radius: var(--radius);
-  box-shadow: var(--shadow-sm);
-  transition: box-shadow 150ms ease;
+  box-shadow:
+    inset 0 0 0 1px rgba(168, 123, 63, 0.4),
+    inset 0 0 24px rgba(0, 0, 0, 0.2),
+    var(--shadow-md);
+  transition: transform 200ms ease, box-shadow 200ms ease;
+  overflow: hidden;
 }
 
-.campaign-card:hover { box-shadow: var(--shadow-md); }
+.campaign-card::before {
+  /* leather spine on the left */
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 14px;
+  background:
+    linear-gradient(90deg, var(--color-dark-1) 0%, transparent 100%),
+    var(--color-dark-2);
+  border-right: 1px solid var(--color-brass);
+  pointer-events: none;
+}
+
+.campaign-card::after {
+  /* brass border-image emboss */
+  content: "";
+  position: absolute;
+  inset: 6px;
+  border: 1px solid var(--color-brass);
+  border-radius: calc(var(--radius) - 4px);
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+.campaign-card:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    inset 0 0 0 1px rgba(168, 123, 63, 0.5),
+    inset 0 0 24px rgba(0, 0, 0, 0.18),
+    var(--shadow-lg);
+}
 
 .campaign-card__main {
   display: block;
-  padding: var(--space-4);
+  padding: var(--space-6) var(--space-6) var(--space-4) calc(var(--space-6) + 14px);
   flex: 1 1 auto;
-  border-top-left-radius: var(--radius);
-  border-top-right-radius: var(--radius);
+  color: inherit;
+  position: relative;
 }
 
-.campaign-card__main:hover {
-  background: var(--color-bg-muted);
-  text-decoration: none;
-}
+.campaign-card__main:hover { text-decoration: none; }
 
 .campaign-card__title {
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: var(--color-text);
-  margin-bottom: var(--space-2);
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  color: var(--color-brass-soft);
+  margin-bottom: var(--space-3);
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.4);
 }
 
-.campaign-card__description { color: var(--color-text-soft); }
+.campaign-card__description {
+  color: var(--color-dark-7);
+  font-style: italic;
+  font-size: 0.95rem;
+  opacity: 0.85;
+}
 
 .campaign-card__footer {
   display: flex;
   justify-content: flex-end;
   gap: var(--space-2);
-  padding: var(--space-2);
-  border-top: 1px solid var(--color-border-soft);
+  padding: var(--space-2) var(--space-4) var(--space-2) calc(var(--space-4) + 14px);
+  border-top: 1px solid var(--color-brass-deep);
+  background: rgba(0, 0, 0, 0.15);
+  position: relative;
 }
 
 .campaign-card__edit {
   display: inline-flex;
   align-items: center;
-  font-size: 0.875rem;
-  color: var(--color-accent);
+  font-size: 0.85rem;
+  font-family: var(--font-display);
+  letter-spacing: 0.04em;
+  color: var(--color-brass-soft);
 }
 
 .campaign-card__edit:hover {
-  color: var(--color-accent-text);
+  color: var(--color-bg);
   text-decoration: none;
 }
 
