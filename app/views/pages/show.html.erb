@@ -10,16 +10,16 @@
     <%# render partial: "chats/show" %>
 
     <div class="page-shell">
-      <div class="page-shell__center">
+      <div class="page-leaf">
         <%= render "header" %>
-      </div>
 
-      <%= form_with model: [@campaign, @page], data: { controller: "tiptap", "tiptap-campaign-id-value": @campaign.id } do |f| %>
-        <%= render partial: "body",
-                    locals: { initial_content: @page.body,
-                              form: f,
-                              field_name: :body } %>
-      <% end %>
+        <%= form_with model: [@campaign, @page], data: { controller: "tiptap", "tiptap-campaign-id-value": @campaign.id } do |f| %>
+          <%= render partial: "body",
+                      locals: { initial_content: @page.body,
+                                form: f,
+                                field_name: :body } %>
+        <% end %>
+      </div>
     </div>
   </main>
 </div>

@@ -580,6 +580,7 @@ code {
 .page-shell {
   position: relative;
   z-index: 10;
+  padding: var(--space-6) 0 var(--space-8);
 }
 
 .page-shell__center {
@@ -593,17 +594,45 @@ code {
   max-width: var(--content-width);
 }
 
+.page-leaf {
+  width: 100%;
+  max-width: var(--content-width);
+  margin: 0 auto;
+  background:
+    radial-gradient(circle at 0% 0%, rgba(168, 123, 63, 0.04), transparent 30%),
+    radial-gradient(circle at 100% 100%, rgba(138, 28, 28, 0.03), transparent 30%),
+    var(--color-bg);
+  border: 1px solid var(--color-border-soft);
+  border-radius: var(--radius-sm);
+  box-shadow:
+    var(--shadow-md),
+    inset 0 0 0 1px rgba(168, 123, 63, 0.15);
+  position: relative;
+}
+
+/* Subtle deckled top edge */
+.page-leaf::before {
+  content: "";
+  position: absolute;
+  top: -3px;
+  left: 8%;
+  right: 8%;
+  height: 6px;
+  background: linear-gradient(90deg, transparent, var(--color-brass-soft), transparent);
+  opacity: 0.4;
+  border-radius: 50%;
+  filter: blur(1px);
+}
+
 .page-header {
   width: 100%;
   cursor: pointer;
-  padding-left: 2rem;
-  padding-right: 2rem;
+  padding: var(--space-6) var(--space-6) 0;
 }
 
 @media (min-width: 768px) {
   .page-header {
-    padding-left: 96px;
-    padding-right: 96px;
+    padding: var(--space-8) 4rem 0;
   }
 }
 
@@ -639,29 +668,26 @@ code {
 }
 
 .page-body {
-  display: flex;
+  display: block;
   width: 100%;
-  justify-content: center;
   padding-top: 0.25rem;
   z-index: 10;
 }
 
 .page-body__inner {
   width: 100%;
-  max-width: var(--content-width);
-  padding: 0 2rem 30vh;
+  padding: 0 var(--space-6) var(--space-8);
 }
 
 @media (min-width: 768px) {
   .page-body__inner {
-    padding: 0 96px 30vh;
+    padding: 0 4rem var(--space-8);
   }
 }
 
 .tiptap__editor {
-  display: flex;
+  display: block;
   width: 100%;
-  justify-content: center;
   padding-top: 0.25rem;
   z-index: 10;
 }
