@@ -1751,8 +1751,13 @@ code {
   max-height: 100vh;
   display: flex;
   flex-direction: column;
-  border-radius: var(--radius);
+  border-top-left-radius: var(--radius);
+  border-top-right-radius: var(--radius);
   z-index: 50;
+  border-top: 2px solid var(--color-brass);
+  border-left: 1px solid var(--color-brass);
+  background: var(--color-bg);
+  box-shadow: var(--shadow-lg);
 }
 
 .chat-panel {
@@ -1767,8 +1772,10 @@ code {
 
 .chat-show__col {
   width: 100%;
-  background: var(--color-bg-muted);
-  padding: var(--space-8) 0;
+  background:
+    linear-gradient(180deg, rgba(168, 123, 63, 0.05), transparent 30%),
+    var(--color-bg-muted);
+  padding: var(--space-6) 0 var(--space-4);
 }
 
 .chat-show__messages {
@@ -1779,10 +1786,11 @@ code {
 .chat-form {
   display: flex;
   flex-direction: column;
-  gap: var(--space-4);
+  gap: var(--space-3);
   padding: var(--space-4);
-  background: var(--color-bg-soft);
-  border-radius: var(--radius-lg);
+  background: var(--color-bg-muted);
+  border-top: 1px solid var(--color-brass);
+  border-radius: 0;
   box-shadow: var(--shadow-md);
   width: 100%;
 }
@@ -1801,10 +1809,16 @@ code {
 .chat-form__input-row {
   display: flex;
   align-items: center;
-  background: var(--color-bg-muted);
-  border-radius: var(--radius);
+  background: var(--color-bg);
+  border: 1px solid var(--color-border-medium);
+  border-radius: var(--radius-sm);
   box-shadow: var(--shadow-sm);
-  padding: var(--space-2) var(--space-4);
+  padding: var(--space-2) var(--space-3);
+}
+
+.chat-form__input-row:focus-within {
+  border-color: var(--color-brass);
+  box-shadow: 0 0 0 3px rgba(168, 123, 63, 0.18);
 }
 
 .chat-form__textarea {
@@ -1824,17 +1838,18 @@ code {
 }
 
 .chat-form__send {
-  margin-left: var(--space-4);
-  background: var(--color-bg-strong);
-  border-radius: var(--radius);
-  padding: 0.5rem;
+  margin-left: var(--space-3);
+  background: var(--color-accent);
+  color: var(--color-bg);
+  border-radius: var(--radius-sm);
+  padding: 0.4rem 0.6rem;
   display: inline-flex;
   align-items: center;
   justify-content: center;
 }
 
 .chat-form__send:hover {
-  background: var(--color-text-light);
+  background: var(--color-accent-text);
 }
 
 .chat-form__clear-link {
@@ -1842,16 +1857,21 @@ code {
   align-items: center;
   gap: var(--space-2);
   border-radius: var(--radius-sm);
-  padding: var(--space-2) var(--space-4);
-  background: var(--color-bg-strong);
-  color: var(--color-text-soft);
-  font-weight: 500;
+  padding: 0.3rem 0.7rem;
+  background: transparent;
+  color: var(--color-text-muted);
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border: 1px solid var(--color-border-soft);
   cursor: pointer;
 }
 
 .chat-form__clear-link:hover {
-  background: var(--color-text-light);
-  color: #fff;
+  background: var(--color-bg-soft);
+  border-color: var(--color-brass);
+  color: var(--color-text-soft);
   text-decoration: none;
 }
 
@@ -1883,13 +1903,53 @@ code {
  * Chat messages + markdown
  * ============================================================ */
 .message {
-  margin: var(--space-8);
-  padding: var(--space-4);
-  border-radius: var(--radius);
+  margin: var(--space-4) var(--space-8);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  position: relative;
+  border-left: 3px solid var(--color-border-soft);
+  background: var(--color-bg);
+  box-shadow: var(--shadow-sm);
 }
 
-.message--user { background: var(--color-accent-200); }
-.message--assistant { background: var(--color-bg-soft); }
+.message--user {
+  border-left-color: var(--color-brass);
+  background: var(--color-bg);
+  margin-right: var(--space-8);
+  margin-left: 25%;
+}
+
+.message--user::before {
+  content: "Player";
+  display: block;
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-brass-deep);
+  margin-bottom: 0.25rem;
+}
+
+.message--assistant {
+  border-left-color: var(--color-accent);
+  background: var(--color-bg-muted);
+  margin-left: var(--space-8);
+  margin-right: 25%;
+}
+
+.message--assistant::before {
+  content: "Scribe";
+  display: block;
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-accent-text);
+  margin-bottom: 0.25rem;
+}
 
 .markdown h1 { font-size: 1.875rem; font-weight: 700; margin-bottom: 1rem; }
 .markdown h2 { font-size: 1.5rem;  font-weight: 600; margin-bottom: 0.75rem; }
