@@ -21,18 +21,21 @@
 </div>
 
 
-<% if @campaign.roles.exists?(user: current_user, role_type: :gamemaster) %>
-  <h3 style="margin-top: 2rem;">Invite a User</h3>
-  <%= form_with url: invite_user_campaign_path(@campaign), method: :post do |f| %>
-    <div style="display: flex; align-items: center; gap: 1rem; margin-top: 0.5rem;">
-      <div style="flex: 1;">
-        <%= text_field_tag :username, nil, placeholder: "Enter user's username", class: "form-input" %>
-      </div>
-      <%= submit_tag "Send Invitation", class: "btn" %>
-    </div>
-  <% end %>
-<% end %>
+<div class="flourish">❦</div>
 
+<% if @campaign.roles.exists?(user: current_user, role_type: :gamemaster) %>
+  <div style="padding: 0 1.5rem;">
+    <h3 style="margin-top: 1rem;">Invite a User</h3>
+    <%= form_with url: invite_user_campaign_path(@campaign), method: :post do |f| %>
+      <div style="display: flex; align-items: center; gap: 1rem; margin-top: 0.5rem;">
+        <div style="flex: 1;">
+          <%= text_field_tag :username, nil, placeholder: "Enter user's username", class: "form-input" %>
+        </div>
+        <%= submit_tag "Send Invitation", class: "btn" %>
+      </div>
+    <% end %>
+  </div>
+<% end %>
 
 <div class="campaign-show__description-block">
   <h2>Description</h2>
@@ -40,6 +43,8 @@
     <%= @campaign.description.presence || "No description provided" %>
   </p>
 </div>
+
+<div class="flourish">❦</div>
 
 <div>
   <div class="campaign-show__characters-header">

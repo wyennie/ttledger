@@ -220,13 +220,14 @@ code {
   gap: 1rem;
   margin: var(--space-6) 0;
   color: var(--color-brass);
+  font-size: 1.25rem;
 }
 
 .flourish::before,
 .flourish::after {
   content: "";
   flex: 1 1 auto;
-  max-width: 8rem;
+  max-width: 10rem;
   height: 1px;
   background: linear-gradient(90deg, transparent, var(--color-brass), transparent);
 }
