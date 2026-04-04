@@ -313,9 +313,19 @@ code {
  * Public navbar
  * ============================================================ */
 .navbar {
-  background: var(--color-bg-muted);
-  padding: var(--space-4);
-  box-shadow: var(--shadow);
+  background:
+    linear-gradient(180deg, rgba(168, 123, 63, 0.08), transparent 80%),
+    var(--color-bg-muted);
+  padding: var(--space-3) var(--space-6);
+  border-bottom: 1px solid var(--color-brass);
+  box-shadow: var(--shadow-sm);
+  margin: 0 calc(-1 * var(--space-3));
+}
+
+@media (min-width: 1024px) {
+  .navbar {
+    margin: 0;
+  }
 }
 
 .navbar__container {
@@ -324,11 +334,64 @@ code {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: var(--space-4);
+}
+
+.navbar__brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+.navbar__brand-mark {
+  color: var(--color-brass);
+  font-size: 1.25rem;
+}
+
+.navbar__brand-text {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 .navbar__links {
   display: flex;
-  gap: var(--space-4);
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.navbar__link {
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 0.4rem 0.9rem;
+  border-radius: var(--radius-sm);
+  color: var(--color-text-soft);
+  text-decoration: none;
+  border: 1px solid transparent;
+}
+
+.navbar__link:hover {
+  color: var(--color-text);
+  border-color: var(--color-brass-soft);
+  text-decoration: none;
+}
+
+.navbar__link--primary {
+  color: var(--color-bg);
+  background: var(--color-accent);
+  border-color: var(--color-accent-text);
+}
+
+.navbar__link--primary:hover {
+  color: var(--color-bg);
+  background: var(--color-accent-text);
+  border-color: var(--color-accent-text);
 }
 
 /* ============================================================
@@ -1808,6 +1871,15 @@ code {
   font-size: 1.25rem;
   font-style: italic;
   color: var(--color-text-soft);
+}
+
+/* ============================================================
+ * Auth frame (login / signup)
+ * ============================================================ */
+.auth-frame {
+  max-width: 32rem;
+  margin: 4rem auto;
+  padding: 0 var(--space-4);
 }
 
 /* ============================================================

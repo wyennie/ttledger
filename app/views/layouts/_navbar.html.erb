@@ -1,8 +1,12 @@
 <nav class="navbar">
   <div class="navbar__container">
+    <%= link_to root_path, class: "navbar__brand" do %>
+      <span class="navbar__brand-mark">❦</span>
+      <span class="navbar__brand-text">Tabletop Ledger</span>
+    <% end %>
     <div class="navbar__links">
-      <%= link_to "Log in", login_path %>
-      <%= link_to "Sign Up", signup_path %>
+      <%= link_to "Log in", login_path, class: "navbar__link" %>
+      <%= link_to "Sign Up", signup_path, class: "navbar__link navbar__link--primary" %>
     </div>
   </div>
 </nav>

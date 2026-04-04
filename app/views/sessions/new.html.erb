@@ -1,3 +1,4 @@
+<div class="auth-frame">
 <h1 class="form-page-title">Log in</h1>
 
 <div class="form-card form-card--narrow">
@@ -13,11 +14,12 @@
     </div>
 
     <div>
-      <%= f.submit "Log in", class: "btn btn--full" %>
+      <%= f.submit "Log in", class: "btn btn--full btn--primary" %>
     </div>
   <% end %>
 
   <p class="login-meta">New User?
     <%= link_to "Sign up now!", signup_path, class: "login-meta__link" %>
   </p>
+</div>
 </div>
