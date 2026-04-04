@@ -643,14 +643,15 @@ class BubbleMenu {
   }
 
   template() {
+    const icon = (svg) => `<svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${svg}</svg>`;
     return `
-      <button type="button" data-cmd="bold"      title="Bold"><strong>B</strong></button>
-      <button type="button" data-cmd="italic"    title="Italic"><em>I</em></button>
-      <button type="button" data-cmd="underline" title="Underline"><u>U</u></button>
-      <button type="button" data-cmd="strike"    title="Strikethrough"><s>S</s></button>
-      <button type="button" data-cmd="code"      title="Inline code"><code>&lt;/&gt;</code></button>
+      <button type="button" data-cmd="bold"      title="Bold (⌘B)">${icon('<path d="M4 3h4.5a2.5 2.5 0 0 1 0 5H4zM4 8h5a2.5 2.5 0 0 1 0 5H4z"/>')}</button>
+      <button type="button" data-cmd="italic"    title="Italic (⌘I)">${icon('<line x1="10" y1="3" x2="6" y2="13"/><line x1="6" y1="3" x2="12" y2="3"/><line x1="4" y1="13" x2="10" y2="13"/>')}</button>
+      <button type="button" data-cmd="underline" title="Underline (⌘U)">${icon('<path d="M4 3v5a4 4 0 0 0 8 0V3"/><line x1="3" y1="13" x2="13" y2="13"/>')}</button>
+      <button type="button" data-cmd="strike"    title="Strikethrough">${icon('<path d="M5 5a3 3 0 0 1 6 0"/><path d="M5 11a3 3 0 0 0 6 0"/><line x1="2.5" y1="8" x2="13.5" y2="8"/>')}</button>
+      <button type="button" data-cmd="code"      title="Inline code">${icon('<polyline points="5 5 2 8 5 11"/><polyline points="11 5 14 8 11 11"/>')}</button>
       <span class="editor-bubble-menu__sep"></span>
-      <button type="button" data-cmd="link"      title="Link">↗</button>
+      <button type="button" data-cmd="link"      title="Link">${icon('<path d="M7 9a3 3 0 0 0 4 0l2-2a3 3 0 0 0-4-4L8 4"/><path d="M9 7a3 3 0 0 0-4 0L3 9a3 3 0 0 0 4 4l1-1"/>')}</button>
     `;
   }
 
