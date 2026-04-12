@@ -41,8 +41,16 @@
       </div>
 
       <div class="nav-sidebar__page-tree">
-        <% @top_pages.each do |page| %>
-          <%= render "pages/sidebar_top_level_page", page: page %>
+        <% if @top_pages.any? %>
+          <% @top_pages.each do |page| %>
+            <%= render "pages/sidebar_top_level_page", page: page %>
+          <% end %>
+        <% else %>
+          <div class="nav-sidebar__empty">
+            <span class="nav-sidebar__empty-symbol">❦</span>
+            <p class="nav-sidebar__empty-text">No pages yet.</p>
+            <p class="nav-sidebar__empty-hint">Pen your first below.</p>
+          </div>
         <% end %>
       </div>
 
