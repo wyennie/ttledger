@@ -1153,18 +1153,58 @@ code {
   padding: 0;
 }
 
-.ProseMirror ul[data-type="taskList"] li {
+.ProseMirror ul[data-type="taskList"] > li {
   display: flex;
   align-items: flex-start;
-  gap: 0.5rem;
-  margin-top: 0.25rem;
+  gap: 0.6rem;
+  margin-top: 0.35rem;
+  padding-left: 0;
+}
+
+.ProseMirror ul[data-type="taskList"] > li::before {
+  content: none;
 }
 
 .ProseMirror ul[data-type="taskList"] li > label {
   display: inline-flex;
   align-items: center;
-  margin-top: 0.25rem;
+  margin-top: 0.4rem;
   flex: 0 0 auto;
+}
+
+.ProseMirror ul[data-type="taskList"] li > label input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 1.05rem;
+  height: 1.05rem;
+  border: 1.5px solid var(--color-brass);
+  border-radius: 2px;
+  background: var(--color-bg);
+  display: inline-block;
+  position: relative;
+  cursor: pointer;
+  transition: background-color 100ms ease, border-color 100ms ease;
+}
+
+.ProseMirror ul[data-type="taskList"] li > label input[type="checkbox"]:hover {
+  border-color: var(--color-accent);
+}
+
+.ProseMirror ul[data-type="taskList"] li > label input[type="checkbox"]:checked {
+  background: var(--color-accent);
+  border-color: var(--color-accent-text);
+}
+
+.ProseMirror ul[data-type="taskList"] li > label input[type="checkbox"]:checked::after {
+  content: "✓";
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-bg);
+  font-size: 0.85rem;
+  font-weight: 700;
 }
 
 .ProseMirror ul[data-type="taskList"] li > div {
@@ -1175,6 +1215,8 @@ code {
 .ProseMirror ul[data-type="taskList"] li[data-checked="true"] > div {
   color: var(--color-text-muted);
   text-decoration: line-through;
+  text-decoration-color: var(--color-brass);
+  font-style: italic;
 }
 
 /* ============================================================
@@ -1183,28 +1225,40 @@ code {
 .ProseMirror table {
   border-collapse: collapse;
   width: 100%;
-  margin: 0.5rem 0;
+  margin: 1rem 0;
   table-layout: fixed;
   overflow: hidden;
+  border: 1px solid var(--color-brass-deep);
+  background: var(--color-bg);
+  box-shadow: var(--shadow-sm);
 }
 
 .ProseMirror table td,
 .ProseMirror table th {
   border: 1px solid var(--color-border-soft);
-  padding: 0.4rem 0.6rem;
+  padding: 0.5rem 0.75rem;
   vertical-align: top;
   position: relative;
   min-width: 4rem;
+  font-size: 0.95rem;
+}
+
+.ProseMirror table tr:nth-child(even) td {
+  background: rgba(168, 123, 63, 0.04);
 }
 
 .ProseMirror table th {
-  background: var(--color-bg-muted);
-  font-weight: 600;
+  background: linear-gradient(180deg, var(--color-bg-soft), var(--color-bg-muted));
+  font-family: var(--font-display);
+  font-weight: 500;
+  letter-spacing: 0.04em;
   text-align: left;
+  color: var(--color-text);
+  border-bottom: 2px solid var(--color-brass);
 }
 
 .ProseMirror table .selectedCell {
-  background: rgba(99, 102, 241, 0.1);
+  background: rgba(168, 123, 63, 0.16);
 }
 
 .ProseMirror table .column-resize-handle {
@@ -1213,7 +1267,7 @@ code {
   top: 0;
   bottom: 0;
   width: 4px;
-  background: var(--color-accent);
+  background: var(--color-brass);
   pointer-events: none;
   opacity: 0;
 }
