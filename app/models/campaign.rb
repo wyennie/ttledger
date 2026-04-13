@@ -6,6 +6,7 @@ class Campaign < ApplicationRecord
   has_many :chats, dependent: :destroy
   has_many :entity_kinds, dependent: :destroy
   has_many :entities, dependent: :destroy
+  has_many :pdf_imports, dependent: :destroy
 
   has_many :campaign_invitations, dependent: :destroy
 

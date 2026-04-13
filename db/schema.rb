@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_05_08_002910) do
+ActiveRecord::Schema[8.0].define(version: 2026_05_08_003006) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -236,6 +236,21 @@ ActiveRecord::Schema[8.0].define(version: 2026_05_08_002910) do
     t.index ["parent_id"], name: "index_pages_on_parent_id"
   end
 
+  create_table "pdf_imports", force: :cascade do |t|
+    t.bigint "campaign_id", null: false
+    t.bigint "user_id", null: false
+    t.string "status", default: "pending", null: false
+    t.string "original_filename"
+    t.jsonb "extracted_pages"
+    t.jsonb "draft_payload"
+    t.text "error_message"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["campaign_id", "created_at"], name: "index_pdf_imports_on_campaign_id_and_created_at"
+    t.index ["campaign_id"], name: "index_pdf_imports_on_campaign_id"
+    t.index ["user_id"], name: "index_pdf_imports_on_user_id"
+  end
+
   create_table "roles", force: :cascade do |t|
     t.integer "user_id", null: false
     t.integer "campaign_id", null: false
@@ -288,6 +303,8 @@ ActiveRecord::Schema[8.0].define(version: 2026_05_08_002910) do
   add_foreign_key "messages", "users"
   add_foreign_key "pages", "campaigns"
   add_foreign_key "pages", "pages", column: "parent_id"
+  add_foreign_key "pdf_imports", "campaigns"
+  add_foreign_key "pdf_imports", "users"
   add_foreign_key "roles", "campaigns"
   add_foreign_key "roles", "users"
 end

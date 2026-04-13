@@ -21,6 +21,11 @@ Rails.application.routes.draw do
       end
     end
     resources :entity_kinds, only: [ :index, :create, :update, :destroy ]
+    resources :pdf_imports, only: [ :new, :create, :show, :update, :destroy ] do
+      member do
+        post :apply
+      end
+    end
     member do
       post :invite_user
       post :accept_invitation
