@@ -1,0 +1,16 @@
+<h1 class="form-page-title"><%= @pdf_import.original_filename.presence || "PDF import" %></h1>
+
+<div class="form-card form-card--medium">
+  <%= render "status_panel", pdf_import: @pdf_import %>
+
+  <div class="flourish">❦</div>
+
+  <div class="campaign-show__top" style="justify-content: flex-start; gap: 1rem;">
+    <%= link_to "Back to campaign", campaign_path(@campaign), class: "btn" %>
+    <%= button_to "Discard import",
+                  campaign_pdf_import_path(@campaign, @pdf_import),
+                  method: :delete,
+                  data: { turbo_confirm: "Throw out this draft? The uploaded PDF will also be deleted." },
+                  class: "btn btn--danger" %>
+  </div>
+</div>

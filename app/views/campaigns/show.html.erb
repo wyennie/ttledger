@@ -2,6 +2,9 @@
 
 <div class="campaign-show__top">
   <%= link_to "Edit campaign details", edit_campaign_path(@campaign), class: "btn" %>
+  <% if @campaign.roles.exists?(user: current_user, role_type: :gamemaster) %>
+    <%= link_to "Import a PDF", new_campaign_pdf_import_path(@campaign), class: "btn" %>
+  <% end %>
   <div class="campaign-show__roster">
     <div>
       <p style="font-size: 1.25rem;">

@@ -1,0 +1,21 @@
+<div class="pdf-import-status pdf-import-status--<%= pdf_import.status %>">
+  <p class="pdf-import-status__label">Status</p>
+  <p class="pdf-import-status__value">
+    <% case pdf_import.status %>
+    <% when "pending" %>
+      Queued. Waiting for the parser to pick it up.
+    <% when "extracting" %>
+      Extracting text from the PDF.
+    <% when "outlining" %>
+      Reading the document and proposing a page tree.
+    <% when "expanding" %>
+      Writing each proposed page.
+    <% when "ready_for_review" %>
+      Draft is ready. Review the proposed pages and entities below.
+    <% when "applied" %>
+      Import applied to the campaign.
+    <% when "failed" %>
+      Import failed. <%= pdf_import.error_message %>
+    <% end %>
+  </p>
+</div>

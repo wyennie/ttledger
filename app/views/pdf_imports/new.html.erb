@@ -1,0 +1,26 @@
+<h1 class="form-page-title">Import a sourcebook</h1>
+
+<div class="form-card form-card--medium">
+  <p class="form-card__heading">
+    Drop in a PDF of a campaign or setting. We'll read it and propose a
+    page tree, plus any entities (locations, characters, factions, items)
+    we find. You'll review the plan before anything is written.
+  </p>
+
+  <%= form_with(model: @pdf_import, url: campaign_pdf_imports_path(@campaign), multipart: true) do |f| %>
+    <%= render 'shared/error_messages', object: @pdf_import %>
+
+    <div class="form-field">
+      <%= f.label :pdf, "PDF file", class: "form-label" %>
+      <%= f.file_field :pdf, accept: "application/pdf", class: "form-input", required: true %>
+      <p class="form-field__hint form-field__hint--small">
+        Sourcebooks of a few hundred pages are fine. Parsing happens in the
+        background and may take several minutes.
+      </p>
+    </div>
+
+    <div>
+      <%= f.submit "Begin import", class: "btn btn--full" %>
+    </div>
+  <% end %>
+</div>

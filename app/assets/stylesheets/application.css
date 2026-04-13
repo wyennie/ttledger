@@ -2747,3 +2747,24 @@ code {
  * ============================================================ */
 .text-status-set { color: var(--color-success-text); font-weight: 600; }
 .text-status-unset { color: var(--color-text-muted); font-weight: 600; }
+
+/* ============================================================
+ * PDF import status panel
+ * ============================================================ */
+.pdf-import-status {
+  padding: var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  background: var(--color-bg-muted);
+}
+.pdf-import-status__label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-text-muted);
+  margin: 0 0 0.25rem 0;
+}
+.pdf-import-status__value { margin: 0; font-size: 1rem; }
+.pdf-import-status--failed { border-color: var(--color-danger); }
+.pdf-import-status--applied { border-color: var(--color-success-text); }
+.pdf-import-status--ready_for_review { border-color: var(--color-accent, #b8860b); }
