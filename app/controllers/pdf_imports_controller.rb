@@ -14,7 +14,7 @@ class PdfImportsController < ApplicationController
     @pdf_import.original_filename = create_params[:pdf]&.original_filename
 
     if @pdf_import.save
-      ExtractPdfTextJob.perform_later(@pdf_import.id) if defined?(ExtractPdfTextJob)
+      ExtractPdfTextJob.perform_later(@pdf_import.id)
       redirect_to campaign_pdf_import_path(@campaign, @pdf_import)
     else
       render :new, status: :unprocessable_entity
