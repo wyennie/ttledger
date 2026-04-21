@@ -16,7 +16,7 @@ class ExtractPdfTextJob < ApplicationJob
     end
 
     import.transition_to!("outlining", extracted_pages: pages)
-    # Next step (outline pass) will be enqueued by a follow-up commit.
+    GenerateOutlineJob.perform_later(import.id)
   rescue ActiveRecord::RecordNotFound
     # Import was deleted; nothing to do.
   rescue PdfTextExtractor::ExtractionError => e
