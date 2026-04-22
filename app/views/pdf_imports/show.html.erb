@@ -1,12 +1,23 @@
 <h1 class="form-page-title"><%= @pdf_import.original_filename.presence || "PDF import" %></h1>
 
-<div class="form-card form-card--medium">
+<div class="form-card form-card--wide">
   <%= render "status_panel", pdf_import: @pdf_import %>
+
+  <% if @pdf_import.ready_for_review? %>
+    <%= render "review", pdf_import: @pdf_import %>
+  <% end %>
 
   <div class="flourish">❦</div>
 
   <div class="campaign-show__top" style="justify-content: flex-start; gap: 1rem;">
     <%= link_to "Back to campaign", campaign_path(@campaign), class: "btn" %>
+    <% if @pdf_import.ready_for_review? %>
+      <%= button_to "Apply import to campaign",
+                    apply_campaign_pdf_import_path(@campaign, @pdf_import),
+                    method: :post,
+                    data: { turbo_confirm: "Create the proposed pages and entities in this campaign?" },
+                    class: "btn btn--primary" %>
+    <% end %>
     <%= button_to "Discard import",
                   campaign_pdf_import_path(@campaign, @pdf_import),
                   method: :delete,

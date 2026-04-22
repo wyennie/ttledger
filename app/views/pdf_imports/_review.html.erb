@@ -1,0 +1,29 @@
+<% draft = pdf_import.draft_payload || {} %>
+<% pages = Array(draft["pages"]) %>
+<% entities = Array(draft["entities"]) %>
+<% by_parent = pages.group_by { |p| p["parent_tmp_id"] } %>
+
+<section class="pdf-import-review">
+  <h2>Proposed pages (<%= pages.size %>)</h2>
+  <%= render "draft_page_tree", pages: by_parent[nil].to_a, by_parent: by_parent %>
+</section>
+
+<section class="pdf-import-review">
+  <h2>Proposed entities (<%= entities.size %>)</h2>
+  <% if entities.empty? %>
+    <p class="pdf-import-review__empty">No entities were proposed.</p>
+  <% else %>
+    <% kinds_in_use = entities.map { |e| e["kind"] }.uniq.sort %>
+    <% kinds_in_use.each do |kind| %>
+      <h3 class="pdf-import-review__kind"><%= kind.titleize %></h3>
+      <ul class="pdf-import-review__entities">
+        <% entities.select { |e| e["kind"] == kind }.each do |entity| %>
+          <li>
+            <strong><%= entity["name"] %></strong>
+            <span class="pdf-import-review__summary"><%= entity["summary"] %></span>
+          </li>
+        <% end %>
+      </ul>
+    <% end %>
+  <% end %>
+</section>

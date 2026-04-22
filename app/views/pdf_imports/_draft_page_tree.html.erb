@@ -1,0 +1,31 @@
+<ul class="pdf-import-review__tree">
+  <% pages.each do |page| %>
+    <% children = by_parent[page["tmp_id"]].to_a %>
+    <li class="pdf-import-review__page">
+      <details>
+        <summary class="pdf-import-review__page-summary">
+          <span class="pdf-import-review__page-title"><%= page["title"] %></span>
+          <span class="pdf-import-review__page-meta">
+            pp. <%= Array(page["source_pages"]).join(", ") %>
+          </span>
+        </summary>
+
+        <% if page["summary"].present? %>
+          <p class="pdf-import-review__page-sketch"><em><%= page["summary"] %></em></p>
+        <% end %>
+
+        <% if page["body"].present? %>
+          <article class="pdf-import-review__page-body">
+            <%= sanitize page["body"], tags: %w[h2 h3 h4 p strong em u code blockquote ul ol li hr table thead tbody tr th td span], attributes: %w[data-mention data-entity-tmp-id data-entity-id data-entity-label data-entity-type class] %>
+          </article>
+        <% else %>
+          <p class="pdf-import-review__page-body--empty"><em>(no body generated yet)</em></p>
+        <% end %>
+      </details>
+
+      <% if children.any? %>
+        <%= render "draft_page_tree", pages: children, by_parent: by_parent %>
+      <% end %>
+    </li>
+  <% end %>
+</ul>

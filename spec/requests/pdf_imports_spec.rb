@@ -69,6 +69,30 @@ RSpec.describe "PdfImports", type: :request do
       expect(response).to have_http_status(:ok)
       expect(response.body).to include("Status")
     end
+
+    it "renders the proposed pages and entities once the draft is ready" do
+      import = create(:pdf_import,
+                      campaign: campaign,
+                      user: user,
+                      status: "ready_for_review",
+                      draft_payload: {
+                        "pages" => [
+                          { "tmp_id" => "p1", "title" => "Overview", "parent_tmp_id" => nil, "source_pages" => [ 1, 2 ], "summary" => "Intro", "body" => "<h2>Welcome</h2>" },
+                          { "tmp_id" => "p2", "title" => "Geography", "parent_tmp_id" => "p1", "source_pages" => [ 3, 4 ], "summary" => "Map", "body" => "<p>Mountains.</p>" }
+                        ],
+                        "entities" => [
+                          { "tmp_id" => "e1", "name" => "Strahd", "kind" => "character", "summary" => "Vampire lord." }
+                        ]
+                      })
+
+      get campaign_pdf_import_path(campaign, import)
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include("Proposed pages (2)")
+      expect(response.body).to include("Overview")
+      expect(response.body).to include("Geography")
+      expect(response.body).to include("Strahd")
+      expect(response.body).to include("Apply import to campaign")
+    end
   end
 
   describe "DELETE /campaigns/:id/pdf_imports/:id" do
