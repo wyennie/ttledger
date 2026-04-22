@@ -19,13 +19,14 @@ RSpec.describe GenerateOutlineJob, type: :job do
     }
   end
 
-  it "writes the outline to draft_payload and advances to ready_for_review" do
+  it "writes the outline to draft_payload, advances to expanding, and fans out a body job per page" do
     allow(PdfImports::OutlineGenerator).to receive(:call).and_return(fake_payload)
+    expect(ExpandDraftPageJob).to receive(:perform_later).with(import.id, "p1")
 
     described_class.perform_now(import.id)
 
     import.reload
-    expect(import.status).to eq("ready_for_review")
+    expect(import.status).to eq("expanding")
     expect(import.draft_payload["pages"].first["title"]).to eq("Overview")
   end
 

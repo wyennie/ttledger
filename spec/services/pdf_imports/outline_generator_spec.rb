@@ -15,11 +15,11 @@ RSpec.describe PdfImports::OutlineGenerator do
 
   it "passes a cacheable PDF context block and the campaign's existing kinds, and returns the validated payload" do
     expect(adapter).to receive(:call_tool) do |args|
-      pdf_block = args[:system_blocks][1]
+      pdf_block = args[:system_blocks][0]
       expect(pdf_block[:cache]).to eq(true)
       expect(pdf_block[:text]).to include('<page n="1">').and include("Chapter 1")
 
-      instructions = args[:system_blocks][0][:text]
+      instructions = args[:system_blocks][1][:text]
       expect(instructions).to include("character", "location") # default kinds
       expect(args[:tool][:name]).to eq("submit_outline")
 

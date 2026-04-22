@@ -20,8 +20,9 @@ module PdfImports
 
       payload = @adapter.call_tool(
         system_blocks: [
-          { text: instructions, cache: false },
-          { text: pdf_text, cache: true }
+          # PDF text comes first so its cache prefix is reused by the body pass.
+          { text: pdf_text, cache: true },
+          { text: instructions, cache: false }
         ],
         messages: [
           { role: "user", content: "Produce the outline and entity list now using the submit_outline tool." }

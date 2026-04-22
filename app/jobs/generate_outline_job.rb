@@ -11,9 +11,10 @@ class GenerateOutlineJob < ApplicationJob
       return
     end
 
-    import.transition_to!("ready_for_review", draft_payload: payload)
-    # Per-page body generation comes in the next commit; for now the user can
-    # at least see the proposed structure.
+    import.transition_to!("expanding", draft_payload: payload.deep_stringify_keys)
+    payload[:pages].each do |page|
+      ExpandDraftPageJob.perform_later(import.id, page[:tmp_id])
+    end
   rescue ActiveRecord::RecordNotFound
     # Import deleted mid-flight.
   rescue PdfImports::OutlineGenerator::TooLarge => e
