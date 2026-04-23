@@ -36,9 +36,9 @@
         <% end %>
       </div>
 
-      <div class="nav-sidebar__campaign-title">
+      <%= link_to campaign_path(@campaign), class: "nav-sidebar__campaign-title" do %>
         <%= @campaign.name || "Campaign Title" %>
-      </div>
+      <% end %>
 
       <div class="nav-sidebar__page-tree">
         <% if @top_pages.any? %>

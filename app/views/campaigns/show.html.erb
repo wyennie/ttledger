@@ -1,6 +1,17 @@
-<h1 class="campaign-show__heading"><%= @campaign.name %></h1>
+<%= content_for :title, @campaign.name %>
+<div class="app-grid">
+  <aside class="app-grid__sidebar">
+    <%= render "pages/sidebar" %>
+  </aside>
 
-<div class="campaign-show__top">
+  <main class="app-grid__main">
+    <%= render partial: "layouts/flash" %>
+
+    <div class="page-shell">
+      <div class="page-leaf">
+        <h1 class="campaign-show__heading"><%= @campaign.name %></h1>
+
+        <div class="campaign-show__top">
   <%= link_to "Edit campaign details", edit_campaign_path(@campaign), class: "btn" %>
   <% if @campaign.roles.exists?(user: current_user, role_type: :gamemaster) %>
     <%= link_to "Import a PDF", new_campaign_pdf_import_path(@campaign), class: "btn" %>
@@ -63,5 +74,7 @@
     </ul>
   </div>
 </div>
-
-<%# Chat display area? %>
+      </div>
+    </div>
+  </main>
+</div>

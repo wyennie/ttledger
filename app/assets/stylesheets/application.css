@@ -478,6 +478,15 @@ code {
   text-align: center;
   letter-spacing: 0.08em;
   text-transform: uppercase;
+  text-decoration: none;
+  display: block;
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+.nav-sidebar__campaign-title:hover,
+.nav-sidebar__campaign-title:focus {
+  color: var(--color-brass);
+  text-decoration: none;
 }
 
 .nav-sidebar__page-tree {

@@ -34,6 +34,7 @@ class CampaignsController < ApplicationController
 
   def show
     @players = @campaign.users.joins(:roles).where(roles: { role_type: "player" }).distinct
+    @top_pages = @campaign.pages.top_level
   end
 
   def authenticate_user!
