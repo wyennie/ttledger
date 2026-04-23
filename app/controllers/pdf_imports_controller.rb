@@ -3,7 +3,7 @@ class PdfImportsController < ApplicationController
   before_action :set_user_and_campaigns
   before_action :set_campaign
   before_action :authorize_gamemaster
-  before_action :set_pdf_import, only: %i[show update destroy apply]
+  before_action :set_pdf_import, only: %i[show destroy apply]
 
   def new
     @pdf_import = @campaign.pdf_imports.new
@@ -30,11 +30,15 @@ class PdfImportsController < ApplicationController
   end
 
   def apply
-    head :not_implemented
-  end
-
-  def update
-    head :not_implemented
+    PdfImports::Applier.call(@pdf_import)
+    flash[:success] = "Import applied. New pages and entities are now in your campaign."
+    redirect_to campaign_path(@campaign)
+  rescue PdfImports::Applier::NotReady
+    flash[:danger] = "This import is not ready to apply yet."
+    redirect_to campaign_pdf_import_path(@campaign, @pdf_import)
+  rescue ActiveRecord::RecordInvalid => e
+    flash[:danger] = "Could not apply import: #{e.message}"
+    redirect_to campaign_pdf_import_path(@campaign, @pdf_import)
   end
 
   private

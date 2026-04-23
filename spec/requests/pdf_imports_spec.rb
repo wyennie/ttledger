@@ -95,6 +95,38 @@ RSpec.describe "PdfImports", type: :request do
     end
   end
 
+  describe "POST /campaigns/:id/pdf_imports/:id/apply" do
+    let(:import) do
+      create(:pdf_import,
+             campaign: campaign,
+             user: user,
+             status: "ready_for_review",
+             draft_payload: {
+               "pages" => [ { "tmp_id" => "p1", "title" => "Overview", "parent_tmp_id" => nil, "source_pages" => [ 1 ], "summary" => "intro", "body" => "<p>hi</p>" } ],
+               "entities" => []
+             })
+    end
+
+    it "materializes the draft and redirects back to the campaign" do
+      expect {
+        post apply_campaign_pdf_import_path(campaign, import)
+      }.to change { campaign.pages.count }.by(1)
+
+      expect(response).to redirect_to(campaign_path(campaign))
+      expect(import.reload.status).to eq("applied")
+    end
+
+    it "surfaces a friendly error if the draft is invalid" do
+      import.update!(draft_payload: {
+        "pages" => [ { "tmp_id" => "p1", "title" => "Overview", "parent_tmp_id" => nil, "source_pages" => [], "summary" => "", "body" => "" } ],
+        "entities" => [ { "tmp_id" => "e1", "name" => "x" * 200, "kind" => "character", "summary" => "too long" } ]
+      })
+      post apply_campaign_pdf_import_path(campaign, import)
+      expect(response).to redirect_to(campaign_pdf_import_path(campaign, import))
+      expect(flash[:danger]).to be_present
+    end
+  end
+
   describe "DELETE /campaigns/:id/pdf_imports/:id" do
     it "discards the import" do
       import = create(:pdf_import, campaign: campaign, user: user)
