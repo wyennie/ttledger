@@ -22,6 +22,8 @@ RSpec.describe PdfImports::OutlineGenerator do
       instructions = args[:system_blocks][1][:text]
       expect(instructions).to include("character", "location") # default kinds
       expect(args[:tool][:name]).to eq("submit_outline")
+      # Outline pass keeps the higher-quality model (default) for structural reasoning.
+      expect(args[:model]).to be_nil
 
       {
         pages: [

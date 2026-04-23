@@ -33,6 +33,7 @@ RSpec.describe PdfImports::BodyGenerator do
       expect(instructions).to include("e1")
       expect(instructions).to include("Strahd")
       expect(args[:tool][:name]).to eq("submit_body")
+      expect(args[:model]).to eq(AnthropicAdapter::BODY_MODEL)
 
       { html_body: "<h2>Welcome</h2><p>Hello <span data-mention=\"entity\" data-entity-tmp-id=\"e1\">@Strahd</span>.</p>" }
     end

@@ -1,7 +1,8 @@
 class AnthropicAdapter
-  CHAT_MODEL = :"claude-haiku-4-5"
-  INGEST_MODEL = :"claude-sonnet-4-6"
-  CHAT_MAX_TOKENS = 4096
+  CHAT_MODEL    = :"claude-haiku-4-5"
+  OUTLINE_MODEL = :"claude-sonnet-4-6"   # structural reasoning + entity extraction
+  BODY_MODEL    = :"claude-haiku-4-5"    # per-page HTML, scaffolded by the outline
+  CHAT_MAX_TOKENS   = 4096
   INGEST_MAX_TOKENS = 16_000
 
   def initialize(api_key)
@@ -24,7 +25,7 @@ class AnthropicAdapter
   # `system_blocks` should be an array of {text:, cache:} hashes so the caller
   # controls which blocks get cache_control. Large, reusable context (e.g. the
   # full PDF text) should have cache: true to be cheap on subsequent calls.
-  def call_tool(system_blocks:, messages:, tool:, model: INGEST_MODEL, max_tokens: INGEST_MAX_TOKENS)
+  def call_tool(system_blocks:, messages:, tool:, model: OUTLINE_MODEL, max_tokens: INGEST_MAX_TOKENS)
     params = {
       model: model,
       max_tokens: max_tokens,

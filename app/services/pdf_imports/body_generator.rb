@@ -21,7 +21,8 @@ module PdfImports
         messages: [
           { role: "user", content: "Write the HTML body for the page now using the submit_body tool." }
         ],
-        tool: tool_schema
+        tool: tool_schema,
+        model: AnthropicAdapter::BODY_MODEL
       )
 
       payload[:html_body].to_s
