@@ -33,7 +33,7 @@
         </svg>
       <% end %>
       <%# plus-circle %>
-      <%= link_to campaign_pages_path(parent_id: page.id),
+      <%= link_to campaign_pages_path(page.campaign_id, parent_id: page.id),
                   data: { "turbo-method": :post },
                   class: "page-node__action" do %>
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" class="nav-icon nav-icon--sm">

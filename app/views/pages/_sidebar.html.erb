@@ -73,7 +73,7 @@
       </div>
 
       <div class="nav-sidebar__footer-item">
-        <%= button_to campaign_pages_path(parent_id: nil), method: :post, class: "nav-button nav-button--tall" do %>
+        <%= button_to campaign_pages_path(@campaign, parent_id: nil), method: :post, class: "nav-button nav-button--tall" do %>
           <svg xmlns="http://www.w3.org/2000/svg" class="nav-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
           </svg>
