@@ -26,6 +26,20 @@ RSpec.describe ExpandDraftPageJob, type: :job do
     expect(import.status).to eq("expanding") # not all pages done yet
   end
 
+  it "chains to the next page-without-body sequentially instead of fanning out" do
+    allow(PdfImports::BodyGenerator).to receive(:call).and_return("<p>body</p>")
+    expect(described_class).to receive(:perform_later).with(import.id, "p2")
+    described_class.perform_now(import.id, "p1")
+  end
+
+  it "skips body generation if the page already has one and just chains forward" do
+    import.draft_payload["pages"][0]["body"] = "<p>already done</p>"
+    import.save!
+    expect(PdfImports::BodyGenerator).not_to receive(:call)
+    expect(described_class).to receive(:perform_later).with(import.id, "p2")
+    described_class.perform_now(import.id, "p1")
+  end
+
   it "transitions to ready_for_review when every page has a body" do
     allow(PdfImports::BodyGenerator).to receive(:call).and_return("<p>body</p>")
     described_class.perform_now(import.id, "p1")

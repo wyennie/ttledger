@@ -12,9 +12,11 @@ class GenerateOutlineJob < ApplicationJob
     end
 
     import.transition_to!("expanding", draft_payload: payload.deep_stringify_keys)
-    payload[:pages].each do |page|
-      ExpandDraftPageJob.perform_later(import.id, page[:tmp_id])
-    end
+    # Body pass runs sequentially: each ExpandDraftPageJob enqueues the next
+    # page once it finishes. A single in-flight Anthropic request keeps us
+    # under Haiku's 10K-output-tokens-per-minute rate limit and avoids
+    # 429 storms on multi-page sourcebooks.
+    ExpandDraftPageJob.perform_later(import.id, payload[:pages].first[:tmp_id])
   rescue ActiveRecord::RecordNotFound
     # Import deleted mid-flight.
   rescue PdfImports::OutlineGenerator::TooLarge => e
