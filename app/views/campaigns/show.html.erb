@@ -63,9 +63,6 @@
 <div>
   <div class="campaign-show__characters-header">
     <h1 class="campaign-show__characters-title">Characters</h1>
-    <%= button_to 'Add character', campaign_characters_path(@campaign),
-                  method: :post, data: { turbo: true }, params: { character: { name: "Default Name" } },
-                  class: "btn" %>
   </div>
 
   <div id="characters">
