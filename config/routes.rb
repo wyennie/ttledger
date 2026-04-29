@@ -9,7 +9,7 @@ Rails.application.routes.draw do
   get "confirm_email", to: "users#confirm_email", as: "confirm_email"
   resources :users
   resources :friendships, only: [ :create, :update ]
-  resources :campaigns do
+  resources :campaigns, except: :edit do
     resources :pages, param: :slug
     resources :characters, only: [ :create, :edit, :update, :destroy ] do
       resources :items, only: [ :create, :edit, :update, :destroy ]

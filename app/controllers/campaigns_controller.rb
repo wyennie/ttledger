@@ -1,9 +1,9 @@
 class CampaignsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_user_and_campaigns
-  before_action :set_campaign, only: [ :invite_user, :accept_invitation, :destroy, :update, :edit, :show ]
+  before_action :set_campaign, only: [ :invite_user, :accept_invitation, :destroy, :update, :show ]
   before_action :authorize_user, only: [ :show ]
-  before_action :authorize_gamemaster, only: [ :invite_user, :edit, :update ]
+  before_action :authorize_gamemaster, only: [ :invite_user, :update ]
 
   def invite_user
     user = User.find_by(username: params[:username])
@@ -91,15 +91,17 @@ class CampaignsController < ApplicationController
   end
 
 
-  def edit
-  end
-
   def update
     if @campaign.update(campaign_params)
-      flash[:success] = "Campaign updated!"
-      redirect_to user_path(@user)
+      respond_to do |format|
+        format.html { head :no_content }
+        format.turbo_stream { head :no_content }
+      end
     else
-      render "edit", status: :unprocessable_entity
+      respond_to do |format|
+        format.html { redirect_to campaign_path(@campaign), alert: @campaign.errors.full_messages.to_sentence }
+        format.turbo_stream { head :unprocessable_entity }
+      end
     end
   end
 
