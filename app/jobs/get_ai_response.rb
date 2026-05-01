@@ -1,45 +1,45 @@
 class GetAiResponse < ApplicationJob
-  RESPONSES_PER_MESSAGE = 1
-
-  def perform(chat_id)
+  def perform(chat_id, user_id)
     chat = Chat.find(chat_id)
-    call_openai(chat: chat)
+    user = User.find(user_id)
+
+    resolution = LLMResolver.client_for(user)
+
+    system_prompt = chat.messages.where(message_role: :system).pluck(:content).join("\n\n")
+    conversation = chat.messages
+      .where(message_role: [ :user, :assistant ])
+      .map { |m| { role: m.message_role, content: m.content } }
+
+    assistant = chat.messages.create!(message_role: :assistant, content: "", response_number: 0)
+    assistant.broadcast_created
+
+    begin
+      resolution.adapter.stream_chat(system: system_prompt, messages: conversation) do |token|
+        assistant.update(content: assistant.content + token)
+      end
+    rescue Anthropic::Errors::APIError, Faraday::Error => e
+      assistant.update(content: "_The #{resolution.provider.to_s.capitalize} API returned an error: #{provider_error_message(e)}_")
+      raise
+    rescue StandardError => e
+      assistant.update(content: "_Something went wrong while generating a response. Please try again._")
+      raise
+    end
+  rescue LLMResolver::QuotaExceeded
+    chat.messages.create!(
+      message_role: :assistant,
+      content: "Demo quota reached for today. Add your own Anthropic or OpenAI API key in settings to keep chatting."
+    )
   end
 
   private
 
-  def call_openai(chat:)
-    client = OpenAI::Client.new(
-        access_token: Rails.application.credentials.open_ai_api_key,
-        log_errors: true
-      )
-    client.chat(
-      parameters: {
-        model: "gpt-4o-mini-2024-07-18",
-        messages: Message.for_openai(chat.messages),
-        temperature: 0.8,
-        stream: stream_proc(chat: chat),
-        n: RESPONSES_PER_MESSAGE
-      }
-    )
-  end
-
-  def create_messages(chat:)
-    messages = []
-    RESPONSES_PER_MESSAGE.times do |i|
-      message = chat.messages.create(message_role: "assistant", content: "", response_number: i)
-      message.broadcast_created
-      messages << message
+    def provider_error_message(error)
+      if error.respond_to?(:body) && error.body.is_a?(Hash)
+        error.body.dig(:error, :message) || error.message
+      elsif error.respond_to?(:response) && error.response.is_a?(Hash)
+        error.response.dig(:body, "error", "message") || error.message
+      else
+        error.message
+      end
     end
-    messages
-  end
-
-  def stream_proc(chat:)
-    messages = create_messages(chat: chat)
-    proc do |chunk, _bytesize|
-      new_content = chunk.dig("choices", 0, "delta", "content")
-      message = messages.find { |m| m.response_number == chunk.dig("choices", 0, "index") }
-      message.update(content: message.content + new_content) if new_content
-    end
-  end
 end

@@ -66,7 +66,7 @@ class UsersController < ApplicationController
     def user_params
       params.require(:user).permit(:username, :name, :email,
                                    :password, :password_confirmation,
-                                   :confirmed_at)
+                                   :confirmed_at, :openai_api_key, :anthropic_api_key)
     end
 
     def authorize_user!

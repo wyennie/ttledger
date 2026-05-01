@@ -20,6 +20,7 @@ gem "kamal", require: false
 gem "thruster", require: false
 gem "postmark-rails"
 gem "ruby-openai", "~> 7.3"
+gem "anthropic", "~> 1.10"
 gem "acts_as_list", "~> 1.2"
 gem "acts_as_tree", "~> 2.9"
 gem "redcarpet", "~> 3.6"
