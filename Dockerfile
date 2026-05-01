@@ -34,7 +34,8 @@ RUN apt-get update -qq && \
     build-essential \
     git \
     pkg-config \
-    libpq-dev && \
+    libpq-dev \
+    libyaml-dev && \
     rm -rf /var/lib/apt/lists /var/cache/apt/archives
 
 # Install application gems
