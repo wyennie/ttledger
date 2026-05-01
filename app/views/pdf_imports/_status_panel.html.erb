@@ -1,3 +1,8 @@
+<% pages = Array(pdf_import.draft_payload&.dig("pages")) %>
+<% bodies_done = pages.count { |p| p["body"].present? } %>
+<% next_page = pages.find { |p| p["body"].blank? } %>
+<% in_flight = pdf_import.status.in?(%w[pending extracting outlining expanding]) %>
+
 <div class="pdf-import-status pdf-import-status--<%= pdf_import.status %>">
   <p class="pdf-import-status__label">Status</p>
   <p class="pdf-import-status__value">
@@ -9,7 +14,10 @@
     <% when "outlining" %>
       Reading the document and proposing a page tree.
     <% when "expanding" %>
-      Writing each proposed page.
+      Writing pages: <strong><%= bodies_done %></strong> of <strong><%= pages.size %></strong> done.
+      <% if next_page %>
+        <span class="pdf-import-status__current">Up next: <em><%= next_page["title"] %></em></span>
+      <% end %>
     <% when "ready_for_review" %>
       Draft is ready. Review the proposed pages and entities below.
     <% when "applied" %>
@@ -18,4 +26,14 @@
       Import failed. <%= pdf_import.error_message %>
     <% end %>
   </p>
+
+  <% if pdf_import.status == "expanding" && pages.any? %>
+    <div class="pdf-import-status__progress" aria-hidden="true">
+      <div class="pdf-import-status__progress-fill" style="width: <%= ((bodies_done.to_f / pages.size) * 100).round(1) %>%;"></div>
+    </div>
+  <% end %>
+
+  <% if in_flight %>
+    <p class="pdf-import-status__refresh-hint">This page refreshes automatically while the import is running.</p>
+  <% end %>
 </div>

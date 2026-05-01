@@ -1,3 +1,9 @@
+<% if @pdf_import.status.in?(%w[pending extracting outlining expanding]) %>
+  <% content_for :head do %>
+    <meta http-equiv="refresh" content="6">
+  <% end %>
+<% end %>
+
 <h1 class="form-page-title"><%= @pdf_import.original_filename.presence || "PDF import" %></h1>
 
 <div class="form-card form-card--wide">

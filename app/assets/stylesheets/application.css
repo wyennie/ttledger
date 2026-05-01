@@ -2784,6 +2784,31 @@ code {
 .pdf-import-status--applied { border-color: var(--color-success-text); }
 .pdf-import-status--ready_for_review { border-color: var(--color-accent, #b8860b); }
 
+.pdf-import-status__current {
+  display: block;
+  margin-top: 0.25rem;
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+}
+.pdf-import-status__progress {
+  margin-top: var(--space-3);
+  height: 6px;
+  background: var(--color-bg-strong);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.pdf-import-status__progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--color-brass), var(--color-accent, #b8860b));
+  transition: width 0.4s ease;
+}
+.pdf-import-status__refresh-hint {
+  margin: var(--space-3) 0 0 0;
+  color: var(--color-text-muted);
+  font-size: 0.8rem;
+  font-style: italic;
+}
+
 .pdf-import-review { margin-top: var(--space-6); }
 .pdf-import-review h2 { margin-bottom: var(--space-3); }
 .pdf-import-review__empty { color: var(--color-text-muted); }
