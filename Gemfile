@@ -33,7 +33,7 @@ group :development, :test do
   gem "factory_bot_rails"
   gem "faker"
   gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"
-  gem "brakeman", "~> 7.0.0", require: false
+  gem "brakeman", "~> 8.0", require: false
   gem "capybara", "~> 3.40"
   gem "selenium-webdriver"
   gem "rubocop-rails-omakase", require: false
