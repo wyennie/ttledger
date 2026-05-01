@@ -95,6 +95,18 @@
     </ul>
   </div>
 </div>
+
+<% if gm %>
+  <div class="flourish">❦</div>
+
+  <div class="campaign-show__danger-zone">
+    <%= button_to "Delete campaign",
+                  campaign_path(@campaign),
+                  method: :delete,
+                  data: { turbo_confirm: "Permanently delete \"#{@campaign.name}\" and all of its pages, characters, and entities? This cannot be undone." },
+                  class: "btn btn--danger" %>
+  </div>
+<% end %>
       </div>
     </div>
   </main>

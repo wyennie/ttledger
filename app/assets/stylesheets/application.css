@@ -2681,6 +2681,12 @@ code {
   gap: var(--space-4);
 }
 
+.campaign-show__danger-zone {
+  padding: var(--space-6);
+  display: flex;
+  justify-content: flex-end;
+}
+
 .campaign-show__description-block h2 {
   font-size: 1.75rem;
   font-weight: 500;
