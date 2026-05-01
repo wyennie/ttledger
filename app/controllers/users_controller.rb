@@ -22,10 +22,10 @@ class UsersController < ApplicationController
 
   def create
     @user = User.new(user_params)
+    @user.confirmed_at = Time.current
     if @user.save
-      @user.send_confirmation_email
-      flash[:info] = "Please check your email to confirm your account."
-      redirect_to root_url
+      flash[:success] = "Account created. You can now log in."
+      redirect_to login_url
     else
       render "new", status: :unprocessable_entity
     end
