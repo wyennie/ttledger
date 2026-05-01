@@ -41,3 +41,6 @@
 /config/credentials/development.key
 
 /config/credentials/test.key
+
+# Local planning notes
+/DEPLOY_PLAN.md

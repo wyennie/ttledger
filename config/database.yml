@@ -8,6 +8,9 @@ default: &default
   adapter: postgresql
   encoding: unicode
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  host: <%= ENV.fetch("POSTGRES_HOST", "localhost") %>
+  username: <%= ENV.fetch("POSTGRES_USER", "ttledger") %>
+  password: <%= ENV.fetch("POSTGRES_PASSWORD", "devpassword") %>
 
 sqlite: &sqlite
   adapter: sqlite3
@@ -43,8 +46,8 @@ test:
 production:
   primary: &primary_production
     <<: *default
-    database: ttledger_development
-    url: <%= Rails.application.credentials.db_url %>
+    database: ttledger_production
+    url: <%= ENV["DATABASE_URL"] %>
   cache:
     <<: *sqlite
     database: storage/ttledger_production_cache.sqlite3
