@@ -1,24 +1,26 @@
-# README
+# Tabletop Ledger
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+A Rails app for running tabletop RPG campaigns with AI-assisted prep — manage campaigns, characters, entities (NPCs, locations, factions, etc.), session pages, and chats, and import existing material from PDFs.
 
-Things you may want to cover:
+## Stack
 
-* Ruby version
+- Rails 8 on Ruby 3.3.11, Hotwire (Turbo + Stimulus), Propshaft, importmap
+- PostgreSQL for the primary DB; Solid Queue / Cache / Cable on SQLite
+- Anthropic and OpenAI APIs for PDF expansion and draft generation
+- RSpec, FactoryBot, Capybara
+- Kamal for deployment (`config/deploy.yml`)
 
-* System dependencies
+## Local development
 
-* Configuration
+See [LOCAL_DEV.md](LOCAL_DEV.md) for the full start/stop guide. Short version:
 
-* Database creation
+```bash
+docker compose up -d db   # Postgres on 127.0.0.1:5432
+bin/dev                   # Rails on http://localhost:3000
+```
 
-* Database initialization
+## Tests
 
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+```bash
+bundle exec rspec
+```
