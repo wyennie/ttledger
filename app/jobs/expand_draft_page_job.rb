@@ -44,6 +44,13 @@ class ExpandDraftPageJob < ApplicationJob
       next_page = Array(import.draft_payload&.dig("pages")).find { |p| p["body"].blank? }
       if next_page
         self.class.perform_later(import.id, next_page["tmp_id"])
+        return
+      end
+
+      # Wiki pages done -- start the entity bio chain (if any entities exist).
+      next_entity = Array(import.draft_payload&.dig("entities")).find { |e| e["body"].blank? }
+      if next_entity
+        ExpandDraftEntityJob.perform_later(import.id, next_entity["tmp_id"])
       else
         import.update!(status: "ready_for_review")
       end
