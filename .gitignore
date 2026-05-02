@@ -44,3 +44,7 @@
 
 # Local planning notes
 /DEPLOY_PLAN.md
+/LOCAL_DEV.md
+
+# Local docker-compose overrides (e.g. exposing db port for dev).
+/docker-compose.override.yml
