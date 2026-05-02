@@ -1,0 +1,42 @@
+<% pages = Array(pdf_import.draft_payload&.dig("pages")) %>
+<% bodies_done = pages.count { |p| p["body"].present? } %>
+<% remaining = pages.size - bodies_done %>
+<% next_idx = pages.index { |p| p["body"].blank? } %>
+<% pct = pages.empty? ? 0 : ((bodies_done.to_f / pages.size) * 100).round(1) %>
+<% eta = remaining.zero? ? nil : distance_of_time_in_words(remaining * 60) %>
+
+<div class="pdf-import-progress">
+  <div class="pdf-import-progress__summary">
+    <span><strong><%= bodies_done %></strong> of <strong><%= pages.size %></strong> pages written</span>
+    <% if eta %>
+      <span class="pdf-import-progress__eta">≈ <%= eta %> remaining</span>
+    <% end %>
+  </div>
+
+  <div class="pdf-import-status__progress" aria-hidden="true">
+    <div class="pdf-import-status__progress-fill" style="width: <%= pct %>%;"></div>
+  </div>
+
+  <ol class="pdf-import-progress__list">
+    <% pages.each_with_index do |p, idx| %>
+      <% is_done   = p["body"].present? %>
+      <% is_active = !is_done && idx == next_idx %>
+      <% state     = is_done ? "done" : (is_active ? "active" : "pending") %>
+      <li class="pdf-import-progress__item pdf-import-progress__item--<%= state %>">
+        <span class="pdf-import-progress__icon" aria-hidden="true">
+          <% if is_done %>
+            ✓
+          <% elsif is_active %>
+            <span class="pdf-import-progress__spinner"></span>
+          <% else %>
+            ·
+          <% end %>
+        </span>
+        <span class="pdf-import-progress__title"><%= p["title"] %></span>
+        <% if p["source_pages"].present? %>
+          <span class="pdf-import-progress__meta">pp. <%= Array(p["source_pages"]).join(", ") %></span>
+        <% end %>
+      </li>
+    <% end %>
+  </ol>
+</div>

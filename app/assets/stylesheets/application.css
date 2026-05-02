@@ -2809,6 +2809,74 @@ code {
   font-style: italic;
 }
 
+.pdf-import-progress { margin-top: var(--space-3); }
+.pdf-import-progress__summary {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-size: 0.95rem;
+  margin-bottom: var(--space-2);
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+.pdf-import-progress__eta { color: var(--color-text-muted); font-size: 0.85rem; }
+.pdf-import-progress__list {
+  list-style: none;
+  padding: 0;
+  margin: var(--space-3) 0 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+.pdf-import-progress__item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 0.35rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.95rem;
+}
+.pdf-import-progress__item--done {
+  color: var(--color-text-muted);
+}
+.pdf-import-progress__item--done .pdf-import-progress__title {
+  text-decoration: line-through;
+  text-decoration-color: var(--color-border);
+}
+.pdf-import-progress__item--done .pdf-import-progress__icon {
+  color: var(--color-success-text, #15803d);
+}
+.pdf-import-progress__item--active {
+  background: var(--color-bg-strong);
+  font-weight: 600;
+}
+.pdf-import-progress__item--pending { color: var(--color-text-muted); }
+.pdf-import-progress__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.25rem;
+  height: 1.25rem;
+  flex-shrink: 0;
+  font-size: 0.85rem;
+}
+.pdf-import-progress__title { flex-grow: 1; }
+.pdf-import-progress__meta {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.pdf-import-progress__spinner {
+  width: 0.85rem;
+  height: 0.85rem;
+  border: 2px solid var(--color-border);
+  border-top-color: var(--color-brass);
+  border-radius: 50%;
+  animation: pdf-import-spin 0.8s linear infinite;
+}
+@keyframes pdf-import-spin { to { transform: rotate(360deg); } }
+
 .pdf-import-review { margin-top: var(--space-6); }
 .pdf-import-review h2 { margin-bottom: var(--space-3); }
 .pdf-import-review__empty { color: var(--color-text-muted); }
