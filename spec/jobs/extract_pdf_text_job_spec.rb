@@ -33,8 +33,8 @@ RSpec.describe ExtractPdfTextJob, type: :job do
   end
 
   it "skips work when the import has already advanced past pending" do
-    import.update!(status: "outlining", extracted_pages: ["pre-existing"])
+    import.update!(status: "outlining", extracted_pages: [ "pre-existing" ])
     described_class.perform_now(import.id)
-    expect(import.reload.extracted_pages).to eq(["pre-existing"])
+    expect(import.reload.extracted_pages).to eq([ "pre-existing" ])
   end
 end
