@@ -55,6 +55,7 @@ jobs:
           script: |
             set -e
             cd /var/www/ttledger
-            git pull origin main
+            git fetch origin main
+            git reset --hard origin/main
             docker compose pull
             docker compose up -d
