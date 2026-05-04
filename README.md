@@ -1,6 +1,6 @@
 # Tabletop Ledger
 
-A Rails app for running tabletop RPG campaigns with AI-assisted prep — manage campaigns, characters, entities (NPCs, locations, factions, etc.), session pages, and chats, and import existing material from PDFs.
+A Rails app for running tabletop RPG campaigns with AI-assisted prep: manage campaigns, characters, entities (NPCs, locations, factions, etc.), session pages, and chats, and import existing material from PDFs.
 
 ## Stack
 
