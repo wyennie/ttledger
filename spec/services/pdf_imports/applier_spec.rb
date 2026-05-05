@@ -98,4 +98,59 @@ RSpec.describe PdfImports::Applier do
       described_class.call(import)
     }.to raise_error(described_class::NotReady)
   end
+
+  describe "entity bio pages" do
+    let(:draft_payload) do
+      {
+        "pages" => [
+          { "tmp_id" => "p1", "title" => "Overview", "parent_tmp_id" => nil, "source_pages" => [ 1 ], "summary" => "intro",
+            "body" => "<p>Welcome.</p>" }
+        ],
+        "entities" => [
+          { "tmp_id" => "e1", "name" => "Strahd", "kind" => "character", "summary" => "Vampire lord.",
+            "body" => "<h2>Background</h2><p>Foe of <span data-mention=\"entity\" data-entity-tmp-id=\"e2\">@Ireena</span>.</p>" },
+          { "tmp_id" => "e2", "name" => "Ireena", "kind" => "creature", "summary" => "Mysterious figure.",
+            "body" => "<p>A burgomaster's daughter.</p>" },
+          { "tmp_id" => "e3", "name" => "Anonymous", "kind" => "character", "summary" => "No bio yet." }
+        ]
+      }
+    end
+
+    it "creates a bio page per entity with a body and links it via bio_page_id" do
+      described_class.call(import)
+
+      strahd = campaign.entities.find_by(name: "Strahd")
+      ireena = campaign.entities.find_by(name: "Ireena")
+
+      expect(strahd.bio_page).to be_present
+      expect(strahd.bio_page.title).to eq("Strahd")
+      expect(ireena.bio_page).to be_present
+    end
+
+    it "rewrites tmp-id mentions inside entity bios to real entity ids" do
+      described_class.call(import)
+      strahd = campaign.entities.find_by(name: "Strahd")
+      ireena = campaign.entities.find_by(name: "Ireena")
+
+      expect(strahd.bio_page.body).to include("data-entity-id=\"#{ireena.id}\"")
+      expect(strahd.bio_page.body).not_to include("data-entity-tmp-id")
+    end
+
+    it "skips entities without a generated body" do
+      described_class.call(import)
+      anon = campaign.entities.find_by(name: "Anonymous")
+      expect(anon.bio_page).to be_nil
+    end
+
+    it "does not overwrite an existing entity's bio_page" do
+      kind = campaign.entity_kinds.find_or_create_by(name: "character")
+      existing_bio = campaign.pages.create!(title: "Strahd (curated)", body: "<p>GM-written.</p>")
+      campaign.entities.create!(name: "strahd", entity_kind: kind, summary: "old", bio_page: existing_bio)
+
+      described_class.call(import)
+
+      strahd = campaign.entities.find_by("LOWER(name) = ?", "strahd")
+      expect(strahd.bio_page).to eq(existing_bio)
+    end
+  end
 end

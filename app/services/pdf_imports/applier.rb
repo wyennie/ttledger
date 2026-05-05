@@ -17,6 +17,7 @@ module PdfImports
         ensure_entity_kinds!
         entity_by_tmp = create_entities!
         create_pages!(entity_by_tmp)
+        attach_entity_bio_pages!(entity_by_tmp)
         @pdf_import.update!(status: "applied", error_message: nil)
       end
     end
@@ -119,6 +120,26 @@ module PdfImports
         end
 
         ordered
+      end
+
+      # Materializes generated entity bios as Page records linked from
+      # entities.bio_page_id. Skips entities without a body and entities that
+      # already have a bio (existing campaign entities reused by name).
+      def attach_entity_bio_pages!(entity_by_tmp)
+        draft_entities.each do |draft_entity|
+          body_html = draft_entity["body"].to_s
+          next if body_html.blank?
+
+          entity = entity_by_tmp[draft_entity["tmp_id"]]
+          next if entity.nil? || entity.bio_page_id.present?
+
+          bio_page = campaign.pages.create!(
+            title: entity.name,
+            body: rewrite_mentions(body_html, entity_by_tmp),
+            parent: nil
+          )
+          entity.update!(bio_page: bio_page)
+        end
       end
 
       def rewrite_mentions(html, entity_by_tmp)
